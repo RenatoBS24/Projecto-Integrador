@@ -160,7 +160,7 @@
             <div class="flex items-center space-x-4">
                 <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-full">
                 <div>
-                    <p class="font-bold">Alfredo Torres</p>
+                    <p class="font-bold">Renato Ballena</p>
                     <p class="text-gray-500">Sede: Chiclayo</p>
                 </div>
                 <button class="bg-green-500 text-white py-1 px-4 rounded-lg">Ver más</button>
