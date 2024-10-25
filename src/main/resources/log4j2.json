@@ -1,0 +1,41 @@
+{
+  "Configuration": {
+    "Appenders": {
+      "Console": {
+        "name": "CONSOLE",
+        "PatternLayout": {
+          "pattern": " %d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"
+        }
+      },
+      "RollingFile":{
+        "name": "chichosSnack",
+        "type": "RollingFile",
+        "filename": "src/main/resources/Log/chichosSnack.log",
+        "filePattern": "src/main/resources/Log/chichosSnack-%d{yyyy-MM-dd}.log.gz",
+        "PatternLayout": {
+          "pattern": "%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"
+        },
+        "policies": {
+          "sizeBasedTriggeringPolicy": {
+            "size": "1GB"
+          }
+        }
+      }
+    },
+    "Loggers": {
+      "Root": {
+        "level": "INFO",
+        "AppenderRef": [
+          {
+            "ref": "CONSOLE",
+            "level": "DEBUG"
+          },
+          {
+            "ref": "chichosSnack",
+            "level": "INFO"
+          }
+        ]
+      }
+    }
+  }
+}
