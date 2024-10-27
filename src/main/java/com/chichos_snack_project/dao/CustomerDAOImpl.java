@@ -1,7 +1,7 @@
 package com.chichos_snack_project.dao;
 
-import com.chichos_snack_project.interfaces.ProductDAO;
-import com.chichos_snack_project.model.Product;
+import com.chichos_snack_project.interfaces.CustomerDAO;
+import com.chichos_snack_project.model.Customer;
 import com.chichos_snack_project.util.MysqlConnector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,24 +11,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProductDAOImpl implements ProductDAO {
+public class CustomerDAOImpl implements CustomerDAO {
     private final Logger log = LogManager.getLogger(ProductDAOImpl.class);
     Connection con;
-    public ProductDAOImpl(String name_datasource){
+    public CustomerDAOImpl(String name_datasource){
         this.con = MysqlConnector.getConnection(name_datasource);
     }
+
     @Override
-    public void create(Product product) throws SQLException {
+    public void create(Customer customer) throws SQLException {
 
     }
 
     @Override
-    public Product read(Product product) throws SQLException {
+    public Customer read(Customer customer) throws SQLException {
         return null;
     }
 
     @Override
-    public void update(Integer integer, Product product) throws SQLException {
+    public void update(Integer integer, Customer customer) throws SQLException {
 
     }
 
@@ -37,15 +38,14 @@ public class ProductDAOImpl implements ProductDAO {
 
     }
     public ResultSet findAll() throws SQLException {
-        String sql = "select * from uv_products";
+        String sql = "select * from uv_clientes";
         try{
             PreparedStatement ps = con.prepareStatement(sql);
             return ps.executeQuery();
         }catch (SQLException e){
-            log.error("Ocurrio un error al obtener los datos de la vista uv_trabajadores");
+            log.error("Ocurrio un error al obtener los datos de la vista uv_clientes");
             return null;
 
         }
     }
-
 }

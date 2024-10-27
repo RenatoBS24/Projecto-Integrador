@@ -39,7 +39,7 @@
                 </a>
             </li>
             <li class="mb-6">
-                <a href="../ChichosSnack/Inicio.html" class="flex items-center space-x-4 p-2 rounded-lg bg-teal-500">
+                <a href="index.jsp" class="flex items-center space-x-4 p-2 rounded-lg bg-teal-500">
                         <span>
                             <ion-icon name="cash-outline" class="text-xl"></ion-icon>
                         </span>
@@ -47,13 +47,22 @@
                 </a>
             </li>
             <li class="mb-6">
-                <a href="../ChichosSnack/productos.html" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                <a href="Products" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
                         <span>
                             <ion-icon name="pricetag-outline" class="text-xl"></ion-icon>
                         </span>
                     <span>Productos</span>
                 </a>
             </li>
+            <li class="mb-6">
+                <a href="Customer" class="flex items-center space-x-4 p-2 rounded-lg bg-teal-500">
+                    <span>
+                        <ion-icon name="people-outline" class="text-xl"></ion-icon>
+                    </span>
+                    <span>Clientes</span>
+                </a>
+            </li>
+
             <li class="mb-6">
                 <a href="Employee" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
                         <span>
@@ -63,7 +72,7 @@
                 </a>
             </li>
             <li class="mb-6">
-                <a href="../ChichosSnack/ajustes.html" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                <a href="settings.jsp" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
                         <span>
                             <ion-icon name="settings-outline" class="text-xl"></ion-icon>
                         </span>

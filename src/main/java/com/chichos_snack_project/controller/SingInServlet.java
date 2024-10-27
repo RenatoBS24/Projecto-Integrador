@@ -25,6 +25,7 @@ public class SingInServlet extends HttpServlet{
         if(Validate_User.validate(name,password)){
             HttpSession se = request.getSession();
             se.setAttribute("is_valid_user",true);
+            se.setAttribute("username",name);
             request.getRequestDispatcher("index.jsp").forward(request,response);
         }else{
             request.setAttribute("errorMessage","Credenciales invalidas");

@@ -53,7 +53,10 @@ public class EmployeeDAPImpl implements EmployeeDAO {
 
     @Override
     public void delete(Integer integer) throws SQLException {
-
+        String sql = "{CALL sp_delete_trabajador(?)}";
+        CallableStatement cs = conn.prepareCall(sql);
+        cs.setInt(1,integer);
+        cs.executeUpdate();
     }
 
     public ResultSet findAll() throws SQLException {

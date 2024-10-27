@@ -3,14 +3,26 @@ package com.chichos_snack_project.model;
 import java.util.Objects;
 
 public class Product {
+    private int id_product;
     private String name;
     private double price;
-
+    private int stock;
     public Product(){
     }
-    public Product(String name, double price) {
+
+    public Product(int id_product, String name, double price, int stock) {
+        this.id_product = id_product;
         this.name = name;
         this.price = price;
+        this.stock = stock;
+    }
+
+    public int getId_product() {
+        return id_product;
+    }
+
+    public void setId_product(int id_product) {
+        this.id_product = id_product;
     }
 
     public String getName() {
@@ -19,6 +31,14 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     public double getPrice() {
@@ -34,19 +54,11 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Double.compare(price, product.price) == 0 && Objects.equals(name, product.name);
+        return id_product == product.id_product && Double.compare(price, product.price) == 0 && stock == product.stock && Objects.equals(name, product.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, price);
-    }
-
-    @Override
-    public String toString() {
-        return "product{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                '}';
+        return Objects.hash(id_product, name, price, stock);
     }
 }
