@@ -19,7 +19,8 @@
           "sizeBasedTriggeringPolicy": {
             "size": "1GB"
           }
-        }
+        },
+        "append": true
       }
     },
     "Loggers": {
