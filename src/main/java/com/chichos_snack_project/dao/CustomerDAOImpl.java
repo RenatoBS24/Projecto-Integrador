@@ -5,14 +5,10 @@ import com.chichos_snack_project.model.Customer;
 import com.chichos_snack_project.util.MysqlConnector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class CustomerDAOImpl implements CustomerDAO {
-    private final Logger log = LogManager.getLogger(ProductDAOImpl.class);
+    private final Logger log = LogManager.getLogger(CustomerDAOImpl.class);
     Connection con;
     public CustomerDAOImpl(String name_datasource){
         this.con = MysqlConnector.getConnection(name_datasource);
@@ -20,23 +16,47 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public void create(Customer customer) throws SQLException {
-
+        String sql = "{CALL sp_insert_cliente(?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setString(1,customer.getName());
+        cs.setString(2,customer.getPhone());
+        cs.setDouble(3,customer.getAmount_total());
+        cs.executeUpdate();
+        log.info("Se registro un nuevo cliente identificado con el nombre: "+customer.getName());
     }
 
     @Override
     public Customer read(Customer customer) throws SQLException {
+        String sql = "{CALL sp_getCliente(?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,customer.getId_customer());
+        ResultSet rs = cs.executeQuery();
+        if(rs.next()){
+            return new Customer(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDate(4),rs.getDouble(5),rs.getDouble(6),rs.getDouble(7),rs.getInt(8));
+        }else{
+            log.error("El procedimiento sp_getCliente ha retornado un null \n id recibido: "+customer.getId_customer());
+            return null;
+        }
 
-        return null;
     }
 
     @Override
     public void update(Integer integer, Customer customer) throws SQLException {
-
+        String sql = "{CALL sp_update_cliente(?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,customer.getId_customer());
+        cs.setString(2, customer.getName());
+        cs.setString(3, customer.getPhone());
+        cs.executeUpdate();
     }
 
     @Override
     public void delete(Integer integer) throws SQLException {
-
+        String sql = "{CALL sp_delete_cliente(?)}";
+        log.info("El id recibido es:"+integer);
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,integer);
+        cs.executeUpdate();
     }
     public ResultSet findAll() throws SQLException {
         String sql = "select * from uv_clientes";

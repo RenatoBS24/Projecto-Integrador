@@ -93,7 +93,7 @@
                 </span>
         </div>
         <div class="flex items-center space-x-4">
-            <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">+ Agregar productos</button>
+            <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" onclick="openModalCustomer()">+ Agregar Cliente</button>
             <div class="relative">
                 <a href="notificaciones.html">
                     <ion-icon name="notifications-outline" class="text-2xl text-gray-600"></ion-icon>
@@ -121,7 +121,7 @@
                     </div>
                 </div>
                 <div class="flex space-x-2">
-                    <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Eliminar</button>
+                    <button onclick="openModalDelete('<%=customer.getId_customer()%>')"  class=" boton bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Eliminar</button>
                     <button onclick="openModal1('<%=customer.getName()%>','<%=customer.getPhone()%>','<%=customer.getAmount_total()%>','<%=customer.getAmount_available()%>','<%=customer.getAmount_used()%>','<%=customer.getId_credit()%>')" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Editar información</button>
                     <button onclick="openModal1()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Editar credito</button>
                 </div>
@@ -145,7 +145,7 @@
                     </span>
             </div>
         </div>
-        <form class="space-y-3">
+        <form action="UpdateCustomer" method="POST" class="space-y-3">
             <input type="hidden" id="id_customer" name="id_customer">
             <div class="grid grid-cols-2 gap-3">
                 <div>
@@ -180,64 +180,69 @@
         </form>
     </div>
 </div>
+<!-- Modal for Adding Client -->
+<div id="clientModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Agregar Cliente</h2>
+        <form action="CreateCustomer" method="POST">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Nombre: </label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="name" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">N° de telefono:</label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="phone" maxlength="9" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Credito:</label>
+                <input type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="credit" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Subir Archivo (Excel)</label>
+                <input type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+            </div>
+            <!-- Modal Actions -->
+            <div class="flex justify-end space-x-4">
+                <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeModalCustomer()">Cancelar</button>
+                <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Modal for delete worker -->
+<div id="deleteClientModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Eliminar Cliente</h2>
+        <form action="DeleteCustomer" method="POST">
+            <input type="hidden" id="id" name="id">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Código: </label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="code_entered">
+                <%
+                    if(request.getAttribute("Error") != null){
+                        String error = (String)request.getAttribute("Error");
 
+                %>
+                <p style="color: red"><%=error%></p>
+                <%
+                    }
+                %>
 
-<!-- Modal Reporte -->
-<div id="workerReportModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white w-1/3 rounded-lg shadow-lg p-5">
-        <h2 class="text-xl font-bold mb-4 text-center">Reporte de Trabajador</h2>
-        <div class="flex justify-center mb-4">
-            <img src="https://via.placeholder.com/100" alt="Empleado" class="rounded-full w-24 h-24 object-cover">
-        </div>
-        <div>
-            <p class="text-lg"><strong>Nombre:</strong> <span id="reportNombre"></span></p>
-            <p class="text-lg"><strong>Apellidos:</strong> <span id="reportApellidos"></span></p>
-            <p class="text-lg"><strong>Edad:</strong> <span id="reportEdad"></span></p>
-            <p class="text-lg"><strong>DNI:</strong> <span id="reportDni"></span></p>
-            <p class="text-lg"><strong>Teléfono:</strong> <span id="reportTelefono"></span></p>
-            <p class="text-lg"><strong>Credito:</strong> $<span id="reportSueldo"></span></p>
-        </div>
-        <div class="flex justify-end mt-4">
-            <button onclick="closeWorkerReport()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cerrar</button>
-        </div>
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeModalDelete()">Cancelar</button>
+                <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Eliminar</button>
+            </div>
+        </form>
     </div>
 </div>
 
+
+
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-<script>
-    // Función para abrir el modal de edición del trabajador
-    function openModal1(name,phone,amount_total,amount_available,amount_used,id_customer) {
-        document.getElementById('name').value = name;
-        document.getElementById('phone').value = phone;
-        document.getElementById('amount_total').value = amount_total;
-        document.getElementById('amount_available').value = amount_available;
-        document.getElementById('amount_used').value = amount_used;
-        document.getElementById('id_customer').value = id_customer;
-        document.getElementById('modal').classList.remove('hidden');
-    }
-
-    // Función para cerrar el modal de edición del cliente
-    function closeModal() {
-        document.getElementById('modal').classList.add('hidden');
-    }
-
-    // Función para abrir el modal del reporte del cliente
-    function openWorkerReport1(nombre, apellidos, edad, dni, telefono, sueldo) {
-        document.getElementById('reportNombre').innerText = nombre;
-        document.getElementById('reportApellidos').innerText = apellidos;
-        document.getElementById('reportEdad').innerText = edad;
-        document.getElementById('reportDni').innerText = dni;
-        document.getElementById('reportTelefono').innerText = telefono;
-        document.getElementById('reportSueldo').innerText = sueldo;
-        document.getElementById('workerReportModal').classList.remove('hidden');
-    }
-
-    // Función para cerrar el modal del reporte del trabajador
-    function closeWorkerReport() {
-        document.getElementById('workerReportModal').classList.add('hidden');
-    }
-</script>
+<script src="js/function_customer.js"></script>
+<script src="js/code_email_ajax.js"></script>
 </body>
 </html>
 
