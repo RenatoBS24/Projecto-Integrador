@@ -95,7 +95,7 @@
 
     <!-- Main Content -->
     <div class="flex-1 p-6 relative">
-        <!-- Header -->
+        <!-- Header  change-->
         <div class="flex justify-between items-center mb-8">
             <div class="relative">
                 <input type="text" placeholder="Search Here" class="p-2 border border-gray-300 rounded-lg focus:outline-none w-full lg:w-96">

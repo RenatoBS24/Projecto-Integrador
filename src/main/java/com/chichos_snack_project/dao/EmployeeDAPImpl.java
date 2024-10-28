@@ -20,7 +20,15 @@ public class EmployeeDAPImpl implements EmployeeDAO {
 
     @Override
     public void create(Employee employee) throws SQLException {
-
+        String sql = "{CALL sp_insert_trabajador(?,?,?,?,?)}";
+        CallableStatement cs = conn.prepareCall(sql);
+        cs.setString(1,employee.getName());
+        cs.setString(2,employee.getLastname());
+        cs.setString(3,employee.getDni());
+        cs.setDouble(4,employee.getSalary());
+        cs.setString(5,employee.getPhone());
+        cs.executeUpdate();
+        log.info("Se registro un nuevo empleado identificado con el nombre: "+employee.getName());
     }
 
     @Override
@@ -54,6 +62,7 @@ public class EmployeeDAPImpl implements EmployeeDAO {
     @Override
     public void delete(Integer integer) throws SQLException {
         String sql = "{CALL sp_delete_trabajador(?)}";
+        log.info("El id recibido es:"+integer);
         CallableStatement cs = conn.prepareCall(sql);
         cs.setInt(1,integer);
         cs.executeUpdate();

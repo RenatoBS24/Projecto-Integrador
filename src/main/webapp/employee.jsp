@@ -19,7 +19,7 @@
 %>
 
 <!-- Sidebar -->
-<div class="bg-teal-600 w-64 h-screen text-white p-6">
+<div class="bg-teal-600 w-64 fixed top-0 left-0 h-screen text-white p-6">
     <h1 class="text-2xl font-bold mb-10">CHICHOS SNACK</h1>
     <ul>
         <li class="mb-6">
@@ -85,9 +85,9 @@
 </div>
 
 <!-- Main Content -->
-<main class="flex-1 p-6">
+<main class="flex-1 p-6 ml-64">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-8">
+    <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-100 z-10 p-4 shadow">
         <div class="relative">
             <input type="text" placeholder="Search Here" class="p-2 border border-gray-300 rounded-lg focus:outline-none w-full lg:w-96">
             <span class="absolute right-2 top-2 text-gray-400">
@@ -95,7 +95,7 @@
                 </span>
         </div>
         <div class="flex items-center space-x-4">
-            <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">+ Agregar productos</button>
+            <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" onclick="openModalEmployee()">+ Agregar Trabajador</button>
             <div class="relative">
                 <a href="notificaciones.html">
                     <ion-icon name="notifications-outline" class="text-2xl text-gray-600"></ion-icon>
@@ -114,7 +114,6 @@
                 for(Employee employee:employeeList){
 
             %>
-            <form action="DeleteEmployee" method="POST">
                 <input type="hidden" name="id" value=<%=employee.getId_employee()%>>
                 <div class="bg-teal-100 p-4 rounded-lg flex items-center justify-between">
                     <div class="flex items-center space-x-4 cursor-pointer" onclick="openWorkerReport('Juan', 'Pérez', 35, 87654321, 912345678, 1200)">
@@ -126,12 +125,10 @@
                         </div>
                     </div>
                     <div class="flex space-x-2">
-                        <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Eliminar</button>
-                        <button onclick="openModal('<%=employee.getName()%>','<%=employee.getLastname()%>','<%=employee.getDni()%>','<%=employee.getPhone()%>','<%=employee.getSalary()%>','<%=employee.getId_employee()%>')" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Editar</button>
+                        <button onclick="openModalDelete('<%=employee.getId_employee()%>')"  class=" boton bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Eliminar</button>
+                        <button onclick="openModal('<%=employee.getName()%>','<%=employee.getLastname()%>','<%=employee.getDni()%>','<%=employee.getPhone()%>','<%=employee.getSalary()%>','<%=employee.getId_employee()%>')" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600" type="button">Editar</button>
                     </div>
                 </div>
-            </form>
-
             <%
                 }
             %>
@@ -141,7 +138,7 @@
 </main>
 
 <!-- Modal (Ventana Emergente para Editar) -->
-<div id="modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+<div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-blue-100 w-1/3 rounded-lg shadow-lg p-5 relative">
         <h2 class="text-xl font-bold mb-4 text-center">Ingresar información de trabajador</h2>
         <div class="flex justify-center mb-4">
@@ -202,14 +199,85 @@
         </div>
     </div>
 </div>
+<!-- Modal for Adding Client -->
+<div id="clientModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Agregar Trabajador</h2>
+        <form action="CreateEmployee" method="POST">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Nombre: </label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="name" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Apellidos:</label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="lastname" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">DNI:</label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="dni" maxlength="8" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">N° de telefono:</label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="phone" maxlength="9" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Salario:</label>
+                <input type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="salary" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Subir Archivo (Excel)</label>
+                <input type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+            </div>
+            <!-- Modal Actions -->
+            <div class="flex justify-end space-x-4">
+                <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeModalEmployee()">Cancelar</button>
+                <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal for delete worker -->
+<div id="deleteClientModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Eliminar Trabajador</h2>
+        <form action="DeleteEmployee" method="POST">
+            <input type="hidden" id="id" name="id">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Código: </label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="code_entered">
+                <%
+                    if(request.getAttribute("Error") != null){
+                        String error = (String)request.getAttribute("Error");
+
+                %>
+                <p style="color: red"><%=error%></p>
+                <%
+                    }
+                %>
+
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeModalDelete()">Cancelar</button>
+                <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Eliminar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+
 <script>
+
     // Función para abrir el modal de edición del trabajador
     function closeModal() {
         document.getElementById('modal').classList.add('hidden');
     }
+
 
     // Función para cerrar el modal de edición del trabajador
     function openModal(nombre,apellidos,dni,phone,salario,id) {
@@ -237,6 +305,45 @@
     function closeWorkerReport() {
         document.getElementById('workerReportModal').classList.add('hidden');
     }
+    // Funciones para el modal create
+    function openModalEmployee() {
+        document.getElementById('clientModal').classList.remove('hidden');
+    }
+
+    function closeModalEmployee() {
+        document.getElementById('clientModal').classList.add('hidden');
+    }
+
+
+    // Funciones para el modal delete
+    function openModalDelete(id_employee) {
+        document.getElementById('id').value = id_employee;
+        document.getElementById('deleteClientModal').classList.remove('hidden');
+    }
+
+    function closeModalDelete() {
+        document.getElementById('deleteClientModal').classList.add('hidden');
+    }
+
+    // Funcion para obtener el codigo de email
+    document.querySelectorAll('.boton').forEach(function (boton){
+        boton.addEventListener("click",function (){
+            fetch("/chichos_snack_project-1.0-SNAPSHOT/GenerateCode",{
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log("Respuesta del servidor: ", data);
+                })
+                .catch(error => console.error("Error:", error));
+        })
+    })
+
+
+
 </script>
 </body>
 </html>

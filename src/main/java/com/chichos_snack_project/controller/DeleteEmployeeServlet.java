@@ -1,7 +1,6 @@
 package com.chichos_snack_project.controller;
 
 import com.chichos_snack_project.service.Delete_employee;
-import com.chichos_snack_project.service.Update_employee;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,11 +17,13 @@ public class DeleteEmployeeServlet extends HttpServlet {
     }
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String id = request.getParameter("id");
-        if(Delete_employee.delete(Integer.parseInt(id))){
+        String code = (String)request.getSession().getAttribute("code");
+        String code_entered = request.getParameter("code_entered");
+        if(Delete_employee.delete(Integer.parseInt(id),code,code_entered)){
             response.sendRedirect("Employee");
         }else{
             request.setAttribute("Error","No se pudo eliminar al empleado, intente de nuevo");
-            request.getRequestDispatcher("Employee").forward(request,response);
+            request.getRequestDispatcher("employee.jsp").forward(request,response);
         }
     }
     public void destroy() {

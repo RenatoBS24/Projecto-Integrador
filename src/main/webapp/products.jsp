@@ -25,7 +25,7 @@
 
 <div class="flex">
     <!-- Sidebar Navigation -->
-    <div class="bg-teal-600 w-64 h-screen text-white p-6 fixed top-0 left-0">
+    <div class="bg-teal-600 w-64 fixed h-screen text-white p-6 fixed top-0 left-0">
         <h1 class="text-2xl font-bold mb-10">CHICHOS SNACK</h1>
         <ul>
             <li class="mb-6">

@@ -36,7 +36,7 @@ public class Validate_User {
             User user = userDAO.read(new User(username,password,0));
             if(user != null){
                 if(user.getPassword().equals(password)){
-                    log.info("El usuario "+user.getUsername()+"ha iniciado sesion");
+                    log.info("El usuario "+user.getUsername()+" ha iniciado sesion");
                     return true;
                 }else{
                     log.info("El usuario "+user.getUsername()+"ha intentado iniciar sesion, pero la clave es incorrecta");
