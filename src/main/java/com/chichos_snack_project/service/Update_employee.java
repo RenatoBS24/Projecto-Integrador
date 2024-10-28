@@ -8,14 +8,24 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 
+import static com.google.common.base.Preconditions.*;
+
+
 public class Update_employee {
     private static final EmployeeDAPImpl employees = new EmployeeDAPImpl(AppConfig.getDatasource());
     private static final Logger log = LogManager.getLogger(Update_employee.class);
 
     public static boolean update(String name,String lastname,String salary,String dni,String phone,String id){
-        double salary_cast = Double.parseDouble(salary);
-        log.info(salary_cast);
         try {
+            checkNotNull(name,"El parametro name no puede ser nulo");
+            checkNotNull(lastname,"El parametro lastname no puede ser nulo");
+            checkNotNull(dni,"El parametro dni no puede ser nulo");
+            checkNotNull(phone,"El parametro phone no puede ser nulo");
+            checkNotNull(salary,"El parametro salary no puede ser nulo");
+            checkNotNull(id,"El parametro id no puede ser nulo");
+            checkArgument(phone.matches("\\d+"),"El telefono solo debe contener numeros");
+            double salary_cast = Double.parseDouble(salary);
+            checkArgument(salary_cast>0,"El salario ingresado no puede ser negativo");
             Employee employee = new Employee();
             employee.setId_employee(Integer.parseInt(id));
             Employee employee_data = employees.read(employee);
@@ -35,6 +45,9 @@ public class Update_employee {
         } catch (SQLException e) {
             log.error("Hubo un error de SQLException con el metodo read o el metodo update de la clase EmployeeDAOImpl");
             throw new RuntimeException(e);
+        }catch (NullPointerException | IllegalArgumentException e){
+            log.error(e.getMessage());
+            return false;
         }
     }
 

@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * The class validate_user is used to validate parameters entered by user
  * @autor Renato
@@ -32,6 +34,8 @@ public class Validate_User {
     public static boolean validate(String username,String password){
         password = sha256(password);
         try{
+            checkNotNull(username,"El parametro name no puede ser nulo");
+            checkNotNull(password,"El parametro password no puede ser nulo");
             UserDAOImpl userDAO = new UserDAOImpl(AppConfig.getDatasource());
             User user = userDAO.read(new User(username,password,0));
             if(user != null){
@@ -46,9 +50,10 @@ public class Validate_User {
                 log.warn("El usuario recibido por el metodo read de userDAO es nulo");
                 return false;
             }
-
-
         }catch (SQLException e){
+            return false;
+        }catch (NullPointerException e) {
+            log.error(e.getMessage());
             return false;
         }
     }

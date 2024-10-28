@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * The class Register_User is used to validate the parameters and create user object
  * @autor Renato
@@ -22,21 +24,29 @@ public class Register_User {
     private static final Logger log = LogManager.getLogger(Register_User.class);
 
     public static boolean register(String name,String password,String passwordRepeat,int id_rol){
-        if (password.equals(passwordRepeat)) {
-            if (!name.trim().isEmpty() && !password.trim().isEmpty()) {
-                User user = new User(name,sha256(password),id_rol);
-                try{
-                    UserDAOImpl userDAO = new UserDAOImpl(AppConfig.getDatasource());
-                    userDAO.create(user);
-                    log.info("Se ha registrado correctamente al usuario "+name);
-                    return true;
-                }catch (SQLException e){
+        try {
+            checkNotNull(name,"El parametro name no puede ser nulo");
+            checkNotNull(password,"El parametro password no puede ser nulo");
+            checkNotNull(passwordRepeat,"El parametro passwordRepeat no puede ser nulo");
+            if (password.equals(passwordRepeat)) {
+                if (!name.trim().isEmpty() && !password.trim().isEmpty()) {
+                    User user = new User(name,sha256(password),id_rol);
+                    try{
+                        UserDAOImpl userDAO = new UserDAOImpl(AppConfig.getDatasource());
+                        userDAO.create(user);
+                        log.info("Se ha registrado correctamente al usuario "+name);
+                        return true;
+                    }catch (SQLException e){
+                        return false;
+                    }
+                }else{
                     return false;
                 }
             }else{
                 return false;
             }
-        }else{
+        } catch (NullPointerException e) {
+            log.error(e.getMessage());
             return false;
         }
     }
