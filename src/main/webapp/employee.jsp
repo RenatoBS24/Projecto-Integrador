@@ -203,7 +203,7 @@
 <div id="clientModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
         <h2 class="text-2xl font-bold mb-4">Agregar Trabajador</h2>
-        <form action="CreateEmployee" method="POST">
+        <form action="CreateEmployee" method="POST" enctype="multipart/form-data">
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Nombre: </label>
                 <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="name" required>
@@ -226,7 +226,7 @@
             </div>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Subir Archivo (Excel)</label>
-                <input type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                <input type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="file" accept=".xlsx">
             </div>
             <!-- Modal Actions -->
             <div class="flex justify-end space-x-4">

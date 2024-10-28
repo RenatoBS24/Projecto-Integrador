@@ -8,9 +8,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import javax.servlet.annotation.MultipartConfig;
 import java.io.IOException;
 
 @WebServlet(name = "CrCreateEmployeeServlet" ,value = "/CreateEmployee")
+@MultipartConfig
 public class CreateEmployeeServlet extends HttpServlet {
     public void init() {
     }
@@ -23,13 +26,25 @@ public class CreateEmployeeServlet extends HttpServlet {
        String dni = request.getParameter("dni");
        String phone = request.getParameter("phone");
        String salary = request.getParameter("salary");
-       if(Create_employee.create(name,lastname,dni,phone,salary)){
-           request.setAttribute("confirm" ,"Se registro al trabajador");
-           request.getRequestDispatcher("employee.jsp").forward(request,response);
-       }else{
-           request.setAttribute("Error" ,"No se pudo registrar al trabajador");
-           request.getRequestDispatcher("employee.jsp").forward(request,response);
-       }
+       Part file = request.getPart("file");
+        if (file ==null) {
+            if(Create_employee.create(name,lastname,dni,phone,salary)){
+                request.setAttribute("confirm" ,"Se registro al trabajador");
+                request.getRequestDispatcher("employee.jsp").forward(request,response);
+            }else{
+                request.setAttribute("Error" ,"No se pudo registrar al trabajador");
+                request.getRequestDispatcher("employee.jsp").forward(request,response);
+            }
+        }else{
+            if(Create_employee.create(Create_employee.readFile(file))){
+                request.setAttribute("confirm" ,"Se registro al trabajador");
+                request.getRequestDispatcher("employee.jsp").forward(request,response);
+            }else{
+                request.setAttribute("Error" ,"No se pudo registrar al trabajador");
+                request.getRequestDispatcher("employee.jsp").forward(request,response);
+            }
+
+        }
     }
     public void destroy() {
     }

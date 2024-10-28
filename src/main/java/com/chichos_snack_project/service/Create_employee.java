@@ -5,8 +5,18 @@ import com.chichos_snack_project.model.Employee;
 import com.chichos_snack_project.util.AppConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.ss.usermodel.*;
 
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,6 +45,53 @@ public class Create_employee {
             log.error(e.getMessage());
             return false;
         }
+    }
+
+    public static boolean create(List<Employee> employeeList){
+        try {
+            for (Employee employee : employeeList){
+                log.info(employee);
+                employeeDAO.create(employee);
+            }
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static List<Employee>readFile(Part file){
+        List<Employee> employeeList = new LinkedList<>();
+        try {
+            InputStream is = file.getInputStream();
+            Workbook wb = WorkbookFactory.create(is);
+            DataFormatter formatter = new DataFormatter();
+            Sheet sheet = wb.getSheetAt(0);
+            for(Row row : sheet){
+                List<String> listData = getStrings(row);
+                Employee employee = new Employee(0,listData.get(0),listData.get(1),Double.parseDouble(listData.get(2)),listData.get(3),null, listData.get(5));
+                employeeList.add(employee);
+            }
+            return employeeList;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static List<String> getStrings(Row row) {
+        List<String> listData = new LinkedList<>();
+        for(Cell cell: row){
+            switch (cell.getCellType()){
+                case STRING:
+                    listData.add(cell.getStringCellValue());
+                    break;
+                case NUMERIC:
+                    listData.add(String.valueOf((long)cell.getNumericCellValue()));
+                    break;
+                default:
+                    listData.add("UNKNOWN");
+                    break;
+            }
+        }
+        return listData;
     }
 
 }
