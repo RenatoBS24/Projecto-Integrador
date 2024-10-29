@@ -3,7 +3,6 @@ package com.chichos_snack_project.dao;
 import com.chichos_snack_project.interfaces.UserDAO;
 import com.chichos_snack_project.model.User;
 import com.chichos_snack_project.util.MysqlConnector;
-import org.apache.logging.log4j.LogManager;
 
 
 import java.sql.*;

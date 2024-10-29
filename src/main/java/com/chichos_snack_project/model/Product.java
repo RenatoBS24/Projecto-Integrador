@@ -61,4 +61,14 @@ public class Product {
     public int hashCode() {
         return Objects.hash(id_product, name, price, stock);
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id_product=" + id_product +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", stock=" + stock +
+                '}';
+    }
 }
