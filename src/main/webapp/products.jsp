@@ -16,6 +16,7 @@
     HttpSession session1  = request.getSession();
     boolean is_valid_user = false;
     if(session1.getAttribute("is_valid_user") != null){
+
         if(request.getAttribute("productList") !=null){
             List<Product> productList = (List<Product>) request.getAttribute("productList");
 

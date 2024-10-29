@@ -6,11 +6,10 @@ import com.chichos_snack_project.util.AppConfig;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -21,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Validate_User {
 
-    private static final Logger log = LogManager.getLogger(Validate_User.class);
+    private static final java.util.logging.Logger log = Logger.getLogger("com.chichos_snack_project.formview");
 
     /**
      *
@@ -47,13 +46,11 @@ public class Validate_User {
                     return false;
                 }
             }else {
-                log.warn("El usuario recibido por el metodo read de userDAO es nulo");
+                log.warning("El usuario recibido por el metodo read de userDAO es nulo");
                 return false;
             }
-        }catch (SQLException e){
-            return false;
-        }catch (NullPointerException e) {
-            log.error(e.getMessage());
+        }catch (SQLException | NullPointerException e){
+            log.warning(e.getMessage());
             return false;
         }
     }

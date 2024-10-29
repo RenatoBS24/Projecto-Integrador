@@ -42,7 +42,7 @@ public class UserDAOImpl implements UserDAO {
             cs.registerOutParameter(3, Types.VARCHAR);
             cs.registerOutParameter(4,Types.VARCHAR);
             cs.registerOutParameter(5,Types.INTEGER);
-            cs.executeUpdate();
+            cs.executeQuery();
             //---------------------------------
 
             String username = cs.getString(3);

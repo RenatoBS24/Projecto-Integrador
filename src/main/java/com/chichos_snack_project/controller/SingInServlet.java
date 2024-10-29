@@ -9,11 +9,12 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 
 @WebServlet(name = "SingIn",value = "/SingIn")
 public class SingInServlet extends HttpServlet{
-
+    private static final Logger log = Logger.getLogger("com.chichos_snack_project.formview");
     public void init() {
     }
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -22,6 +23,7 @@ public class SingInServlet extends HttpServlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String name = request.getParameter("username");
         String password = request.getParameter("password");
+        log.info(name +" "+password);
         if(Validate_User.validate(name,password)){
             HttpSession se = request.getSession();
             se.setAttribute("is_valid_user",true);
