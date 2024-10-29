@@ -95,8 +95,8 @@
                 <input type="text" class="w-full p-3 border rounded-lg focus:outline-none" placeholder="Nombre del usuario" value=<%=username%>>
             </div>
             <div class="mb-4">
-                <label class="block text-gray-700 font-semibold">Correo Electrónico:</label>
-                <input type="email" class="w-full p-3 border rounded-lg focus:outline-none" placeholder="Correo electrónico" value=<%=username%>>
+                <label class="block text-gray-700 font-semibold">Correo Electrónico de la empresa:</label>
+                <p class="w-full p-3 border rounded-lg focus:outline-none">renatoballena2405@gmail.com</p>
             </div>
             <%
                 }

@@ -7,11 +7,16 @@
     <title>Registro</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<%
+    if(request.getSession().getAttribute("code") != null){
+
+
+%>
 <body style="background-image: url('../img/Chicos\ Snack.png'); background-size: cover; background-position: center;">
 <section class="d-flex justify-content-center align-items-center vh-100">
     <div class="card shadow-lg" style="width: 400px;">
         <div class="card-body">
-            <form action="validar" method="POST">
+            <form action="register" method="POST">
                 <h2 class="text-center mb-4">Registro</h2>
                 <div class="form-group">
                     <label for="nameUser">Nombre de Usuario</label>
@@ -47,6 +52,41 @@
                         <input type="password" class="form-control" name="passwordRepeat" id="passwordRepeat" required>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="rol">Rol</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <ion-icon name="lock-closed-outline"></ion-icon>
+                                </span>
+                        </div>
+                        <select id="rol" class="form-control" name ="rol">
+                            <option value="1">Administrador</option>
+                            <option value="2">Vendedor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="code_entered">Codigo dinamico(Este codigo ha sido enviado al correo del administrador)</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <ion-icon name="lock-closed-outline"></ion-icon>
+                                </span>
+                        </div>
+                        <input type="text" class="form-control" name="code_entered" id="code_entered" maxlength="8" required>
+                    </div>
+                </div>
+                <%
+                    String error = (String)request.getAttribute("error");
+                    if(error != null){
+
+
+                %>
+                <p style="color: red"><%=error%></p>
+                <%
+                    }
+                %>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
                 </div>
@@ -63,3 +103,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<%
+    }else{
+        response.sendRedirect("register");
+    }
+%>

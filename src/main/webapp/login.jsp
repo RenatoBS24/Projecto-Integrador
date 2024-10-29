@@ -53,7 +53,7 @@
                     <a href="ForgotPassword">¿Olvidaste tu contraseña?</a>
                 </div>
                 <div class="text-center mt-3">
-                    <p>No tengo una cuenta <a href="register_user.jsp">Registrarse</a></p>
+                    <p>No tengo una cuenta <a href="register">Registrarse</a></p>
                 </div>
             </form>
         </div>
