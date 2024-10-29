@@ -8,12 +8,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body style="background-image: url('../img/Chicos\ Snack.png'); background-size: cover; background-position: center;">
-<%
-    String username = (String)request.getSession().getAttribute("username");
-    if(username!=null){
 
-
-%>
 <section class="d-flex justify-content-center align-items-center vh-100">
     <div class="card shadow-lg" style="width: 400px;">
         <div class="card-body">
@@ -27,10 +22,7 @@
                                     <ion-icon name="person-outline"></ion-icon>
                                 </span>
                         </div>
-                        <input type="text" class="form-control" name="username" id="username" value="<%=username%>" required>
-                        <%
-                            }
-                        %>
+                        <input type="text" class="form-control" name="username" id="username"  required>
                     </div>
                 </div>
                 <div class="form-group">

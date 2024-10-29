@@ -4,16 +4,15 @@ import com.chichos_snack_project.interfaces.UserDAO;
 import com.chichos_snack_project.model.User;
 import com.chichos_snack_project.util.MysqlConnector;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 
 import java.sql.*;
-
+import java.util.logging.Logger;
 
 
 public class UserDAOImpl implements UserDAO {
     Connection con;
-    private static Logger log = LogManager.getLogger(UserDAOImpl.class);
+    private static final java.util.logging.Logger log = Logger.getLogger(UserDAOImpl.class.getName());
 
     public UserDAOImpl(String name_datasource)  {
         this.con = MysqlConnector.getConnection(name_datasource);

@@ -3,12 +3,13 @@ package com.chichos_snack_project.dao;
 import com.chichos_snack_project.interfaces.CustomerDAO;
 import com.chichos_snack_project.model.Customer;
 import com.chichos_snack_project.util.MysqlConnector;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+
 import java.sql.*;
+import java.util.logging.Logger;
 
 public class CustomerDAOImpl implements CustomerDAO {
-    private final Logger log = LogManager.getLogger(CustomerDAOImpl.class);
+    private static final java.util.logging.Logger log = Logger.getLogger(CustomerDAOImpl.class.getName());
     Connection con;
     public CustomerDAOImpl(String name_datasource){
         this.con = MysqlConnector.getConnection(name_datasource);
@@ -34,7 +35,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         if(rs.next()){
             return new Customer(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDate(4),rs.getDouble(5),rs.getDouble(6),rs.getDouble(7),rs.getInt(8));
         }else{
-            log.error("El procedimiento sp_getCliente ha retornado un null \n id recibido: "+customer.getId_customer());
+            log.severe("El procedimiento sp_getCliente ha retornado un null \n id recibido: "+customer.getId_customer());
             return null;
         }
 
@@ -64,7 +65,7 @@ public class CustomerDAOImpl implements CustomerDAO {
             PreparedStatement ps = con.prepareStatement(sql);
             return ps.executeQuery();
         }catch (SQLException e){
-            log.error("Ocurrio un error al obtener los datos de la vista uv_clientes");
+            log.severe("Ocurrio un error al obtener los datos de la vista uv_clientes");
             return null;
 
         }

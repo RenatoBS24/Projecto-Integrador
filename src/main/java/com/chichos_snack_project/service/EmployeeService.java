@@ -3,8 +3,6 @@ package com.chichos_snack_project.service;
 import com.chichos_snack_project.dao.EmployeeDAPImpl;
 import com.chichos_snack_project.model.Employee;
 import com.chichos_snack_project.util.AppConfig;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import javax.servlet.http.Part;
 import java.io.IOException;
@@ -13,13 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class EmployeeService {
     private static final EmployeeDAPImpl employeeDAO = new EmployeeDAPImpl(AppConfig.getDatasource());
-    private static final Logger log = LogManager.getLogger(EmployeeService.class);
+    private static final java.util.logging.Logger log = Logger.getLogger(EmployeeService.class.getName());
     public static List<Employee> getEmployees(){
         List<Employee> employeeList = new LinkedList<>();
         try{
@@ -33,7 +32,7 @@ public class EmployeeService {
             }
             return employeeList;
         }catch (SQLException e){
-            log.error("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de EmployeeDAOImpl");
+            log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de EmployeeDAOImpl");
             employeeList.add(new Employee(0,"Error","Error",0,"Error",null,"Error"));
             return employeeList;
         }
@@ -53,10 +52,10 @@ public class EmployeeService {
             log.info("Se ha registrado un nuevo trabajador \n Nombre: "+name+" "+lastname);
             return true;
         }catch (SQLException e){
-            log.error("Ocurrion un error en el metodo create de EmployeeDAOImpl\n status: "+e.getSQLState());
+            log.severe("Ocurrion un error en el metodo create de EmployeeDAOImpl\n status: "+e.getSQLState());
             return false;
         }catch (NullPointerException | IllegalArgumentException e){
-            log.error(e.getMessage());
+            log.severe(e.getMessage());
             return false;
         }
     }
@@ -64,7 +63,6 @@ public class EmployeeService {
     public static boolean create(List<Employee> employeeList){
         try {
             for (Employee employee : employeeList){
-                log.info(employee);
                 employeeDAO.create(employee);
             }
             return true;
@@ -96,14 +94,14 @@ public class EmployeeService {
                 log.info("Se actualizaron los datos del empleado: "+employee_data.getName());
                 return true;
             }else{
-                log.error("El Objeto empleado recibido del metodo read de la clase EmployeeDAOImpl es nulo");
+                log.severe("El Objeto empleado recibido del metodo read de la clase EmployeeDAOImpl es nulo");
                 return false;
             }
         } catch (SQLException e) {
-            log.error("Hubo un error de SQLException con el metodo read o el metodo update de la clase EmployeeDAOImpl");
+            log.severe("Hubo un error de SQLException con el metodo read o el metodo update de la clase EmployeeDAOImpl");
             throw new RuntimeException(e);
         }catch (NullPointerException | IllegalArgumentException e){
-            log.error(e.getMessage());
+            log.severe(e.getMessage());
             return false;
         }
     }
@@ -117,7 +115,7 @@ public class EmployeeService {
                     employeeDAO.delete(id);
                     return true;
                 }catch (SQLException e){
-                    log.error("No se pudo eliminar al empleado por una SQLException en el metodo delete de EmployeeDAOImpl "+e.getSQLState());
+                    log.severe("No se pudo eliminar al empleado por una SQLException en el metodo delete de EmployeeDAOImpl "+e.getSQLState());
                     return false;
                 }
             }else{
@@ -125,7 +123,7 @@ public class EmployeeService {
                 return false;
             }
         } catch (NullPointerException e) {
-            log.error(e.getMessage());
+            log.severe(e.getMessage());
             return false;
         }
     }

@@ -3,20 +3,20 @@ package com.chichos_snack_project.service;
 import com.chichos_snack_project.dao.CustomerDAOImpl;
 import com.chichos_snack_project.model.Customer;
 import com.chichos_snack_project.util.AppConfig;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CustomerService {
     private static final CustomerDAOImpl customerDAO = new CustomerDAOImpl(AppConfig.getDatasource());
-    private static final Logger log = LogManager.getLogger(CustomerService.class);
+    private static final java.util.logging.Logger log = Logger.getLogger(CustomerService.class.getName());
     public static List<Customer> getCustomer(){
         List<Customer> customerList = new LinkedList<>();
         try{
@@ -30,7 +30,7 @@ public class CustomerService {
             }
             return customerList;
         }catch (SQLException e){
-            log.error("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de CustomerDAOImpl");
+            log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de CustomerDAOImpl");
             customerList.add(new Customer(0,"Error","Error",null,0,0,0,0));
             return customerList;
         }
@@ -48,10 +48,10 @@ public class CustomerService {
             log.info("Se ha registrado un nuevo cliente \n Nombre: "+name);
             return true;
         }catch (SQLException e){
-            log.error("Ocurrion un error en el metodo create de CustomerDAOImpl\n status: "+e.getSQLState());
+            log.severe("Ocurrion un error en el metodo create de CustomerDAOImpl\n status: "+e.getSQLState());
             return false;
         }catch (NullPointerException | IllegalArgumentException e){
-            log.error(e.getMessage());
+            log.severe(e.getMessage());
             return false;
         }
     }
@@ -70,10 +70,10 @@ public class CustomerService {
             log.info("Se actualizaron los datos del cliente: "+customer_data.getName());
             return true;
         }catch (SQLException e){
-            log.error("Ocurrio un error en los metodos de CustomerDAOImpl\n state: "+e.getSQLState());
+            log.severe("Ocurrio un error en los metodos de CustomerDAOImpl\n state: "+e.getSQLState());
             return false;
         }catch (NullPointerException | IllegalArgumentException e){
-            log.error(e.getMessage());
+            log.severe(e.getMessage());
             return false;
         }
 
@@ -88,7 +88,7 @@ public class CustomerService {
                     customerDAO.delete(id);
                     return true;
                 }catch (SQLException e){
-                    log.error("No se pudo eliminar al cliente por una SQLException en el metodo delete de EmployeeDAOImpl "+e.getSQLState());
+                    log.severe("No se pudo eliminar al cliente por una SQLException en el metodo delete de EmployeeDAOImpl "+e.getSQLState());
                     return false;
                 }
             }else{
@@ -96,7 +96,7 @@ public class CustomerService {
                 return false;
             }
         } catch (NullPointerException e) {
-            log.error(e.getMessage());
+            log.severe(e.getMessage());
             return false;
         }
     }

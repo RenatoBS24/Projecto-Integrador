@@ -1,7 +1,9 @@
 package com.chichos_snack_project.controller;
 
 
+
 import com.chichos_snack_project.service.EmployeeService;
+
 
 
 import javax.servlet.ServletException;
@@ -28,7 +30,7 @@ public class CreateEmployeeServlet extends HttpServlet {
        String phone = request.getParameter("phone");
        String salary = request.getParameter("salary");
        Part file = request.getPart("file");
-        if (file == null) {
+        if (file.getSize() == 0) {
             if(EmployeeService.create(name,lastname,dni,phone,salary)){
                 request.setAttribute("confirm" ,"Se registro al trabajador");
                 request.getRequestDispatcher("employee.jsp").forward(request,response);

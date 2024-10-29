@@ -3,16 +3,16 @@ package com.chichos_snack_project.dao;
 import com.chichos_snack_project.interfaces.EmployeeDAO;
 import com.chichos_snack_project.model.Employee;
 import com.chichos_snack_project.util.MysqlConnector;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 import java.sql.*;
+import java.util.logging.Logger;
 
 
 public class EmployeeDAPImpl implements EmployeeDAO {
 
     private Connection conn;
-    private static Logger log = LogManager.getLogger(EmployeeDAPImpl.class);
+    private static final java.util.logging.Logger log = Logger.getLogger(EmployeeDAPImpl.class.getName());
 
     public EmployeeDAPImpl(String name_datasource) {
         this.conn = MysqlConnector.getConnection(name_datasource);
@@ -40,7 +40,7 @@ public class EmployeeDAPImpl implements EmployeeDAO {
         if(rs.next()){
             return new Employee(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4), rs.getString(5),rs.getDate(6),rs.getString(7));
         }else{
-            log.error("No se pudo obtener al empleado por lo cual se retorna null");
+            log.severe("No se pudo obtener al empleado por lo cual se retorna null");
             return null;
         }
 
@@ -74,7 +74,7 @@ public class EmployeeDAPImpl implements EmployeeDAO {
             PreparedStatement ps = conn.prepareStatement(sql);
             return ps.executeQuery();
         }catch (SQLException e){
-            log.error("Ocurrio un error al obtener los datos de la vista uv_trabajadores");
+            log.severe("Ocurrio un error al obtener los datos de la vista uv_trabajadores");
             return null;
 
         }

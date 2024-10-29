@@ -3,8 +3,7 @@ package com.chichos_snack_project.controller;
 
 import com.chichos_snack_project.util.Sending_Email;
 import com.chichos_snack_project.service.UserService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -18,7 +17,7 @@ import java.io.IOException;
 @WebServlet(name ="register", value = "/register")
 public class SingUpServlet extends HttpServlet {
     private String code;
-    Logger log = LogManager.getLogger(SingUpServlet.class);
+
     public void init() {
     }
     @Override
@@ -37,7 +36,6 @@ public class SingUpServlet extends HttpServlet {
         String passwordRepeat = request.getParameter("passwordRepeat");
         String code_entered = request.getParameter("code_entered");
         String rol = request.getParameter("rol");
-        log.info(code+" "+code_entered);
         if (code != null && code.equals(code_entered)) {
             request.getSession().removeAttribute("code");
             if(UserService.register(name,password,passwordRepeat,Integer.parseInt(rol))){

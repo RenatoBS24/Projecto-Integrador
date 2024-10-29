@@ -3,16 +3,16 @@ package com.chichos_snack_project.service;
 import com.chichos_snack_project.dao.ProductDAOImpl;
 import com.chichos_snack_project.model.Product;
 import com.chichos_snack_project.util.AppConfig;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
-public class ProductService {
-    private static final Logger log = LogManager.getLogger(ProductService.class);
+public class ProductService  {
+    private static final java.util.logging.Logger log = Logger.getLogger(ProductService.class.getName());
     private static final ProductDAOImpl productDAO = new ProductDAOImpl(AppConfig.getDatasource());
     public static List<Product> getProducts(){
         List<Product> productsList = new LinkedList<>();
@@ -27,7 +27,7 @@ public class ProductService {
             }
             return productsList;
         }catch (SQLException e){
-            log.error("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de ProductDAOImpl");
+            log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de ProductDAOImpl");
             productsList.add(new Product(0,"Error",0,0));
             return productsList;
         }

@@ -4,15 +4,15 @@ import com.chichos_snack_project.interfaces.ProductDAO;
 import com.chichos_snack_project.model.Product;
 import com.chichos_snack_project.util.MysqlConnector;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class ProductDAOImpl implements ProductDAO {
-    private final Logger log = LogManager.getLogger(ProductDAOImpl.class);
+    private static final java.util.logging.Logger log = Logger.getLogger(ProductDAOImpl.class.getName());
     Connection con;
     public ProductDAOImpl(String name_datasource){
         this.con = MysqlConnector.getConnection(name_datasource);
@@ -42,7 +42,7 @@ public class ProductDAOImpl implements ProductDAO {
             PreparedStatement ps = con.prepareStatement(sql);
             return ps.executeQuery();
         }catch (SQLException e){
-            log.error("Ocurrio un error al obtener los datos de la vista uv_trabajadores");
+            log.severe("Ocurrio un error al obtener los datos de la vista uv_trabajadores");
             return null;
 
         }
