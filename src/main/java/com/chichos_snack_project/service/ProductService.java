@@ -1,7 +1,6 @@
 package com.chichos_snack_project.service;
 
 import com.chichos_snack_project.dao.ProductDAOImpl;
-import com.chichos_snack_project.model.Employee;
 import com.chichos_snack_project.model.Product;
 import com.chichos_snack_project.util.AppConfig;
 import org.apache.logging.log4j.LogManager;
@@ -12,11 +11,9 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class View_data_products {
-
-    private static final Logger log = LogManager.getLogger(View_data_products.class);
+public class ProductService {
+    private static final Logger log = LogManager.getLogger(ProductService.class);
     private static final ProductDAOImpl productDAO = new ProductDAOImpl(AppConfig.getDatasource());
-
     public static List<Product> getProducts(){
         List<Product> productsList = new LinkedList<>();
         try{

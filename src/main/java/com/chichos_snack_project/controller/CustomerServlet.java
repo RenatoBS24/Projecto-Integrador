@@ -1,9 +1,10 @@
 package com.chichos_snack_project.controller;
 
 import com.chichos_snack_project.model.Customer;
-import com.chichos_snack_project.model.Employee;
-import com.chichos_snack_project.service.View_data_customer;
-import com.chichos_snack_project.service.View_data_employee;
+
+import com.chichos_snack_project.service.CustomerService;
+
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +19,7 @@ public class CustomerServlet extends HttpServlet {
     public void init() {
     }
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        List<Customer> customerList = View_data_customer.getCustomer();
+        List<Customer> customerList = CustomerService.getCustomer();
         request.setAttribute("customerList",customerList);
         request.getRequestDispatcher("customer.jsp").forward(request,response);
     }

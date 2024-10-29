@@ -1,8 +1,7 @@
 package com.chichos_snack_project.controller;
 
 
-import com.chichos_snack_project.service.Validate_User;
-
+import com.chichos_snack_project.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -24,7 +23,7 @@ public class SingInServlet extends HttpServlet{
         String name = request.getParameter("username");
         String password = request.getParameter("password");
         log.info(name +" "+password);
-        if(Validate_User.validate(name,password)){
+        if(UserService.validate(name,password)){
             HttpSession se = request.getSession();
             se.setAttribute("is_valid_user",true);
             se.setAttribute("username",name);

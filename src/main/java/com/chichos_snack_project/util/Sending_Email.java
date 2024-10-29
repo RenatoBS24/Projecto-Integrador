@@ -1,4 +1,4 @@
-package com.chichos_snack_project.service;
+package com.chichos_snack_project.util;
 
 import org.apache.commons.mail.*;
 

@@ -1,6 +1,7 @@
 package com.chichos_snack_project.controller;
 
-import com.chichos_snack_project.service.Update_employee;
+import com.chichos_snack_project.service.EmployeeService;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +24,7 @@ public class UpdateEmployeeServlet  extends HttpServlet {
         String dni = request.getParameter("dni");
         String phone = request.getParameter("phone");
         String id = request.getParameter("id");
-        if(Update_employee.update(name,lastname,salary,dni,phone,id)){
+        if(EmployeeService.update(name,lastname,salary,dni,phone,id)){
             response.sendRedirect("Employee");
         }else{
             request.setAttribute("Error","No se pudo actualizar los datos, intente de nuevo");

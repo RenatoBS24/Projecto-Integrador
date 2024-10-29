@@ -2,8 +2,8 @@ package com.chichos_snack_project.controller;
 
 
 
-import com.chichos_snack_project.service.Sending_Email;
-import com.chichos_snack_project.service.Update_User;
+import com.chichos_snack_project.util.Sending_Email;
+import com.chichos_snack_project.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,7 +35,7 @@ public class ForgotPassword extends HttpServlet {
         String passwordRepeat = request.getParameter("passwordRepeat");
         String code_entered = request.getParameter("code");
         if(code != null && code.equals(code_entered)){
-            if(Update_User.update(username,password,passwordRepeat)){
+            if(UserService.update(username,password,passwordRepeat)){
                 response.sendRedirect("login.jsp");
             }else{
                 request.setAttribute("error","Ocurrio un error intente de nuevo");

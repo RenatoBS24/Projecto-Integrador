@@ -1,6 +1,7 @@
 package com.chichos_snack_project.controller;
 
-import com.chichos_snack_project.service.Create_customer;
+
+import com.chichos_snack_project.service.CustomerService;
 
 
 import javax.servlet.ServletException;
@@ -20,7 +21,7 @@ public class CreateCustomerServlet extends HttpServlet {
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         String credit = request.getParameter("credit");
-        if(Create_customer.create(name,phone,credit)){
+        if(CustomerService.create(name,phone,credit)){
             request.setAttribute("confirm" ,"Se registro al cliente");
             request.getRequestDispatcher("customer.jsp").forward(request,response);
         }else{

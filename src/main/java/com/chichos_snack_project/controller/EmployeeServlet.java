@@ -1,7 +1,8 @@
 package com.chichos_snack_project.controller;
 
 import com.chichos_snack_project.model.Employee;
-import com.chichos_snack_project.service.View_data_employee;
+import com.chichos_snack_project.service.EmployeeService;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +16,7 @@ public class EmployeeServlet  extends HttpServlet {
     public void init() {
     }
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException,ServletException {
-        List<Employee> employeeList = View_data_employee.getEmployees();
+        List<Employee> employeeList = EmployeeService.getEmployees();
         request.setAttribute("employeeList",employeeList);
         request.getRequestDispatcher("employee.jsp").forward(request,response);
     }

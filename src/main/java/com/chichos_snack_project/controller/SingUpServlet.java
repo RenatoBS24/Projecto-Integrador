@@ -1,8 +1,8 @@
 package com.chichos_snack_project.controller;
 
 
-import com.chichos_snack_project.service.Register_User;
-import com.chichos_snack_project.service.Sending_Email;
+import com.chichos_snack_project.util.Sending_Email;
+import com.chichos_snack_project.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +40,7 @@ public class SingUpServlet extends HttpServlet {
         log.info(code+" "+code_entered);
         if (code != null && code.equals(code_entered)) {
             request.getSession().removeAttribute("code");
-            if(Register_User.register(name,password,passwordRepeat,Integer.parseInt(rol))){
+            if(UserService.register(name,password,passwordRepeat,Integer.parseInt(rol))){
                 HttpSession session = request.getSession();
                 session.setAttribute("is_valid_user", true);
                 request.getRequestDispatcher("index.jsp").forward(request, response);

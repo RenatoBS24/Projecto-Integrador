@@ -15,7 +15,7 @@ public class UserDAOImpl implements UserDAO {
     Connection con;
     private static Logger log = LogManager.getLogger(UserDAOImpl.class);
 
-    public UserDAOImpl(String name_datasource) throws SQLException {
+    public UserDAOImpl(String name_datasource)  {
         this.con = MysqlConnector.getConnection(name_datasource);
     }
 

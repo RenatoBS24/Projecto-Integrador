@@ -1,6 +1,7 @@
 package com.chichos_snack_project.controller;
 
-import com.chichos_snack_project.service.Update_customer;
+import com.chichos_snack_project.service.CustomerService;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +20,7 @@ public class UpdateCustomerServlet extends HttpServlet {
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         String id = request.getParameter("id_customer");
-        if(Update_customer.update(name,phone,id)){
+        if(CustomerService.update(name,phone,id)){
             response.sendRedirect("Customer");
         }else{
             request.setAttribute("Error","No se pudo actualizar los datos, intente de nuevo");

@@ -1,6 +1,6 @@
 package com.chichos_snack_project.controller;
 
-import com.chichos_snack_project.service.Delete_employee;
+import com.chichos_snack_project.service.EmployeeService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +19,7 @@ public class DeleteEmployeeServlet extends HttpServlet {
         String id = request.getParameter("id");
         String code = (String)request.getSession().getAttribute("code");
         String code_entered = request.getParameter("code_entered");
-        if(Delete_employee.delete(Integer.parseInt(id),code,code_entered)){
+        if(EmployeeService.delete(Integer.parseInt(id),code,code_entered)){
             response.sendRedirect("Employee");
         }else{
             request.setAttribute("Error","No se pudo eliminar al empleado, intente de nuevo");

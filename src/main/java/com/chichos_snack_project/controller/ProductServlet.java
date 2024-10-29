@@ -2,7 +2,8 @@ package com.chichos_snack_project.controller;
 
 import com.chichos_snack_project.model.Product;
 
-import com.chichos_snack_project.service.View_data_products;
+import com.chichos_snack_project.service.ProductService;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +18,7 @@ public class ProductServlet extends HttpServlet {
     public void init() {
     }
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        List<Product> productList = View_data_products.getProducts();
+        List<Product> productList = ProductService.getProducts();
         request.setAttribute("productList",productList);
         request.getRequestDispatcher("products.jsp").forward(request,response);
     }
