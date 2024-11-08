@@ -55,7 +55,7 @@
                 </a>
             </li>
             <li class="mb-6">
-                <a href="Customer" class="flex items-center space-x-4 p-2 rounded-lg bg-teal-500">
+                <a href="Customer" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
                     <span>
                         <ion-icon name="people-outline" class="text-xl"></ion-icon>
                     </span>

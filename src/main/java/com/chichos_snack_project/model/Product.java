@@ -7,14 +7,16 @@ public class Product {
     private String name;
     private double price;
     private int stock;
+    private Category category;
     public Product(){
     }
 
-    public Product(int id_product, String name, double price, int stock) {
+    public Product(int id_product, String name, double price, int stock, Category category) {
         this.id_product = id_product;
         this.name = name;
         this.price = price;
         this.stock = stock;
+        this.category = category;
     }
 
     public int getId_product() {
@@ -49,17 +51,25 @@ public class Product {
         this.price = price;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id_product == product.id_product && Double.compare(price, product.price) == 0 && stock == product.stock && Objects.equals(name, product.name);
+        return id_product == product.id_product && Double.compare(price, product.price) == 0 && stock == product.stock && Objects.equals(name, product.name) && Objects.equals(category, product.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id_product, name, price, stock);
+        return Objects.hash(id_product, name, price, stock, category);
     }
 
     @Override
@@ -69,6 +79,7 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", stock=" + stock +
+                ", category=" + category +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 <%@ page import="com.chichos_snack_project.model.Product" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.chichos_snack_project.model.Category" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 
@@ -17,9 +18,9 @@
     boolean is_valid_user = false;
     if(session1.getAttribute("is_valid_user") != null){
 
-        if(request.getAttribute("productList") !=null){
+        if(request.getAttribute("productList") !=null && request.getAttribute("categoryList") !=null){
             List<Product> productList = (List<Product>) request.getAttribute("productList");
-
+            List<Category> categoryList = (List<Category>) request.getAttribute("categoryList");
 
 
 %>
@@ -54,7 +55,7 @@
                 </a>
             </li>
             <li class="mb-6">
-                <a href="Customer" class="flex items-center space-x-4 p-2 rounded-lg bg-teal-500">
+                <a href="Customer" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
                     <span>
                         <ion-icon name="people-outline" class="text-xl"></ion-icon>
                     </span>
@@ -114,15 +115,20 @@
         </div>
 
         <!-- Category Menu -->
-        <div class="flex space-x-8 text-teal-600 font-bold text-lg mb-6 sticky top-16 bg-gray-100 z-10 p-4 shadow">
-            <button id="comestibles-btn" class="border-b-4 border-teal-500" onclick="showCategory('comestibles')">Comestibles</button>
-            <button id="aseo-btn" class="hover:border-b-4 hover:border-teal-500" onclick="showCategory('aseo')">Aseo Personal</button>
-            <button id="utiles-btn" class="hover:border-b-4 hover:border-teal-500" onclick="showCategory('utiles')">Útiles</button>
-            <button id="limpieza-btn" class="hover:border-b-4 hover:border-teal-500" onclick="showCategory('limpieza')">Limpieza</button>
+        <div class="flex space-x-8 text-teal-600 font-bold text-lg mb-6 sticky top-16 bg-gray-100 z-10 p-4 shadow overflow-x-auto whitespace-nowrap">
+            <button id="todos-btn" class="border-b-4 border-teal-500" onclick="showCategory('todos')">Todos</button>
+            <%
+                for(Category category: categoryList){
+
+            %>
+            <button id="<%=category.getName_category()+"-btn"%>" class="border-b-4 border-teal-500" onclick="showCategory('<%=category.getName_category()%>')"><%=category.getName_category()%></button>
+            <%
+                }
+            %>
         </div>
 
         <!-- Products Section -->
-        <div id="comestibles" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="todos" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Product Item -->
             <%
                 for(Product product:productList){
@@ -140,59 +146,31 @@
             <!-- Más productos aquí -->
         </div>
 
-        <div id="aseo" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-            <div class="bg-white p-4 rounded-lg shadow">
-                <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
-                <h3 class="text-lg font-bold">Jabón</h3>
-                <p class="text-gray-600">Lote</p>
-                <p class="text-red-600 font-bold">$150</p>
-            </div>
-            <!-- Más productos aquí -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
-                <h3 class="text-lg font-bold">Jabón</h3>
-                <p class="text-gray-600">Lote</p>
-                <p class="text-red-600 font-bold">$150</p>
-            </div>
-            <div class="bg-white p-4 rounded-lg shadow">
-                <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
-                <h3 class="text-lg font-bold">Jabón</h3>
-                <p class="text-gray-600">Lote</p>
-                <p class="text-red-600 font-bold">$150</p>
-            </div>
-            <div class="bg-white p-4 rounded-lg shadow">
-                <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
-                <h3 class="text-lg font-bold">Jabón</h3>
-                <p class="text-gray-600">Lote</p>
-                <p class="text-red-600 font-bold">$150</p>
-            </div>
-            <div class="bg-white p-4 rounded-lg shadow">
-                <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
-                <h3 class="text-lg font-bold">Jabón</h3>
-                <p class="text-gray-600">Lote</p>
-                <p class="text-red-600 font-bold">$150</p>
-            </div>
-        </div>
+        <%
+            for(Category category:categoryList){
 
-        <div id="utiles" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-            <div class="bg-white p-4 rounded-lg shadow">
-                <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
-                <h3 class="text-lg font-bold">Cuaderno</h3>
-                <p class="text-gray-600">Lote</p>
-                <p class="text-red-600 font-bold">$50</p>
-            </div>
-            <!-- Más productos aquí -->
-        </div>
 
-        <div id="limpieza" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+        %>
+        <div id="<%=category.getName_category()%>" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            <%
+                for(Product product:productList){
+                    if(product.getCategory().getName_category().equalsIgnoreCase(category.getName_category())){
+            %>
             <div class="bg-white p-4 rounded-lg shadow">
                 <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
-                <h3 class="text-lg font-bold">Detergente</h3>
-                <p class="text-gray-600">Lote</p>
-                <p class="text-red-600 font-bold">$100</p>
+                <h3 class="text-lg font-bold"><%=product.getName()%></h3>
+                <p class="text-gray-600">Stock: <%=product.getStock()%></p>
+                <p class="text-red-600 font-bold">Precio: <%=product.getPrice()%></p>
             </div>
-            <!-- Más productos aquí -->
+            <%
+                    }
+                }
+            %>
+
         </div>
+        <%
+            }
+        %>
 
     </div>
 </div>

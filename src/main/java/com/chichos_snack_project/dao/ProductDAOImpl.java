@@ -42,7 +42,7 @@ public class ProductDAOImpl implements ProductDAO {
             PreparedStatement ps = con.prepareStatement(sql);
             return ps.executeQuery();
         }catch (SQLException e){
-            log.severe("Ocurrio un error al obtener los datos de la vista uv_trabajadores");
+            log.severe("Ocurrio un error al obtener los datos de la vista uv_products");
             return null;
 
         }

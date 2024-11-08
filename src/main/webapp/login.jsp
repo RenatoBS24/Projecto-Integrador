@@ -7,7 +7,7 @@
     <title>Iniciar Sesión</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body style="background-image: url('../img/Chicos\ Snack.png'); background-size: cover; background-position: center;">
+<body style="background-image: url('img/back.jpg'); background-size: cover; background-position: center;">
 <section class="d-flex justify-content-center align-items-center vh-100">
     <div class="card shadow-lg" style="width: 400px;">
         <div class="card-body">
