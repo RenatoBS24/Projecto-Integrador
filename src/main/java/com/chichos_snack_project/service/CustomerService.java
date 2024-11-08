@@ -3,14 +3,11 @@ package com.chichos_snack_project.service;
 import com.chichos_snack_project.dao.CustomerDAOImpl;
 import com.chichos_snack_project.model.Customer;
 import com.chichos_snack_project.util.AppConfig;
-
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 

@@ -47,7 +47,7 @@
             </a>
         </li>
         <li class="mb-6">
-            <a href="Customer" class="flex items-center space-x-4 p-2 rounded-lg bg-teal-500">
+            <a href="Customer" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
                     <span>
                         <ion-icon name="people-outline" class="text-xl"></ion-icon>
                     </span>
@@ -161,11 +161,11 @@
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700">DNI:</label>
-                <input type="number" class="w-full p-2 border rounded-lg focus:outline-none"  id="dni" name="dni">
+                <input type="number" class="w-full p-2 border rounded-lg focus:outline-none validate"  id="dni" name="dni">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700">Telefono:</label>
-                <input type="text" class="w-full p-2 border rounded-lg focus:outline-none"  id="phone" name="phone">
+                <input type="text" class="w-full p-2 border rounded-lg focus:outline-none validate"  id="phone" name="phone">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700">Sueldo:</label>
@@ -205,20 +205,20 @@
         <h2 class="text-2xl font-bold mb-4">Agregar Trabajador</h2>
         <form action="CreateEmployee" method="POST" enctype="multipart/form-data">
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Nombre: </label>
-                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="name" required>
+                <label class="block text-sm font-medium text-gray-700" >Nombre: </label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"  name="name" required>
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Apellidos:</label>
-                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="lastname" required>
+                <label class="block text-sm font-medium text-gray-700" >Apellidos:</label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="lastname"  required>
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">DNI:</label>
-                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="dni" maxlength="8" required>
+                <label class="block text-sm font-medium text-gray-700 ">DNI:</label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none validate" name="dni"  maxlength="8"  required>
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">N° de telefono:</label>
-                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="phone" maxlength="9" required>
+                <label class="block text-sm font-medium text-gray-700 ">N° de telefono:</label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none validate" name="phone" maxlength="9"  required>
             </div>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Salario:</label>

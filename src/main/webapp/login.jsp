@@ -21,7 +21,7 @@
                                     <ion-icon name="person-outline"></ion-icon>
                                 </span>
                         </div>
-                        <input type="text" class="form-control" name="username" id="nameUser" required>
+                        <input type="text" class="form-control" name="username" id="nameUser" oninput="validate()" required>
                     </div>
                 </div>
 
@@ -59,6 +59,7 @@
         </div>
     </div>
 </section>
+<script src="js/validations.js"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
