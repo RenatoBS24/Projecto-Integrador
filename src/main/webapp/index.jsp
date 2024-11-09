@@ -18,6 +18,9 @@
         HttpSession session1  = request.getSession();
         boolean is_valid_user = false;
         if(session1.getAttribute("is_valid_user") != null){
+            if(request.getAttribute("total") !=null){
+                double total = (double)request.getAttribute("total");
+
 
 
     %>
@@ -121,9 +124,8 @@
                 <h2 class="text-xl font-semibold mb-4">Principal</h2>
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div class="bg-green-100 p-4 rounded-lg">
-                        <h3 class="text-sm font-medium text-green-700">Ingresos</h3>
-                        <p class="text-2xl font-bold">S/.20.000</p>
-                        <span class="text-green-700 text-sm">+70%</span>
+                        <h3 class="text-sm font-medium text-green-700">Ingresos del mes</h3>
+                        <p class="text-2xl font-bold">S/.<%=total%></p>
                     </div>
                     <div class="bg-red-100 p-4 rounded-lg">
                         <h3 class="text-sm font-medium text-red-700">Clientes</h3>
@@ -132,7 +134,7 @@
                     </div>
                 </div>
                 <!-- Popular Products -->
-                <h3 class="text-lg font-semibold mb-2">Productos mas vendidos</h3>
+                <h3 class="text-lg font-semibold mb-2">Productos mas vendidos del mes</h3>
                 <div class="flex space-x-4">
                     <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-full">
                     <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-full">
@@ -172,7 +174,7 @@
                     <p class="font-bold">Renato Ballena</p>
                     <p class="text-gray-500">Sede: Chiclayo</p>
                 </div>
-                <button class="bg-green-500 text-white py-1 px-4 rounded-lg">Ver más</button>
+                <a class="bg-green-500 text-white py-1 px-4 rounded-lg" href="Employee">Ver mas</a>
             </div>
         </div>
     </div>
@@ -251,6 +253,10 @@
 </html>
 
 <%
+
+            }else{
+                response.sendRedirect("Index");
+            }
     }else{
             response.sendRedirect("login.jsp");
     }

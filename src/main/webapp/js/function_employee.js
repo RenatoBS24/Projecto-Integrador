@@ -16,13 +16,12 @@ function openModal(nombre,apellidos,dni,phone,salario,id) {
 }
 
 // Función para abrir el modal del reporte del trabajador
-function openWorkerReport(nombre, apellidos, edad, dni, phone, sueldo) {
-    document.getElementById('reportNombre').innerText = nombre;
-    document.getElementById('reportApellidos').innerText = apellidos;
-    document.getElementById('reportEdad').innerText = edad;
+function openWorkerReport(name, lastname, dni, phone, salary) {
+    document.getElementById('reportNombre').innerText = name;
+    document.getElementById('reportApellidos').innerText = lastname;
     document.getElementById('reportDni').innerText = dni;
     document.getElementById('reportTelefono').innerText = phone;
-    document.getElementById('reportSueldo').innerText = sueldo;
+    document.getElementById('reportSueldo').innerText = salary;
     document.getElementById('workerReportModal').classList.remove('hidden');
 }
 

@@ -116,7 +116,7 @@
             %>
                 <input type="hidden" name="id" value=<%=employee.getId_employee()%>>
                 <div class="bg-teal-100 p-4 rounded-lg flex items-center justify-between">
-                    <div class="flex items-center space-x-4 cursor-pointer" onclick="openWorkerReport('Juan', 'Pérez', 35, 87654321, 912345678, 1200)">
+                    <div class="flex items-center space-x-4 cursor-pointer" onclick="openWorkerReport('<%=employee.getName()%>','<%=employee.getLastname()%>','<%=employee.getDni()%>','<%=employee.getPhone()%>','<%=employee.getSalary()%>')">
                         <img src="https://via.placeholder.com/100" alt="Empleado" class="rounded-full w-16 h-16 object-cover">
                         <div>
                             <p class="text-lg font-semibold">Nombre: <%=employee.getName()%></p>
@@ -189,7 +189,6 @@
         <div>
             <p class="text-lg"><strong>Nombre:</strong> <span id="reportNombre"></span></p>
             <p class="text-lg"><strong>Apellidos:</strong> <span id="reportApellidos"></span></p>
-            <p class="text-lg"><strong>Edad:</strong> <span id="reportEdad"></span></p>
             <p class="text-lg"><strong>DNI:</strong> <span id="reportDni"></span></p>
             <p class="text-lg"><strong>Teléfono:</strong> <span id="reportTelefono"></span></p>
             <p class="text-lg"><strong>Sueldo:</strong> $<span id="reportSueldo"></span></p>
