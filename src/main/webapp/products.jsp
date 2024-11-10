@@ -12,6 +12,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+<style>
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        scrollbar-width: none;
+    }
+</style>
+
 <body class="bg-gray-100">
 <%
     HttpSession session1  = request.getSession();
@@ -115,16 +125,18 @@
         </div>
 
         <!-- Category Menu -->
-        <div class="flex space-x-8 text-teal-600 font-bold text-lg mb-6 sticky top-16 bg-gray-100 z-10 p-4 shadow overflow-x-auto whitespace-nowrap">
-            <button id="todos-btn" class="border-b-4 border-teal-500" onclick="showCategory('todos')">Todos</button>
-            <%
-                for(Category category: categoryList){
+        <div class="w-[80%] max-w-[1000px] overflow-x-auto no-scrollbar whitespace-nowrap text-teal-600 font-bold text-lg mb-6 sticky top-16 bg-gray-100 z-10 p-4 shadow">
+            <div class="flex space-x-4">
+                <button id="todos-btn" class="border-b-4 border-teal-500" onclick="showCategory('todos')">Todos</button>
+                <%
+                    for(Category category: categoryList){
 
-            %>
-            <button id="<%=category.getName_category()+"-btn"%>" class="border-b-4 border-teal-500" onclick="showCategory('<%=category.getName_category()%>')"><%=category.getName_category()%></button>
-            <%
-                }
-            %>
+                %>
+                <button id="<%=category.getName_category()+"-btn"%>" class="border-b-4 border-teal-500" onclick="showCategory('<%=category.getName_category()%>')"><%=category.getName_category()%></button>
+                <%
+                    }
+                %>
+            </div>
         </div>
 
         <!-- Products Section -->
