@@ -18,7 +18,7 @@
 
 %>
 <!-- Sidebar -->
-<div class="bg-teal-600 w-64 fixed top-0 left-0 h-screen text-white p-6">
+<div class="bg-teal-600 w-64 h-screen text-white p-6 fixed top-0 left-0">
     <h1 class="text-2xl font-bold mb-10">CHICHOS SNACK</h1>
     <ul>
         <li class="mb-6">
@@ -180,6 +180,32 @@
         </form>
     </div>
 </div>
+
+
+
+<!-- Modal Reporte -->
+<div id="workerReportModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-white w-1/3 rounded-lg shadow-lg p-5">
+        <h2 class="text-xl font-bold mb-4 text-center">Reporte de Cliente</h2>
+        <div class="flex justify-center mb-4">
+            <img src="https://via.placeholder.com/100" alt="Empleado" class="rounded-full w-24 h-24 object-cover">
+        </div>
+        <div>
+            <p class="text-lg"><strong>Nombre:</strong> <span id="reportNombre"></span></p>
+            <p class="text-lg"><strong>Apellidos:</strong> <span id="reportApellidos"></span></p>
+            <p class="text-lg"><strong>Edad:</strong> <span id="reportEdad"></span></p>
+            <p class="text-lg"><strong>DNI:</strong> <span id="reportDni"></span></p>
+            <p class="text-lg"><strong>Teléfono:</strong> <span id="reportTelefono"></span></p>
+            <p class="text-lg"><strong>Credito:</strong> $<span id="reportSueldo"></span></p>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button onclick="closeWorkerReport()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+
+
 <!-- Modal for Adding Client -->
 <div id="clientModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">

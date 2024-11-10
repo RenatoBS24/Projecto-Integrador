@@ -20,7 +20,7 @@
 %>
 
 <!-- Sidebar -->
-<div class="bg-teal-600 w-64 fixed top-0 left-0 h-screen text-white p-6">
+<div class="bg-teal-600 w-64 h-screen text-white p-6 fixed top-0 left-0">
     <h1 class="text-2xl font-bold mb-10">CHICHOS SNACK</h1>
     <ul>
         <li class="mb-6">
@@ -181,7 +181,7 @@
 </div>
 
 <!-- Modal Reporte -->
-<div id="workerReportModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+<div id="workerReportModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white w-1/3 rounded-lg shadow-lg p-5">
         <h2 class="text-xl font-bold mb-4 text-center">Reporte de Trabajador</h2>
         <div class="flex justify-center mb-4">
