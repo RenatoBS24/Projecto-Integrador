@@ -70,4 +70,10 @@ public class CustomerDAOImpl implements CustomerDAO {
 
         }
     }
+
+    public ResultSet countCustomer() throws SQLException{
+        String sql = "select uf_totalClientes()";
+        PreparedStatement ps = con.prepareStatement(sql);
+        return ps.executeQuery();
+    }
 }

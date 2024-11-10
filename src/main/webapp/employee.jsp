@@ -15,6 +15,7 @@
     boolean is_valid_user = false;
     if(session1.getAttribute("is_valid_user") != null){
         if(request.getAttribute("employeeList") != null){
+            @SuppressWarnings("unchecked")
             List<Employee> employeeList = (List<Employee>) request.getAttribute("employeeList");
 %>
 

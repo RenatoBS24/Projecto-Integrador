@@ -1,4 +1,5 @@
-
+<%@ page import="com.chichos_snack_project.model.Employee" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 
@@ -18,10 +19,11 @@
         HttpSession session1  = request.getSession();
         boolean is_valid_user = false;
         if(session1.getAttribute("is_valid_user") != null){
-            if(request.getAttribute("total") !=null){
+            if(request.getAttribute("total") !=null && request.getAttribute("count") !=null && request.getAttribute("employeeList") !=null){
                 double total = (double)request.getAttribute("total");
-
-
+                int count = (int)request.getAttribute("count");
+                @SuppressWarnings("unchecked")
+                List<Employee> employeeList = (List<Employee>) request.getAttribute("employeeList");
 
     %>
 </head>
@@ -128,9 +130,8 @@
                         <p class="text-2xl font-bold">S/.<%=total%></p>
                     </div>
                     <div class="bg-red-100 p-4 rounded-lg">
-                        <h3 class="text-sm font-medium text-red-700">Clientes</h3>
-                        <p class="text-2xl font-bold">50.000</p>
-                        <span class="text-red-700 text-sm">-10%</span>
+                        <h3 class="text-sm font-medium text-red-700">N° de Clientes</h3>
+                        <p class="text-2xl font-bold"><%=count%></p>
                     </div>
                 </div>
                 <!-- Popular Products -->
@@ -167,15 +168,24 @@
 
         <!-- Employee Section -->
         <div class="bg-white p-6 rounded-lg shadow-md mt-8">
-            <h2 class="text-xl font-semibold mb-4">Trabajador</h2>
-            <div class="flex items-center space-x-4">
+            <div class="flex">
+                <h2 class="text-xl font-semibold mb-4">Trabajadores</h2>
+                <a class="bg-green-500 text-white py-1 px-4 rounded-lg ml-5 h-8" href="Employee">Ver mas</a>
+            </div>
+
+            <%
+                for(int i =0; i<2;i++){
+            %>
+            <div class="flex items-center space-x-4 mb-2.5 mt-2.5">
                 <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-full">
                 <div>
-                    <p class="font-bold">Renato Ballena</p>
-                    <p class="text-gray-500">Sede: Chiclayo</p>
+                    <p class="font-bold"><%=employeeList.get(i).getName()%> <%=employeeList.get(i).getLastname()%></p>
+                    <p class="text-gray-500">Telefono: <%=employeeList.get(i).getPhone()%></p>
                 </div>
-                <a class="bg-green-500 text-white py-1 px-4 rounded-lg" href="Employee">Ver mas</a>
             </div>
+            <%
+                }
+            %>
         </div>
     </div>
 </div>

@@ -97,4 +97,20 @@ public class CustomerService {
             return false;
         }
     }
+    public static int getCountCustomer(){
+        int count = 0;
+        try{
+            ResultSet rs = customerDAO.countCustomer();
+            if(rs != null && rs.next()){
+                count = rs.getInt(1);
+            }else{
+                log.severe("El ResultSet recibido por el metodo countCustoemr de CustomerDAOImpl es nulo ");
+            }
+
+        }catch (SQLException e){
+            log.severe("Hubo un error al procesar la el resulset obtenido por el metodo sumAmountSales de SaleDAOImpl state: " +e.getSQLState());
+
+        }
+        return count;
+    }
 }
