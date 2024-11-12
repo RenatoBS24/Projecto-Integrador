@@ -30,7 +30,6 @@ public class UserService  {
         try{
             checkNotNull(username,"El parametro name no puede ser nulo");
             checkNotNull(password,"El parametro password no puede ser nulo");
-            UserDAOImpl userDAO = new UserDAOImpl(AppConfig.getDatasource());
             User user = userDAO.read(new User(username,password,0));
             if(user != null){
                 if(user.getPassword().equals(password)){
@@ -49,14 +48,22 @@ public class UserService  {
             return false;
         }
     }
-    public static boolean register(String name,String password,String passwordRepeat,int id_rol){
+
+    /**
+     * @param name name of the user
+     * @param password new password
+     * @param passwordRepeat new password repeat
+     * @param id_role id that reference the name of the user role
+     * @return true if register user is successful or false if occurred a SQLException
+     */
+    public static boolean register(String name,String password,String passwordRepeat,int id_role){
         try {
             checkNotNull(name,"El parametro name no puede ser nulo");
             checkNotNull(password,"El parametro password no puede ser nulo");
             checkNotNull(passwordRepeat,"El parametro passwordRepeat no puede ser nulo");
             if (password.equals(passwordRepeat)) {
                 if (!name.trim().isEmpty() && !password.trim().isEmpty()) {
-                    User user = new User(name,sha256(password),id_rol);
+                    User user = new User(name,sha256(password),id_role);
                     try{
                         userDAO.create(user);
                         log.info("Se ha registrado correctamente al usuario "+name);

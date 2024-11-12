@@ -1,6 +1,7 @@
 <%@ page import="com.chichos_snack_project.model.Product" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.chichos_snack_project.model.Category" %>
+<%@ page import="com.chichos_snack_project.model.UnitOfMeasurement" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 
@@ -28,9 +29,13 @@
     boolean is_valid_user = false;
     if(session1.getAttribute("is_valid_user") != null){
 
-        if(request.getAttribute("productList") !=null && request.getAttribute("categoryList") !=null){
+        if(request.getAttribute("productList") !=null && request.getAttribute("categoryList") !=null && request.getAttribute("unitOfMeasurementList") !=null){
+            @SuppressWarnings("unchecked")
             List<Product> productList = (List<Product>) request.getAttribute("productList");
+            @SuppressWarnings("unchecked")
             List<Category> categoryList = (List<Category>) request.getAttribute("categoryList");
+            @SuppressWarnings("unchecked")
+            List<UnitOfMeasurement> unitOfMeasurementList = (List<UnitOfMeasurement>)request.getAttribute("unitOfMeasurementList");
 
 
 %>
@@ -190,7 +195,7 @@
 <!-- Modal for Adding Product -->
 <div id="productModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold mb-4">Agregar Información del Producto</h2>
+        <h2 class="text-2xl font-bold mb-4">Agregar Producto</h2>
         <form>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Nombre del Producto</label>
@@ -203,6 +208,32 @@
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Precio</label>
                 <input type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700" for="unit">Unidad de medida</label>
+                <select id="unit" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="unit">
+                    <%
+                        for(UnitOfMeasurement unitOfMeasurement: unitOfMeasurementList){
+                    %>
+                    <option value="<%=unitOfMeasurement.getId_unit_of_measurement()%>"><%=unitOfMeasurement.getName_unit_of_measurement()%></option>
+                    <%
+                        }
+                    %>
+                </select>
+
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700" for="category">Categoria</label>
+                <select id="category" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">
+                    <%
+                        for(Category category: categoryList){
+                    %>
+                    <option value="<%=category.getId_category()%>"><%=category.getName_category()%></option>
+                    <%
+                        }
+                    %>
+                </select>
+
             </div>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Subir Archivo (Excel)</label>

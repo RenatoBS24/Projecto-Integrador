@@ -1,6 +1,5 @@
 package com.chichos_snack_project.controller;
 
-
 import com.chichos_snack_project.service.UserService;
 
 import javax.servlet.ServletException;
@@ -9,6 +8,7 @@ import javax.servlet.annotation.*;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+
 
 
 @WebServlet(name = "SingIn",value = "/SingIn")

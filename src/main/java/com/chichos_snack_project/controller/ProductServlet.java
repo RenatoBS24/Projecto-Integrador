@@ -3,8 +3,10 @@ package com.chichos_snack_project.controller;
 import com.chichos_snack_project.model.Category;
 import com.chichos_snack_project.model.Product;
 
+import com.chichos_snack_project.model.UnitOfMeasurement;
 import com.chichos_snack_project.service.CategoryService;
 import com.chichos_snack_project.service.ProductService;
+import com.chichos_snack_project.service.UnitOfMeasurementService;
 
 
 import javax.servlet.ServletException;
@@ -22,8 +24,10 @@ public class ProductServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         List<Product> productList = ProductService.getProducts();
         List<Category> categoryList = CategoryService.getCategory();
+        List<UnitOfMeasurement>unitOfMeasurementList = UnitOfMeasurementService.getAllUnitOfMeasurements();
         request.setAttribute("productList",productList);
         request.setAttribute("categoryList",categoryList);
+        request.setAttribute("unitOfMeasurementList",unitOfMeasurementList);
         request.getRequestDispatcher("products.jsp").forward(request,response);
     }
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
