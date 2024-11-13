@@ -55,9 +55,17 @@
             </li>
             <li class="mb-6">
                 <a href="index.jsp" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
-                        <span>
-                            <ion-icon name="cash-outline" class="text-xl"></ion-icon>
-                        </span>
+                    <span>
+                        <ion-icon name="cash-outline" class="text-xl"></ion-icon>
+                    </span>
+                    <span>Inicio</span>
+                </a>
+            </li>
+            <li class="mb-6">
+                <a href="ventas.jsp" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                    <span>
+                        <ion-icon name="cash-outline" class="text-xl"></ion-icon>
+                    </span>
                     <span>Ventas</span>
                 </a>
             </li>
@@ -109,136 +117,172 @@
 
     <!-- Main Content -->
     <div class="flex-1 p-6 ml-64">
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-100 z-10 p-4 shadow">
-            <div class="relative">
-                <input type="text" placeholder="Search Here" class="p-2 border border-gray-300 rounded-lg focus:outline-none w-full lg:w-96">
-                <span class="absolute right-2 top-2 text-gray-400">
-                        <ion-icon name="search-outline"></ion-icon>
-                    </span>
-            </div>
-            <div class="flex items-center space-x-4">
-                <!-- Button to Open Modal -->
-                <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" onclick="openModal()">+ Agregar productos</button>
+        <div class="max-w-[1300px] mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-100 z-10 p-4 shadow">
                 <div class="relative">
-                    <a href="notificaciones.html">
-                        <ion-icon name="notifications-outline" class="text-2xl text-gray-600"></ion-icon>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">1</span>
-                    </a>
+                    <input type="text" placeholder="Search Here" class="p-2 border border-gray-300 rounded-lg focus:outline-none w-full lg:w-96">
+                    <span class="absolute right-2 top-2 text-gray-400">
+                            <ion-icon name="search-outline"></ion-icon>
+                        </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Button to Open Modal -->
+                    <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" onclick="openModal()">+ Agregar productos</button>
+                    <div class="relative">
+                        <a href="notificaciones.html">
+                            <ion-icon name="notifications-outline" class="text-2xl text-gray-600"></ion-icon>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">1</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Menu -->
+            <div class="w-[80%] max-w-[1000px] overflow-x-auto no-scrollbar whitespace-nowrap text-teal-600 font-bold text-lg mb-6 sticky top-16 bg-gray-100 z-10 p-4 shadow">
+                <div class="flex space-x-4">
+                    <button id="todos-btn" class="border-b-4 border-teal-500" onclick="showCategory('todos')">Todos</button>
+                    <%
+                        for(Category category: categoryList){
+
+                    %>
+                    <button id="<%=category.getName_category()+"-btn"%>" class="border-b-4 border-teal-500" onclick="showCategory('<%=category.getName_category()%>')"><%=category.getName_category()%></button>
+                    <%
+                        }
+                    %>
                 </div>
             </div>
         </div>
-
-        <!-- Category Menu -->
-        <div class="w-[80%] max-w-[1000px] overflow-x-auto no-scrollbar whitespace-nowrap text-teal-600 font-bold text-lg mb-6 sticky top-16 bg-gray-100 z-10 p-4 shadow">
-            <div class="flex space-x-4">
-                <button id="todos-btn" class="border-b-4 border-teal-500" onclick="showCategory('todos')">Todos</button>
-                <%
-                    for(Category category: categoryList){
-
-                %>
-                <button id="<%=category.getName_category()+"-btn"%>" class="border-b-4 border-teal-500" onclick="showCategory('<%=category.getName_category()%>')"><%=category.getName_category()%></button>
-                <%
-                    }
-                %>
-            </div>
-        </div>
-
         <!-- Products Section -->
-        <div id="todos" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Product Item -->
-            <%
-                for(Product product:productList){
-            %>
-            <div class="bg-white p-4 rounded-lg shadow">
-                <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
-                <h3 class="text-lg font-bold"><%=product.getName()%></h3>
-                <p class="text-gray-600">Stock: <%=product.getStock()%></p>
-                <p class="text-red-600 font-bold">Precio: S/<%=product.getPrice()%></p>
-            </div>
-            <%
-                }
-            %>
+        <div class="overflow-y-auto h-[calc(100vh-14rem)]  no-scrollbar ">
+            <div id="todos" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Product Item -->
+                <%
+                    for(Product product:productList){
+                %>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold"><%=product.getName()%></h3>
+                            <p class="text-gray-600">Stock: <%=product.getStock()%></p>
+                            <p class="text-red-600 font-bold">Precio: S/<%=product.getPrice()%></p>
+                        </div>
+                        <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4"
+                                onclick="openEditModal({
+                                        name: 'Gaseosas',
+                                        price: 200,
+                                        stock: 200,
+                                        lotNumber: 'L12345',
+                                        expiryDate: '2025-01-15',
+                                        buyDate: '2024-01-15',
+                                        purchasePrice: 200,
 
-            <!-- Más productos aquí -->
-        </div>
-
-        <%
-            for(Category category:categoryList){
-
-
-        %>
-        <div id="<%=category.getName_category()%>" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-            <%
-                for(Product product:productList){
-                    if(product.getCategory().getName_category().equalsIgnoreCase(category.getName_category())){
-            %>
-            <div class="bg-white p-4 rounded-lg shadow">
-                <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
-                <h3 class="text-lg font-bold"><%=product.getName()%></h3>
-                <p class="text-gray-600">Stock: <%=product.getStock()%></p>
-                <p class="text-red-600 font-bold">Precio: <%=product.getPrice()%></p>
-            </div>
-            <%
+                                    })">
+                            Editar
+                        </button>
+                    </div>
+                </div>
+                <%
                     }
+                %>
+
+                <!-- Más productos aquí -->
+            </div>
+
+            <%
+                for(Category category:categoryList){
+
+
+            %>
+            <div id="<%=category.getName_category()%>" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                <%
+                    for(Product product:productList){
+                        if(product.getCategory().getName_category().equalsIgnoreCase(category.getName_category())){
+                %>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold"><%=product.getName()%></h3>
+                            <p class="text-gray-600">Stock: <%=product.getStock()%></p>
+                            <p class="text-red-600 font-bold">Precio: <%=product.getPrice()%></p>
+                        </div>
+                        <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4"
+                                onclick="openEditModal({
+                                        name: 'Gaseosas',
+                                        price: 200,
+                                        stock: 200,
+                                        lotNumber: 'L12345',
+                                        expiryDate: '2025-01-15',
+                                        buyDate: '2024-01-15',
+                                        purchasePrice: 200,
+
+                                    })">
+                            Editar
+                        </button>
+                    </div>
+                </div>
+                <%
+                        }
+                    }
+                %>
+
+            </div>
+            <%
                 }
             %>
-
         </div>
-        <%
-            }
-        %>
-
     </div>
 </div>
 
 <!-- Modal for Adding Product -->
 <div id="productModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
-    <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold mb-4">Agregar Producto</h2>
+    <div class="bg-white w-full max-w-3xl p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Agregar Información del Producto</h2>
         <form>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Nombre del Producto</label>
-                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+            <!-- Basic Product Information -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nombre del Producto</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Precio</label>
+                    <input type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
             </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Lote</label>
-                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
-            </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Precio</label>
-                <input type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
-            </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700" for="unit">Unidad de medida</label>
-                <select id="unit" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="unit">
-                    <%
-                        for(UnitOfMeasurement unitOfMeasurement: unitOfMeasurementList){
-                    %>
-                    <option value="<%=unitOfMeasurement.getId_unit_of_measurement()%>"><%=unitOfMeasurement.getName_unit_of_measurement()%></option>
-                    <%
-                        }
-                    %>
-                </select>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Stock</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Número de Lote</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Fecha de Vencimiento</label>
+                    <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Fecha de Compra</label>
+                    <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Precio de compra</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
 
             </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700" for="category">Categoria</label>
-                <select id="category" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">
-                    <%
-                        for(Category category: categoryList){
-                    %>
-                    <option value="<%=category.getId_category()%>"><%=category.getName_category()%></option>
-                    <%
-                        }
-                    %>
-                </select>
 
-            </div>
+            <!-- File Upload -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Subir Archivo (Excel)</label>
                 <input type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
             </div>
+
             <!-- Modal Actions -->
             <div class="flex justify-end space-x-4">
                 <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeModal()">Cancelar</button>
@@ -247,6 +291,120 @@
         </form>
     </div>
 </div>
+
+<!-- Modal for Editing Product -->
+<div id="editProductModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-white w-full max-w-3xl p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Editar Información del Producto</h2>
+        <form>
+            <!-- Basic Product Information -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nombre del Producto</label>
+                    <input id="editProductName" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Precio</label>
+                    <input id="editProductPrice" type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Stock</label>
+                    <input id="editProductStock" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Número de Lote</label>
+                    <input id="editLotNumber" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Fecha de Caducidad</label>
+                    <input id="editExpiryDate" type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Fecha de Compra</label>
+                    <input id="editBuyDate" type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Precio de compra</label>
+                    <input id="editPurchasePrice" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
+            </div>
+
+
+            <!-- File Upload -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Actualizar Archivo (Excel)</label>
+                <input id="editFileUpload" type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+            </div>
+
+            <!-- Modal Actions -->
+            <div class="flex justify-end space-x-4">
+                <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeEditModal()">Cancelar</button>
+                <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Actualizar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<%--<!-- Modal for Adding Product -->--%>
+<%--<div id="productModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">--%>
+<%--    <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">--%>
+<%--        <h2 class="text-2xl font-bold mb-4">Agregar Producto</h2>--%>
+<%--        <form>--%>
+<%--            <div class="mb-4">--%>
+<%--                <label class="block text-sm font-medium text-gray-700">Nombre del Producto</label>--%>
+<%--                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">--%>
+<%--            </div>--%>
+<%--            <div class="mb-4">--%>
+<%--                <label class="block text-sm font-medium text-gray-700">Lote</label>--%>
+<%--                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">--%>
+<%--            </div>--%>
+<%--            <div class="mb-4">--%>
+<%--                <label class="block text-sm font-medium text-gray-700">Precio</label>--%>
+<%--                <input type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">--%>
+<%--            </div>--%>
+<%--            <div class="mb-4">--%>
+<%--                <label class="block text-sm font-medium text-gray-700" for="unit">Unidad de medida</label>--%>
+<%--                <select id="unit" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="unit">--%>
+<%--                    <%--%>
+<%--                        for(UnitOfMeasurement unitOfMeasurement: unitOfMeasurementList){--%>
+<%--                    %>--%>
+<%--                    <option value="<%=unitOfMeasurement.getId_unit_of_measurement()%>"><%=unitOfMeasurement.getName_unit_of_measurement()%></option>--%>
+<%--                    <%--%>
+<%--                        }--%>
+<%--                    %>--%>
+<%--                </select>--%>
+
+<%--            </div>--%>
+<%--            <div class="mb-4">--%>
+<%--                <label class="block text-sm font-medium text-gray-700" for="category">Categoria</label>--%>
+<%--                <select id="category" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">--%>
+<%--                    <%--%>
+<%--                        for(Category category: categoryList){--%>
+<%--                    %>--%>
+<%--                    <option value="<%=category.getId_category()%>"><%=category.getName_category()%></option>--%>
+<%--                    <%--%>
+<%--                        }--%>
+<%--                    %>--%>
+<%--                </select>--%>
+
+<%--            </div>--%>
+<%--            <div class="mb-4">--%>
+<%--                <label class="block text-sm font-medium text-gray-700">Subir Archivo (Excel)</label>--%>
+<%--                <input type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">--%>
+<%--            </div>--%>
+<%--            <!-- Modal Actions -->--%>
+<%--            <div class="flex justify-end space-x-4">--%>
+<%--                <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeModal()">Cancelar</button>--%>
+<%--                <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Guardar</button>--%>
+<%--            </div>--%>
+<%--        </form>--%>
+<%--    </div>--%>
+<%--</div>--%>
 
 
 <script>
@@ -258,6 +416,25 @@
     // Function to close the modal
     function closeModal() {
         document.getElementById('productModal').classList.add('hidden');
+    }
+
+    function openEditModal(product) {
+        // Populate fields with product data
+        document.getElementById('editProductName').value = product.name;
+        document.getElementById('editProductPrice').value = product.price;
+        document.getElementById('editProductStock').value = product.stock;
+        document.getElementById('editLotNumber').value = product.lotNumber;
+        document.getElementById('editExpiryDate').value = product.expiryDate;
+        document.getElementById('editBuyDate').value = product.buyDate;
+        document.getElementById('editPurchasePrice').value = product.purchasePrice;
+
+
+        // Show modal
+        document.getElementById('editProductModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editProductModal').classList.add('hidden');
     }
 
     // Function to switch categories

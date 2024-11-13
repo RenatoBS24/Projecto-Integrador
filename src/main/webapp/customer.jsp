@@ -34,7 +34,7 @@
                     <span>
                         <ion-icon name="cash-outline" class="text-xl"></ion-icon>
                     </span>
-                <span>Ventas</span>
+                <span>Inicio</span>
             </a>
         </li>
         <li class="mb-6">

@@ -44,10 +44,18 @@
                 </a>
             </li>
             <li class="mb-6">
-                <a href="index.jsp" class="flex items-center space-x-4 p-2 rounded-lg bg-teal-500">
-                        <span>
-                            <ion-icon name="cash-outline" class="text-xl"></ion-icon>
-                        </span>
+                <a href="index.jsp" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                    <span>
+                        <ion-icon name="cash-outline" class="text-xl"></ion-icon>
+                    </span>
+                    <span>Inicio</span>
+                </a>
+            </li>
+            <li class="mb-6">
+                <a href="ventas.jsp" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                    <span>
+                        <ion-icon name="cash-outline" class="text-xl"></ion-icon>
+                    </span>
                     <span>Ventas</span>
                 </a>
             </li>
