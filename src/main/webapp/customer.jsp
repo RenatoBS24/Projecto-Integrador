@@ -14,7 +14,8 @@
     boolean is_valid_user = false;
     if(session1.getAttribute("is_valid_user") != null){
         if(request.getAttribute("customerList") !=null){
-        List<Customer> customerList = (List<Customer>) request.getAttribute("customerList");
+            @SuppressWarnings("unchecked")
+            List<Customer> customerList = (List<Customer>) request.getAttribute("customerList");
 
 %>
 <!-- Sidebar -->

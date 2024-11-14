@@ -2,6 +2,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.chichos_snack_project.model.Category" %>
 <%@ page import="com.chichos_snack_project.model.UnitOfMeasurement" %>
+<%@ page import="com.chichos_snack_project.model.Inventory" %>
+<%@ page import="java.util.LinkedList" %>
+<%@ page import="com.google.gson.Gson" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 
@@ -29,14 +32,15 @@
     boolean is_valid_user = false;
     if(session1.getAttribute("is_valid_user") != null){
 
-        if(request.getAttribute("productList") !=null && request.getAttribute("categoryList") !=null && request.getAttribute("unitOfMeasurementList") !=null){
+        if(request.getAttribute("productList") !=null && request.getAttribute("categoryList") !=null && request.getAttribute("unitOfMeasurementList") !=null && request.getAttribute("inventoryList") !=null){
             @SuppressWarnings("unchecked")
             List<Product> productList = (List<Product>) request.getAttribute("productList");
             @SuppressWarnings("unchecked")
             List<Category> categoryList = (List<Category>) request.getAttribute("categoryList");
             @SuppressWarnings("unchecked")
             List<UnitOfMeasurement> unitOfMeasurementList = (List<UnitOfMeasurement>)request.getAttribute("unitOfMeasurementList");
-
+            @SuppressWarnings("unchecked")
+            List<Inventory> inventoryList = (List<Inventory>)request.getAttribute("inventoryList");
 
 %>
 
@@ -62,7 +66,7 @@
                 </a>
             </li>
             <li class="mb-6">
-                <a href="ventas.jsp" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                <a href="sales.jsp" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
                     <span>
                         <ion-icon name="cash-outline" class="text-xl"></ion-icon>
                     </span>
@@ -146,7 +150,7 @@
                         for(Category category: categoryList){
 
                     %>
-                    <button id="<%=category.getName_category()+"-btn"%>" class="border-b-4 border-teal-500" onclick="showCategory('<%=category.getName_category()%>')"><%=category.getName_category()%></button>
+                    <button id="<%=category.getName_category()+"-btn"%>" class="hover:border-b-4 hover:border-teal-500" onclick="showCategory('<%=category.getName_category()%>')"><%=category.getName_category()%></button>
                     <%
                         }
                     %>
@@ -166,28 +170,25 @@
                         <div>
                             <h3 class="text-lg font-bold"><%=product.getName()%></h3>
                             <p class="text-gray-600">Stock: <%=product.getStock()%></p>
-                            <p class="text-red-600 font-bold">Precio: S/<%=product.getPrice()%></p>
+                            <p class="text-red-600 font-bold">Precio: <%=product.getPrice()%></p>
                         </div>
-                        <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4"
-                                onclick="openEditModal({
-                                        name: 'Gaseosas',
-                                        price: 200,
-                                        stock: 200,
-                                        lotNumber: 'L12345',
-                                        expiryDate: '2025-01-15',
-                                        buyDate: '2024-01-15',
-                                        purchasePrice: 200,
+                        <%
+                            Gson gson = new Gson();
+                            LinkedList<Inventory> inventories = new LinkedList<>();
+                            for(Inventory inventory: inventoryList){
+                                if(inventory.getProduct().getId_product() == product.getId_product()){
+                                    inventories.add(inventory);
+                                }
+                            }
+                            String json = gson.toJson(inventories).replace("\"","'");
 
-                                    })">
-                            Editar
-                        </button>
+                        %>
+                        <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4" onclick="openEditModal('<%=product.getName()%>','<%=product.getPrice()%>','<%=product.getStock()%>',`<%=json%>`)">Editar</button>
                     </div>
                 </div>
                 <%
                     }
                 %>
-
-                <!-- Más productos aquí -->
             </div>
 
             <%
@@ -208,19 +209,18 @@
                             <p class="text-gray-600">Stock: <%=product.getStock()%></p>
                             <p class="text-red-600 font-bold">Precio: <%=product.getPrice()%></p>
                         </div>
-                        <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4"
-                                onclick="openEditModal({
-                                        name: 'Gaseosas',
-                                        price: 200,
-                                        stock: 200,
-                                        lotNumber: 'L12345',
-                                        expiryDate: '2025-01-15',
-                                        buyDate: '2024-01-15',
-                                        purchasePrice: 200,
+                        <%
+                            Gson gson = new Gson();
+                            LinkedList<Inventory> inventories = new LinkedList<>();
+                            for(Inventory inventory: inventoryList){
+                                if(inventory.getProduct().getId_product() == product.getId_product()){
+                                    inventories.add(inventory);
+                                }
+                            }
+                            String json = gson.toJson(inventories).replace("\"","'");
 
-                                    })">
-                            Editar
-                        </button>
+                        %>
+                        <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4" onclick="openEditModal('<%=product.getName()%>','<%=product.getPrice()%>','<%=product.getStock()%>',`<%=json%>`)">Editar</button>
                     </div>
                 </div>
                 <%
@@ -271,9 +271,35 @@
                     <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700" for="unit">Unidad de medida</label>
+                    <select name="" id="unit" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                        <%
+                            for (UnitOfMeasurement unitOfMeasurement:unitOfMeasurementList){
+
+
+                        %>
+                        <option value="<%=unitOfMeasurement.getId_unit_of_measurement()%>"><%=unitOfMeasurement.getName_unit_of_measurement()%></option>
+                        <%
+                            }
+                        %>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700" for="category">Categoria</label>
+                    <select id="category" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">
+                        <%for(Category category: categoryList){%>
+
+                        <option value="<%=category.getId_category()%>"><%=category.getName_category()%></option>
+
+                        <%      } %>
+                     </select>
+
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700">Precio de compra</label>
                     <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
                 </div>
+
 
             </div>
 
@@ -312,16 +338,43 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Stock</label>
-                    <input id="editProductStock" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <label class="block text-sm font-medium text-gray-700">Stock Total</label>
+                    <p id="ProductStock" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"></p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Número de Lote</label>
-                    <input id="editLotNumber" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <label class="block text-sm font-medium text-gray-700" for="units">Unidad de medida</label>
+                    <select name="" id="units" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                        <%
+                            for (UnitOfMeasurement unitOfMeasurement:unitOfMeasurementList){
+
+
+                        %>
+                        <option value="<%=unitOfMeasurement.getId_unit_of_measurement()%>"><%=unitOfMeasurement.getName_unit_of_measurement()%></option>
+                        <%
+                            }
+                        %>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700" for="categorys">Categoria</label>
+                    <select id="categories" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">
+                        <%for(Category category: categoryList){%>
+
+                        <option value="<%=category.getId_category()%>"><%=category.getName_category()%></option>
+
+                        <%      } %>
+                    </select>
+
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700" for="editLotNumber">Número de Lotes</label>
+                    <select name="" id="editLotNumber" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" onchange="change()">
+
+                    </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Fecha de Caducidad</label>
+                    <label class="block text-sm font-medium text-gray-700" for="editExpiryDate">Fecha de Caducidad</label>
                     <input id="editExpiryDate" type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
                 </div>
                 <div>
@@ -332,15 +385,11 @@
                     <label class="block text-sm font-medium text-gray-700">Precio de compra</label>
                     <input id="editPurchasePrice" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Stock del Inventario</label>
+                    <input type="text" id="editProductStock" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                </div>
             </div>
-
-
-            <!-- File Upload -->
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Actualizar Archivo (Excel)</label>
-                <input id="editFileUpload" type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
-            </div>
-
             <!-- Modal Actions -->
             <div class="flex justify-end space-x-4">
                 <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeEditModal()">Cancelar</button>
@@ -349,113 +398,7 @@
         </form>
     </div>
 </div>
-
-<%--<!-- Modal for Adding Product -->--%>
-<%--<div id="productModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">--%>
-<%--    <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">--%>
-<%--        <h2 class="text-2xl font-bold mb-4">Agregar Producto</h2>--%>
-<%--        <form>--%>
-<%--            <div class="mb-4">--%>
-<%--                <label class="block text-sm font-medium text-gray-700">Nombre del Producto</label>--%>
-<%--                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">--%>
-<%--            </div>--%>
-<%--            <div class="mb-4">--%>
-<%--                <label class="block text-sm font-medium text-gray-700">Lote</label>--%>
-<%--                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">--%>
-<%--            </div>--%>
-<%--            <div class="mb-4">--%>
-<%--                <label class="block text-sm font-medium text-gray-700">Precio</label>--%>
-<%--                <input type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">--%>
-<%--            </div>--%>
-<%--            <div class="mb-4">--%>
-<%--                <label class="block text-sm font-medium text-gray-700" for="unit">Unidad de medida</label>--%>
-<%--                <select id="unit" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="unit">--%>
-<%--                    <%--%>
-<%--                        for(UnitOfMeasurement unitOfMeasurement: unitOfMeasurementList){--%>
-<%--                    %>--%>
-<%--                    <option value="<%=unitOfMeasurement.getId_unit_of_measurement()%>"><%=unitOfMeasurement.getName_unit_of_measurement()%></option>--%>
-<%--                    <%--%>
-<%--                        }--%>
-<%--                    %>--%>
-<%--                </select>--%>
-
-<%--            </div>--%>
-<%--            <div class="mb-4">--%>
-<%--                <label class="block text-sm font-medium text-gray-700" for="category">Categoria</label>--%>
-<%--                <select id="category" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">--%>
-<%--                    <%--%>
-<%--                        for(Category category: categoryList){--%>
-<%--                    %>--%>
-<%--                    <option value="<%=category.getId_category()%>"><%=category.getName_category()%></option>--%>
-<%--                    <%--%>
-<%--                        }--%>
-<%--                    %>--%>
-<%--                </select>--%>
-
-<%--            </div>--%>
-<%--            <div class="mb-4">--%>
-<%--                <label class="block text-sm font-medium text-gray-700">Subir Archivo (Excel)</label>--%>
-<%--                <input type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">--%>
-<%--            </div>--%>
-<%--            <!-- Modal Actions -->--%>
-<%--            <div class="flex justify-end space-x-4">--%>
-<%--                <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeModal()">Cancelar</button>--%>
-<%--                <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Guardar</button>--%>
-<%--            </div>--%>
-<%--        </form>--%>
-<%--    </div>--%>
-<%--</div>--%>
-
-
-<script>
-    // Function to open the modal
-    function openModal() {
-        document.getElementById('productModal').classList.remove('hidden');
-    }
-
-    // Function to close the modal
-    function closeModal() {
-        document.getElementById('productModal').classList.add('hidden');
-    }
-
-    function openEditModal(product) {
-        // Populate fields with product data
-        document.getElementById('editProductName').value = product.name;
-        document.getElementById('editProductPrice').value = product.price;
-        document.getElementById('editProductStock').value = product.stock;
-        document.getElementById('editLotNumber').value = product.lotNumber;
-        document.getElementById('editExpiryDate').value = product.expiryDate;
-        document.getElementById('editBuyDate').value = product.buyDate;
-        document.getElementById('editPurchasePrice').value = product.purchasePrice;
-
-
-        // Show modal
-        document.getElementById('editProductModal').classList.remove('hidden');
-    }
-
-    function closeEditModal() {
-        document.getElementById('editProductModal').classList.add('hidden');
-    }
-
-    // Function to switch categories
-    function showCategory(category) {
-        // Ocultar todas las categorías
-        document.querySelectorAll('.category').forEach(function (el) {
-            el.classList.add('hidden');
-        });
-
-        // Mostrar solo la categoría seleccionada
-        document.getElementById(category).classList.remove('hidden');
-
-        // Cambiar la clase de borde en los botones
-        document.querySelectorAll('.flex.space-x-8 button').forEach(function (btn) {
-            btn.classList.remove('border-b-4', 'border-teal-500');
-        });
-
-        // Añadir la clase de borde al botón seleccionado
-        document.getElementById(category + '-btn').classList.add('border-b-4', 'border-teal-500');
-    }
-</script>
+<script src="js/function_products.js"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
