@@ -11,19 +11,23 @@ public class Sale {
    private Customer customer;
    private java.sql.Date sale_date;
    private double amount;
+   private int count;
    private List<Product> productList;
+
 
     public Sale() {
 
     }
 
-    public Sale(int id_sale, Employee employee, Date sale_date, Customer customer, double amount, List<Product> productList) {
+    public Sale(int id_sale, Employee employee, Customer customer, Date sale_date, double amount, int count,List<Product> productList) {
         this.id_sale = id_sale;
         this.employee = employee;
         this.sale_date = sale_date;
         this.customer = customer;
         this.amount = amount;
+        this.count = count;
         this.productList = productList;
+
     }
 
     public int getId_sale() {
@@ -74,17 +78,25 @@ public class Sale {
         this.productList = productList;
     }
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Sale sale = (Sale) o;
-        return id_sale == sale.id_sale && Double.compare(amount, sale.amount) == 0 && Objects.equals(employee, sale.employee) && Objects.equals(customer, sale.customer) && Objects.equals(sale_date, sale.sale_date) && Objects.equals(productList, sale.productList);
+        return id_sale == sale.id_sale && Double.compare(amount, sale.amount) == 0 && count == sale.count && Objects.equals(employee, sale.employee) && Objects.equals(customer, sale.customer) && Objects.equals(sale_date, sale.sale_date) && Objects.equals(productList, sale.productList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id_sale, employee, customer, sale_date, amount, productList);
+        return Objects.hash(id_sale, employee, customer, sale_date, amount, count, productList);
     }
 
     @Override
@@ -95,6 +107,7 @@ public class Sale {
                 ", customer=" + customer +
                 ", sale_date=" + sale_date +
                 ", amount=" + amount +
+                ", count=" + count +
                 ", productList=" + productList +
                 '}';
     }

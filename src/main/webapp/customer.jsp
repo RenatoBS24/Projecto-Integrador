@@ -39,6 +39,14 @@
             </a>
         </li>
         <li class="mb-6">
+            <a href="Sales" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                    <span>
+                        <ion-icon name="cash-outline" class="text-xl"></ion-icon>
+                    </span>
+                <span>Ventas</span>
+            </a>
+        </li>
+        <li class="mb-6">
             <a href="Products" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
                     <span>
                         <ion-icon name="pricetag-outline" class="text-xl"></ion-icon>
@@ -96,7 +104,7 @@
         <div class="flex items-center space-x-4">
             <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" onclick="openModalCustomer()">+ Agregar Cliente</button>
             <div class="relative">
-                <a href="notificaciones.html">
+                <a href="Notifications">
                     <ion-icon name="notifications-outline" class="text-2xl text-gray-600"></ion-icon>
                     <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">1</span>
                 </a>

@@ -36,6 +36,11 @@ public class SaleDAOImpl implements SaleDAO {
     public void delete(Integer integer) throws SQLException {
 
     }
+    public ResultSet findAll() throws SQLException{
+        String sql = "select * from uv_ventas";
+        PreparedStatement ps = con.prepareStatement(sql);
+        return ps.executeQuery();
+    }
 
     public ResultSet sumAmountSales() throws SQLException{
         String sql = "select uf_sumVentas()";

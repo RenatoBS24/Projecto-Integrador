@@ -1,4 +1,7 @@
-
+<%@ page import="com.chichos_snack_project.model.Customer" %>
+<%@ page import="com.chichos_snack_project.model.Employee" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.chichos_snack_project.model.Sale" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 
@@ -31,6 +34,19 @@
 </head>
 
 <body class="bg-gray-100">
+
+<%
+    HttpSession session1 = request.getSession();
+    if(session1.getAttribute("is_valid_user") !=null){
+        if(request.getAttribute("customerList") !=null && request.getAttribute("employeeList") !=null && request.getAttribute("saleList") !=null){
+            @SuppressWarnings("unchecked")
+            List<Customer> customerList = (List<Customer>) request.getAttribute("customerList");
+            @SuppressWarnings("unchecked")
+            List<Employee> employeeList = (List<Employee>) request.getAttribute("employeeList");
+            @SuppressWarnings("unchecked")
+            List<Sale> saleList = (List<Sale>) request.getAttribute("saleList");
+
+%>
 
 <div class="flex">
     <!-- Sidebar Navigation -->
@@ -67,6 +83,14 @@
                             <ion-icon name="pricetag-outline" class="text-xl"></ion-icon>
                         </span>
                     <span>Productos</span>
+                </a>
+            </li>
+            <li class="mb-6">
+                <a href="Customer" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                    <span>
+                        <ion-icon name="people-outline" class="text-xl"></ion-icon>
+                    </span>
+                    <span>Clientes</span>
                 </a>
             </li>
             <li class="mb-6">
@@ -109,7 +133,7 @@
             <div class="flex items-center space-x-4">
                 <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">+ Agregar productos</button>
                 <div class="relative">
-                    <a href="notificaciones.html">
+                    <a href="Notifications">
                         <ion-icon name="notifications-outline" class="text-2xl text-gray-600"></ion-icon>
                         <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">1</span>
                     </a>
@@ -123,18 +147,26 @@
             <div class="bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
                 <h2 class="text-lg font-semibold mb-4">Filtros de Ventas</h2>
                 <label class="block mb-2">Trabajador:</label>
-                <select class="w-full p-2 mb-4 border rounded-lg">
-                    <option>Todos</option>
-                    <option>Trabajador 1</option>
-                    <option>Trabajador 2</option>
+                <select class="w-full p-2 mb-4 border rounded-lg" name ="employee">
+                    <%
+                        for(Employee employee : employeeList){
+                    %>
+                    <option value="<%=employee.getId_employee()%>" ><%= employee.getName() %></option>
+                    <%
+                        }
+                    %>
                 </select>
                 <label class="block mb-2">Fecha:</label>
                 <input type="date" id="fechaFiltro" class="w-full p-2 mb-4 border rounded-lg">
                 <label class="block mb-2">Cliente:</label>
                 <select class="w-full p-2 mb-4 border rounded-lg">
-                    <option>Todos</option>
-                    <option>Cliente 1</option>
-                    <option>Cliente 2</option>
+                    <%
+                        for(Customer customer : customerList){
+                    %>
+                    <option value="<%=customer.getId_customer()%>"><%= customer.getName() %></option>
+                    <%
+                        }
+                    %>
                 </select>
                 <label class="block mb-2">Producto:</label>
                 <input type="text" placeholder="Nombre del producto" class="w-full p-2 border rounded-lg">
@@ -145,87 +177,20 @@
             <div class="bg-white p-4 no-scrollbar rounded-lg shadow-md col-span-2 ventas-list min-h-[500px] flex flex-col">
                 <h2 class="text-lg font-semibold mb-4">Ventas Realizadas</h2>
                 <div class="space-y-4">
+                    <%
+                        for(Sale sale : saleList){
+                    %>
                     <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                        <span>Venta #001 - Cliente: Juan Pérez</span>
+                        <span>Venta #<%=sale.getId_sale()%> - Cliente: <%=sale.getCustomer().getName()%></span>
                         <div>
                             <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
                             <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
                             <button class="text-red-500 ml-4">Eliminar</button>
                         </div>
                     </div>
-                    <!-- Más registros de ventas aquí -->
-                    <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                        <span>Venta #001 - Cliente: Juan Pérez</span>
-                        <div>
-                            <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
-                            <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
-                            <button class="text-red-500 ml-4">Eliminar</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                        <span>Venta #001 - Cliente: Juan Pérez</span>
-                        <div>
-                            <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
-                            <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
-                            <button class="text-red-500 ml-4">Eliminar</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                        <span>Venta #001 - Cliente: Juan Pérez</span>
-                        <div>
-                            <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
-                            <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
-                            <button class="text-red-500 ml-4">Eliminar</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                        <span>Venta #001 - Cliente: Juan Pérez</span>
-                        <div>
-                            <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
-                            <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
-                            <button class="text-red-500 ml-4">Eliminar</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                        <span>Venta #001 - Cliente: Juan Pérez</span>
-                        <div>
-                            <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
-                            <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
-                            <button class="text-red-500 ml-4">Eliminar</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                        <span>Venta #001 - Cliente: Juan Pérez</span>
-                        <div>
-                            <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
-                            <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
-                            <button class="text-red-500 ml-4">Eliminar</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                        <span>Venta #001 - Cliente: Juan Pérez</span>
-                        <div>
-                            <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
-                            <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
-                            <button class="text-red-500 ml-4">Eliminar</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                        <span>Venta #001 - Cliente: Juan Pérez</span>
-                        <div>
-                            <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
-                            <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
-                            <button class="text-red-500 ml-4">Eliminar</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                        <span>Venta #001 - Cliente: Juan Pérez</span>
-                        <div>
-                            <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
-                            <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
-                            <button class="text-red-500 ml-4">Eliminar</button>
-                        </div>
-                    </div>
+                    <%
+                        }
+                    %>
                 </div>
             </div>
         </div>
@@ -271,17 +236,16 @@
 <!-- Scripts -->
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
-<script>
-    function abrirModal(modalId) {
-        document.getElementById(modalId).style.display = 'flex';
-    }
-
-    function cerrarModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-</script>
+<script src="js/function_sale.js"></script>
 
 </body>
+<%
+        }else{
+            response.sendRedirect("Sales");
+        }
+    }else{
+        response.sendRedirect("login.jsp");
+    }
+%>
 </html>
 
