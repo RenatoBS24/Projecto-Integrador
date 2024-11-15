@@ -183,7 +183,7 @@
                             String json = gson.toJson(inventories).replace("\"","'");
 
                         %>
-                        <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4" onclick="openEditModal('<%=product.getName()%>','<%=product.getPrice()%>','<%=product.getStock()%>',`<%=json%>`)">Editar</button>
+                        <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4" onclick="openEditModal('<%=product.getId_product()%>','<%=product.getName()%>','<%=product.getPrice()%>','<%=product.getStock()%>','<%=product.getCategory().getId_category()%>','<%=product.getUnitOfMeasurement().getId_unit_of_measurement()%>',`<%=json%>`)">Editar</button>
                     </div>
                 </div>
                 <%
@@ -220,7 +220,7 @@
                             String json = gson.toJson(inventories).replace("\"","'");
 
                         %>
-                        <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4" onclick="openEditModal('<%=product.getName()%>','<%=product.getPrice()%>','<%=product.getStock()%>',`<%=json%>`)">Editar</button>
+                        <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4" onclick="openEditModal('<%=product.getId_product()%>','<%=product.getName()%>','<%=product.getPrice()%>','<%=product.getStock()%>','<%=product.getCategory().getId_category()%>','<%=product.getUnitOfMeasurement().getId_unit_of_measurement()%>',`<%=json%>`)">Editar</button>
                     </div>
                 </div>
                 <%
@@ -240,39 +240,35 @@
 <div id="productModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white w-full max-w-3xl p-6 rounded-lg shadow-lg">
         <h2 class="text-2xl font-bold mb-4">Agregar Información del Producto</h2>
-        <form>
+        <form action="CreateProduct" method="post">
             <!-- Basic Product Information -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Nombre del Producto</label>
-                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <label class="block text-sm font-medium text-gray-700" for="name">Nombre del Producto</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="name" id="name">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Precio</label>
-                    <input type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <label class="block text-sm font-medium text-gray-700" for="price">Precio</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="price" id="price">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Stock</label>
-                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Número de Lote</label>
-                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <label class="block text-sm font-medium text-gray-700" for="lot">Número de Lote</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="lot" id="lot">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Fecha de Vencimiento</label>
-                    <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name = "expired_date">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Fecha de Compra</label>
-                    <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="purchase_date">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="unit">Unidad de medida</label>
-                    <select name="" id="unit" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <select name="unit" id="unit" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
                         <%
                             for (UnitOfMeasurement unitOfMeasurement:unitOfMeasurementList){
 
@@ -286,7 +282,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="category">Categoria</label>
-                    <select id="category" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">
+                    <select id="category" name="category" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">
                         <%for(Category category: categoryList){%>
 
                         <option value="<%=category.getId_category()%>"><%=category.getName_category()%></option>
@@ -296,8 +292,12 @@
 
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700">Stock</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="stock">
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700">Precio de compra</label>
-                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="purchase_price">
                 </div>
 
 
@@ -322,17 +322,19 @@
 <div id="editProductModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white w-full max-w-3xl p-6 rounded-lg shadow-lg">
         <h2 class="text-2xl font-bold mb-4">Editar Información del Producto</h2>
-        <form>
+        <form action="UpdateProduct" method="post">
+            <input type="hidden" name="id_product" id="id_product">
+            <input type="hidden" name="id_inventory" id="id_inventory">
             <!-- Basic Product Information -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Nombre del Producto</label>
-                    <input id="editProductName" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input id="editProductName" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="name">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Precio</label>
-                    <input id="editProductPrice" type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input id="editProductPrice" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="price">
                 </div>
             </div>
 
@@ -343,7 +345,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="units">Unidad de medida</label>
-                    <select name="" id="units" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <select name="unit" id="units" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
                         <%
                             for (UnitOfMeasurement unitOfMeasurement:unitOfMeasurementList){
 
@@ -356,8 +358,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700" for="categorys">Categoria</label>
-                    <select id="categories" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">
+                    <label class="block text-sm font-medium text-gray-700" for="categories">Categoria</label>
+                    <select id="categories" name="category" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">
                         <%for(Category category: categoryList){%>
 
                         <option value="<%=category.getId_category()%>"><%=category.getName_category()%></option>
@@ -368,26 +370,26 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="editLotNumber">Número de Lotes</label>
-                    <select name="" id="editLotNumber" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" onchange="change()">
+                    <select name="lot" id="editLotNumber"  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" onchange="change()">
 
                     </select>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="editExpiryDate">Fecha de Caducidad</label>
-                    <input id="editExpiryDate" type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input id="editExpiryDate" name="expired" type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Fecha de Compra</label>
-                    <input id="editBuyDate" type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input id="editBuyDate" type="date" name="purchase" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Precio de compra</label>
-                    <input id="editPurchasePrice" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input id="editPurchasePrice" type="text" name="buy_purchase" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Stock del Inventario</label>
-                    <input type="text" id="editProductStock" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input type="text" id="editProductStock"  name="stock" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
                 </div>
             </div>
             <!-- Modal Actions -->

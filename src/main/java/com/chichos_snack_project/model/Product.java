@@ -8,15 +8,17 @@ public class Product {
     private double price;
     private int stock;
     private Category category;
+    private UnitOfMeasurement unitOfMeasurement;
     public Product(){
     }
 
-    public Product(int id_product, String name, double price, int stock, Category category) {
+    public Product(int id_product, String name, double price, int stock, Category category ,UnitOfMeasurement unitOfMeasurement) {
         this.id_product = id_product;
         this.name = name;
         this.price = price;
         this.stock = stock;
         this.category = category;
+        this.unitOfMeasurement = unitOfMeasurement;
     }
 
     public int getId_product() {
@@ -59,17 +61,25 @@ public class Product {
         this.category = category;
     }
 
+    public UnitOfMeasurement getUnitOfMeasurement() {
+        return unitOfMeasurement;
+    }
+
+    public void setUnitOfMeasurement(UnitOfMeasurement unitOfMeasurement) {
+        this.unitOfMeasurement = unitOfMeasurement;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id_product == product.id_product && Double.compare(price, product.price) == 0 && stock == product.stock && Objects.equals(name, product.name) && Objects.equals(category, product.category);
+        return id_product == product.id_product && Double.compare(price, product.price) == 0 && stock == product.stock && Objects.equals(name, product.name) && Objects.equals(category, product.category) && Objects.equals(unitOfMeasurement, product.unitOfMeasurement);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id_product, name, price, stock, category);
+        return Objects.hash(id_product, name, price, stock, category, unitOfMeasurement);
     }
 
     @Override
@@ -80,6 +90,7 @@ public class Product {
                 ", price=" + price +
                 ", stock=" + stock +
                 ", category=" + category +
+                ", unitOfMeasurement=" + unitOfMeasurement +
                 '}';
     }
 }

@@ -3,12 +3,7 @@ package com.chichos_snack_project.dao;
 import com.chichos_snack_project.interfaces.ProductDAO;
 import com.chichos_snack_project.model.Product;
 import com.chichos_snack_project.util.MysqlConnector;
-import org.apache.logging.log4j.LogManager;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.logging.Logger;
 
 public class ProductDAOImpl implements ProductDAO {
@@ -19,7 +14,13 @@ public class ProductDAOImpl implements ProductDAO {
     }
     @Override
     public void create(Product product) throws SQLException {
-
+        String sql = "{CALL sp_insert_producto(?,?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setString(1,product.getName());
+        cs.setDouble(2,product.getPrice());
+        cs.setInt(3,product.getUnitOfMeasurement().getId_unit_of_measurement());
+        cs.setInt(4,product.getCategory().getId_category());
+        cs.execute();
     }
 
     @Override
@@ -29,7 +30,14 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public void update(Integer integer, Product product) throws SQLException {
-
+        String sql = "{CALL sp_update_producto(?,?,?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,integer);
+        cs.setString(2,product.getName());
+        cs.setDouble(3,product.getPrice());
+        cs.setInt(4,product.getUnitOfMeasurement().getId_unit_of_measurement());
+        cs.setInt(5,product.getCategory().getId_category());
+        cs.execute();
     }
 
     @Override

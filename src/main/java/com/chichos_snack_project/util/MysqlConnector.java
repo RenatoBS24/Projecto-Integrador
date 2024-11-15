@@ -1,7 +1,5 @@
 package com.chichos_snack_project.util;
 
-import org.apache.logging.log4j.LogManager;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;

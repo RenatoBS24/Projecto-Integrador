@@ -4,10 +4,7 @@ import com.chichos_snack_project.interfaces.InventoryDAO;
 import com.chichos_snack_project.model.Inventory;
 import com.chichos_snack_project.util.MysqlConnector;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class InventoryDAOImpl implements InventoryDAO {
 
@@ -18,7 +15,14 @@ public class InventoryDAOImpl implements InventoryDAO {
 
     @Override
     public void create(Inventory inventory) throws SQLException {
-
+        String sql = "{CALL sp_insert_inventario(?,?,?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,inventory.getStock());
+        cs.setString(2,inventory.getLot());
+        cs.setDate(3,inventory.getExpiration_date());
+        cs.setDate(4,inventory.getPurchase_date());
+        cs.setDouble(5,inventory.getPurchase_price());
+        cs.execute();
     }
 
     @Override
@@ -28,7 +32,14 @@ public class InventoryDAOImpl implements InventoryDAO {
 
     @Override
     public void update(Integer integer, Inventory inventory) throws SQLException {
-
+        String sql = "{CALL sp_update_inventario(?,?,?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,integer);
+        cs.setInt(2,inventory.getStock());
+        cs.setDate(3,inventory.getExpiration_date());
+        cs.setDate(4,inventory.getPurchase_date());
+        cs.setDouble(5,inventory.getPurchase_price());
+        cs.execute();
     }
 
     @Override
