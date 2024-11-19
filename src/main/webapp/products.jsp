@@ -17,13 +17,23 @@
 </head>
 
 <style>
+    /* Inicialmente ocultamos el overlay */
+    #reportModal {
+        display: none;
+    }
     .no-scrollbar::-webkit-scrollbar {
         display: none;
     }
-
     .no-scrollbar {
         scrollbar-width: none;
     }
+    .no-scroll{
+        overflow: hidden;
+    }
+    .dimmed{
+        opacity: 0.7;
+    }
+
 </style>
 
 <body class="bg-gray-100">
@@ -31,7 +41,6 @@
     HttpSession session1  = request.getSession();
     boolean is_valid_user = false;
     if(session1.getAttribute("is_valid_user") != null){
-
         if(request.getAttribute("productList") !=null && request.getAttribute("categoryList") !=null && request.getAttribute("unitOfMeasurementList") !=null && request.getAttribute("inventoryList") !=null){
             @SuppressWarnings("unchecked")
             List<Product> productList = (List<Product>) request.getAttribute("productList");
@@ -132,6 +141,7 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <!-- Button to Open Modal -->
+                    <button class="bg-green-400 text-white p-2 rounded-lg hover:bg-grean-600" onclick="openReportModal()">Generar reporte</button>
                     <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" onclick="openModal()">+ Agregar productos</button>
                     <div class="relative">
                         <a href="Notifications">
@@ -427,6 +437,69 @@
                 <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Eliminar</button>
             </div>
         </form>
+    </div>
+</div>
+
+
+<div id="reportModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white w-2/3 rounded-lg shadow-lg p-6 relative">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold">Reporte de Productos</h2>
+            <button class="text-black hover:text-red-500" onclick="closeReportModal()">
+                <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+            </button>
+        </div>
+
+        <!-- Dropdown para seleccionar el periodo -->
+        <div class="flex justify-start items-center mb-6">
+            <form action="" class="flex justify-start items-center">
+                <label for="filter" class="text-lg font-semibold">Categoria:</label>
+                <select id="filter" onchange="categoryFilter()" class="p-2 bg-white border border-gray-300 rounded-lg ms-3">
+                    <option value="0">Todos</option>
+                    <%
+                        for(Category category: categoryList){
+                    %>
+                    <option value="<%=category.getId_category()%>"><%=category.getName_category()%></option>
+                    <%
+                        }
+                    %>
+                </select>
+                <div class="flex justify-center ms-3">
+                    <button class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600">Exportar</button>
+                </div>
+            </form>
+
+        </div>
+
+        <!-- Tabla del reporte -->
+        <div class="overflow-y-auto max-h-96">
+            <table class="table-auto w-full text-center border border-gray-200" id="reportTable">
+                <thead class="bg-blue-200 sticky top-0">
+                <tr>
+                    <th class="px-4 py-2">Producto</th>
+                    <th class="px-4 py-2">Categoria</th>
+                    <th class="px-4 py-2">Precio</th>
+                    <th class="px-4 py-2">Stock Disponible</th>
+                </tr>
+                </thead>
+                <tbody>
+                <%
+                    for(Product product: productList){
+                        String price = String.format("S/ %.2f",product.getPrice());
+                %>
+                <tr>
+                    <td class="border px-4 py-2"><%=product.getName()%></td>
+                    <td class="border px-4 py-2"><%=product.getCategory().getName_category()%></td>
+                    <td class="border px-4 py-2"><%=price%></td>
+                    <td class="border px-4 py-2"><%=product.getStock()%></td>
+                    <td class="hidden"><%=product.getCategory().getId_category()%></td>
+                </tr>
+                <%
+                    }
+                %>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <%

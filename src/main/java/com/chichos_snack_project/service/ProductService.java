@@ -5,6 +5,16 @@ import com.chichos_snack_project.model.Category;
 import com.chichos_snack_project.model.Product;
 import com.chichos_snack_project.model.UnitOfMeasurement;
 import com.chichos_snack_project.util.AppConfig;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.WorkbookUtil;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -13,6 +23,7 @@ import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.apache.poi.ss.util.CellUtil.createCell;
 
 public class ProductService  {
     private static final java.util.logging.Logger log = Logger.getLogger(ProductService.class.getName());
@@ -131,5 +142,69 @@ public class ProductService  {
             log.severe("Hubo un error al eliminar el producto  porque un argumento no cumple las condiciones de checkArgument state: "+e.getMessage());
             return false;
         }
+    }
+
+    public static void createReport(String id_user,String id_category){
+        try{
+            checkNotNull(id_user,"El parametro id_user no puede ser nulo");
+            checkNotNull(id_category,"El parametro id_category no puede ser nulo");
+            checkArgument(id_user.matches("\\d+"),"El id del usuario debe ser un numero");
+            checkArgument(id_category.matches("\\d+"),"El id de la categoria debe ser un numero");
+            int id_user_cast = Integer.parseInt(id_user);
+            int id_category_cast = Integer.parseInt(id_category);
+            // validaciones para id_user_cast
+            checkArgument(id_user_cast>0,"El id del usuario debe ser mayor a 0");
+            try(ResultSet rs = productDAO.getProductsByCategory(id_category_cast);Workbook workbook = new XSSFWorkbook();){
+                if(rs !=null){
+                    String safeName = WorkbookUtil.createSafeSheetName("Reporte de productos");
+                    Sheet sheet = workbook.createSheet(safeName);
+                    //Header
+                    Row row = sheet.createRow(0);
+                    createCell(workbook, row, 0,"Producto");
+                    createCell(workbook, row, 1,"Categoria");
+                    createCell(workbook, row, 2, "Precio");
+                    createCell(workbook, row, 3,"Stock");
+                    int rowId = 1;
+                    while(rs.next()){
+                        Row rowItem = sheet.createRow(rowId++);
+                        createCell(workbook, rowItem, 0,rs.getString(2));
+                        createCell(workbook, rowItem, 1,rs.getString(6));
+                        createCell(workbook, rowItem, 2, rs.getDouble(3));
+                        createCell(workbook, rowItem, 3,rs.getInt(4));
+                    }
+                    String filename = "Prueba.xlsx";
+                    OutputStream fileOut = Files.newOutputStream(Paths.get(filename));
+                    workbook.write(fileOut);
+                }
+
+            }catch (IOException e){
+                log.severe("Hubo un error al crear el reporte state: "+e.getMessage());
+            }
+            catch (SQLException e){
+                log.severe("Hubo un error al crear el reporte state: "+e.getSQLState());
+            }
+        } catch (NullPointerException e) {
+            log.severe("Hubo un error al crear el reporte porque un argumento es nulo state: " + e.getMessage());
+        }catch (IllegalArgumentException e){
+            log.severe("Hubo un error al crear el reporte porque un argumento no cumple las condiciones de checkArgument state: "+e.getMessage());
+        }
+
+
+    }
+
+    private static void createCell(Workbook wb,Row row,int column,Object val){
+        CreationHelper creationHelper = wb.getCreationHelper();
+        Cell cell = row.createCell(column);
+        CellStyle cellStyle = wb.createCellStyle();
+        if(val instanceof String){
+            cell.setCellValue((String) val);
+        }else if(val instanceof Integer){
+            cell.setCellValue((Integer) val);
+        } else if (val instanceof Double){
+            cell.setCellValue((Double) val);
+        }
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        cell.setCellStyle(cellStyle);
     }
 }

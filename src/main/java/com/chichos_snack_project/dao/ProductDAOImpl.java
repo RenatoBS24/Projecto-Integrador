@@ -48,6 +48,13 @@ public class ProductDAOImpl implements ProductDAO {
         cs.setInt(1,integer);
         cs.execute();
     }
+
+    public ResultSet getProductsByCategory(Integer id_category) throws SQLException {
+        String sql = "{CALL sp_getProductosByCategoria(?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,id_category);
+        return cs.executeQuery();
+    }
     public ResultSet findAll() throws SQLException {
         String sql = "select * from uv_products";
         try{

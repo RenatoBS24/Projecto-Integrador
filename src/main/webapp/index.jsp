@@ -220,7 +220,7 @@
         </div>
 
         <!-- Tabla del reporte -->
-        <table class="table-auto w-full text-center border border-gray-200">
+        <table class="table-auto w-full text-center border border-gray-200" >
             <thead class="bg-blue-200">
             <tr>
                 <th class="px-4 py-2">Producto</th>
