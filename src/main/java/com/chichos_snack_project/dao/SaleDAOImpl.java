@@ -38,7 +38,7 @@ public class SaleDAOImpl implements SaleDAO {
     }
     public ResultSet findAll() throws SQLException{
         String sql = "select * from uv_ventas";
-        PreparedStatement ps = con.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
         return ps.executeQuery();
     }
 

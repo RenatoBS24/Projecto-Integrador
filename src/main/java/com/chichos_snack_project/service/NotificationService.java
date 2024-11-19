@@ -18,8 +18,7 @@ public class NotificationService {
 
     public static List<Notification> getNotifications() {
         List<Notification> notificationList = new LinkedList<>();
-        try{
-            ResultSet rs = notificationDAO.findAll();
+        try(ResultSet rs = notificationDAO.findAll()){
             if(rs !=null){
                 while (rs.next()){
                     notificationList.add(new Notification(rs.getInt(1),new Product(rs.getInt(2),"",0,0,null,null),rs.getString(3),rs.getString(4),rs.getDate(5)));

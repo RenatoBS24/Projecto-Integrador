@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class UserService  {
@@ -30,6 +31,7 @@ public class UserService  {
         try{
             checkNotNull(username,"El parametro name no puede ser nulo");
             checkNotNull(password,"El parametro password no puede ser nulo");
+            checkArgument(username.matches("^[a-zA-Z0-9_\\-\\s]+$"),"El parametro name solo puede contener letras, numeros, guiones y guiones bajos");
             User user = userDAO.read(new User(username,password,0));
             if(user != null){
                 if(user.getPassword().equals(password)){
@@ -61,6 +63,8 @@ public class UserService  {
             checkNotNull(name,"El parametro name no puede ser nulo");
             checkNotNull(password,"El parametro password no puede ser nulo");
             checkNotNull(passwordRepeat,"El parametro passwordRepeat no puede ser nulo");
+            checkArgument(name.matches("^[a-zA-Z0-9_\\-\\s]+$"),"El parametro name solo puede contener letras, numeros, guiones y guiones bajos");
+
             if (password.equals(passwordRepeat)) {
                 if (!name.trim().isEmpty() && !password.trim().isEmpty()) {
                     User user = new User(name,sha256(password),id_role);
@@ -87,6 +91,7 @@ public class UserService  {
             checkNotNull(username,"El parametro name no puede ser nulo");
             checkNotNull(password,"El parametro password no puede ser nulo");
             checkNotNull(passwordRepeat,"El parametro passwordRepeat no puede ser nulo");
+            checkArgument(username.matches("^[a-zA-Z0-9_\\-\\s]+$"),"El parametro name solo puede contener letras, numeros, guiones y guiones bajos");
             if (password.equals(passwordRepeat)) {
                 try{
                     int id_user = userDAO.read(username.trim());
@@ -113,7 +118,7 @@ public class UserService  {
      */
     private static String sha256(String password){
         HashFunction hashFunction = Hashing.sha256();
-        HashCode hashCode = hashFunction.newHasher().putString(password, StandardCharsets.UTF_8).hash();
+        @SuppressWarnings("UnstableApiUsage") HashCode hashCode = hashFunction.newHasher().putString(password, StandardCharsets.UTF_8).hash();
         return hashCode.toString();
     }
 }

@@ -2,6 +2,7 @@
 <%@ page import="com.chichos_snack_project.model.Employee" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.chichos_snack_project.model.Sale" %>
+<%@ page import="com.google.gson.Gson" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 
@@ -110,12 +111,14 @@
                 </a>
             </li>
             <li class="mt-16">
-                <a href="LogOut" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                <form action="LogOut" method="POST">
+                    <button class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
                         <span>
                             <ion-icon name="log-out-outline" class="text-xl"></ion-icon>
                         </span>
-                    <span>Salir</span>
-                </a>
+                        <span>Salir</span>
+                    </button>
+                </form>
             </li>
         </ul>
     </div>
@@ -178,12 +181,15 @@
                 <h2 class="text-lg font-semibold mb-4">Ventas Realizadas</h2>
                 <div class="space-y-4">
                     <%
+                        Gson gson = new Gson();
                         for(Sale sale : saleList){
+                            String json = gson.toJson(sale.getProductList()).replace("\"","'");
+
                     %>
                     <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
                         <span>Venta #<%=sale.getId_sale()%> - Cliente: <%=sale.getCustomer().getName()%></span>
                         <div>
-                            <button class="text-blue-500" onclick="abrirModal('reporteModal')">Ver Detalles</button>
+                            <button class="text-blue-500" onclick="abrirModal('<%=sale.getEmployee().getName()%>','<%=sale.getCustomer().getName()%>','<%=sale.getSale_date()%>','<%=sale.getAmount()%>',`<%=json%>`)">Ver Detalles</button>
                             <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
                             <button class="text-red-500 ml-4">Eliminar</button>
                         </div>
@@ -202,16 +208,15 @@
     <div class="bg-white w-3/4 lg:w-1/2 p-6 rounded-lg">
         <h3 class="text-xl font-semibold mb-4">Detalles de Venta</h3>
         <div class="space-y-2">
-            <p><strong>Vendedor:</strong> María López</p>
-            <p><strong>Cliente:</strong> Juan Pérez</p>
-            <p><strong>Fecha:</strong> 12/11/2024</p>
+            <p id="employeeId" ><strong>Vendedor:</strong> </p>
+            <p id="customerId"><strong>Cliente:</strong> </p>
+            <p id="dateId"><strong>Fecha:</strong></p>
             <hr>
             <h4 class="font-semibold mt-4">Productos Vendidos:</h4>
-            <ul class="list-disc ml-6">
-                <li>Producto 1 - Cantidad: 2 - Precio: $10.00</li>
-                <li>Producto 2 - Cantidad: 1 - Precio: $5.00</li>
+            <ul class="list-disc ml-6" id="list">
+
             </ul>
-            <p class="font-semibold mt-4">Total: $25.00</p>
+            <p class="font-semibold mt-4" id="totalId"></p>
         </div>
         <button onclick="cerrarModal('reporteModal')" class="mt-6 w-full bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Cerrar</button>
     </div>

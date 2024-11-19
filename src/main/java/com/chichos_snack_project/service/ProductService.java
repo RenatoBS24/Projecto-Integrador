@@ -19,8 +19,7 @@ public class ProductService  {
     private static final ProductDAOImpl productDAO = new ProductDAOImpl(AppConfig.getDatasource());
     public static List<Product> getProducts(){
         List<Product> productsList = new LinkedList<>();
-        try{
-            ResultSet rs = productDAO.findAll();
+        try(ResultSet rs = productDAO.findAll()){
             if(rs !=null){
                 while (rs.next()){
                     productsList.add(new Product(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getInt(4),new Category(rs.getInt(5),rs.getString(6),""),new UnitOfMeasurement(rs.getInt(7),rs.getString(8),"")));
@@ -66,7 +65,7 @@ public class ProductService  {
 
     }
 
-    public static boolean UpdateProduct(String id_product,String name,String price,String unit,String category){
+    public static boolean UpdateProduct(String id_product, String name, String price, String unit, String category){
         try{
             checkNotNull(id_product,"El parametro id_product no puede ser nulo");
             checkNotNull(name,"El parametro name no puede ser nulo");
@@ -98,6 +97,38 @@ public class ProductService  {
         }
         catch (SQLException e){
             log.severe("Hubo un error al actualizar el producto state: "+e.getSQLState());
+            return false;
+        }
+    }
+
+    public static boolean deleteProduct(String id_product, String code, String code_entered){
+        try{
+            checkNotNull(code,"El parametro code no puede ser nulo");
+            checkNotNull(code_entered,"El parametro code_entered no puede ser nulo");
+            checkArgument(code.matches("\\d+"),"El codigo solo debe contener numeros");
+            checkArgument(code_entered.matches("\\d+"),"El codigo ingresado solo debe contener numeros");
+            checkNotNull(id_product,"El parametro id_product no puede ser nulo");
+            id_product = id_product.trim();
+            checkArgument(id_product.matches("\\d+"),"El id del producto debe ser un numero");
+            checkArgument(!id_product.equals("0"),"El id del producto no puede ser 0");
+            if (code.equals(code_entered)) {
+                try {
+                    int id_product_cast = Integer.parseInt(id_product);
+                    productDAO.delete(id_product_cast);
+                    return true;
+                } catch (SQLException e) {
+                    log.severe("No se pudo eliminar el producto por una SQLException en el metodo delete de ProductDAOImpl " + e.getSQLState());
+                    return false;
+                }
+            }else{
+                log.info("Los codigos ingresados no son iguales");
+                return false;
+            }
+        }catch (NullPointerException e){
+            log.severe("Hubo un error al eliminar el producto porque un argumento es nulo state: "+e.getMessage());
+            return false;
+        }catch (IllegalArgumentException e){
+            log.severe("Hubo un error al eliminar el producto  porque un argumento no cumple las condiciones de checkArgument state: "+e.getMessage());
             return false;
         }
     }

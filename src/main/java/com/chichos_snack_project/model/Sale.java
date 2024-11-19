@@ -91,12 +91,12 @@ public class Sale {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Sale sale = (Sale) o;
-        return id_sale == sale.id_sale && Double.compare(amount, sale.amount) == 0 && count == sale.count && Objects.equals(employee, sale.employee) && Objects.equals(customer, sale.customer) && Objects.equals(sale_date, sale.sale_date) && Objects.equals(productList, sale.productList);
+        return id_sale == sale.id_sale;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id_sale, employee, customer, sale_date, amount, count, productList);
+        return Objects.hash(id_sale);
     }
 
     @Override

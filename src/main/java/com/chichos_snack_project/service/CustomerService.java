@@ -16,8 +16,7 @@ public class CustomerService {
     private static final java.util.logging.Logger log = Logger.getLogger(CustomerService.class.getName());
     public static List<Customer> getCustomer(){
         List<Customer> customerList = new LinkedList<>();
-        try{
-            ResultSet rs = customerDAO.findAll();
+        try(ResultSet rs = customerDAO.findAll()){
             if(rs !=null){
                 while (rs.next()){
                     customerList.add(new Customer(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDate(4),rs.getDouble(5),rs.getDouble(6),rs.getDouble(7),rs.getInt(8)));
@@ -99,8 +98,7 @@ public class CustomerService {
     }
     public static int getCountCustomer(){
         int count = 0;
-        try{
-            ResultSet rs = customerDAO.countCustomer();
+        try(ResultSet rs = customerDAO.countCustomer()){
             if(rs != null && rs.next()){
                 count = rs.getInt(1);
             }else{

@@ -15,9 +15,8 @@ public class CategoryService {
     private static final CategoryDAOImpl categoryDAO = new CategoryDAOImpl(AppConfig.getDatasource());
 
     public static List<Category> getCategory(){
-        List<Category> categoryList = new LinkedList<Category>();
-        try{
-            ResultSet rs = categoryDAO.findAll();
+        List<Category> categoryList = new LinkedList<>();
+        try(ResultSet rs = categoryDAO.findAll()){
             if(rs != null){
                 while (rs.next()) {
                     categoryList.add(new Category(rs.getInt(1),rs.getString(2), rs.getString(3)));

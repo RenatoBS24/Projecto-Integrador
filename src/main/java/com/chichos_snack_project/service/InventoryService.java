@@ -23,8 +23,7 @@ public class InventoryService {
 
     public static List<Inventory> getAllInventory() {
         List<Inventory> inventoryList = new LinkedList<>();
-        try{
-            ResultSet rs = inventoryDAO.findAll();
+        try(ResultSet rs = inventoryDAO.findAll()){
             if (rs !=null){
                 while (rs.next()){
                     inventoryList.add(new Inventory(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getDate(4),rs.getDate(5),rs.getDouble(6),new Product(rs.getInt(7),rs.getString(8),0,0,new Category(rs.getInt(10), rs.getString(11),""),new UnitOfMeasurement(rs.getInt(12),rs.getString(13),""))));

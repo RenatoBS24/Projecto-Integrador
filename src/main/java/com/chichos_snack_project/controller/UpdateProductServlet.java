@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "UpdateProductServlet", value = "/UpdateProduct")
+@WebServlet(name = "UpdateProductServlet", value = "/updateProduct")
 public class UpdateProductServlet extends HttpServlet {
     public void init() {
     }

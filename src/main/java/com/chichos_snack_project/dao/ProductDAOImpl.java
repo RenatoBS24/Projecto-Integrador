@@ -3,6 +3,7 @@ package com.chichos_snack_project.dao;
 import com.chichos_snack_project.interfaces.ProductDAO;
 import com.chichos_snack_project.model.Product;
 import com.chichos_snack_project.util.MysqlConnector;
+
 import java.sql.*;
 import java.util.logging.Logger;
 
@@ -42,7 +43,10 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public void delete(Integer integer) throws SQLException {
-
+        String sql = "{CALL sp_delete_producto(?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,integer);
+        cs.execute();
     }
     public ResultSet findAll() throws SQLException {
         String sql = "select * from uv_products";

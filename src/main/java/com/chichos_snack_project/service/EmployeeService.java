@@ -21,8 +21,7 @@ public class EmployeeService {
     private static final java.util.logging.Logger log = Logger.getLogger(EmployeeService.class.getName());
     public static List<Employee> getEmployees(){
         List<Employee> employeeList = new LinkedList<>();
-        try{
-            ResultSet rs = employeeDAO.findAll();
+        try(ResultSet rs = employeeDAO.findAll()){
             if(rs !=null){
                 while (rs.next()){
                     employeeList.add(new Employee(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getDate(6),rs.getString(7)));

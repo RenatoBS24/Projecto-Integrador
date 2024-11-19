@@ -14,11 +14,14 @@ public class UnitOfMeasurementService {
 
     private static final java.util.logging.Logger log = Logger.getLogger(UnitOfMeasurementService.class.getName());
     private static final UnitOfMeasurementDAOImpl unitDAO = new UnitOfMeasurementDAOImpl(AppConfig.getDatasource());
-
+    /**
+     * Method for get all the units of measurement.
+     *
+     * @return a list of all the units of measurement.
+     */
     public static List<UnitOfMeasurement> getAllUnitOfMeasurements() {
         List<UnitOfMeasurement> unitOfMeasurementList = new LinkedList<>();
-        try{
-            ResultSet rs = unitDAO.findAll();
+        try(ResultSet rs = unitDAO.findAll()){
             if(rs != null){
                 while (rs.next()){
                     unitOfMeasurementList.add(new UnitOfMeasurement(rs.getInt(1),rs.getString(2), rs.getString(3)));

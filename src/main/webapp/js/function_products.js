@@ -101,3 +101,15 @@ function showCategory(category) {
     // Añadir la clase de borde al botón seleccionado
     document.getElementById(category + '-btn').classList.add('border-b-4', 'border-teal-500');
 }
+
+
+// open modal delete
+
+function openDeleteModal(id) {
+    document.getElementById('deleteProductModal').classList.remove('hidden');
+    document.getElementById('id').value = id;
+}
+
+function  closeDeleteModal(){
+    document.getElementById('deleteProductModal').classList.add('hidden');
+}

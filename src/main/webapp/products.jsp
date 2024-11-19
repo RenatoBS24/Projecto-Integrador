@@ -184,6 +184,7 @@
 
                         %>
                         <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4" onclick="openEditModal('<%=product.getId_product()%>','<%=product.getName()%>','<%=product.getPrice()%>','<%=product.getStock()%>','<%=product.getCategory().getId_category()%>','<%=product.getUnitOfMeasurement().getId_unit_of_measurement()%>',`<%=json%>`)">Editar</button>
+                        <button class="boton bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-800 ml-4" onclick="openDeleteModal('<%=product.getId_product()%>')">Eliminar</button>
                     </div>
                 </div>
                 <%
@@ -221,6 +222,7 @@
 
                         %>
                         <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4" onclick="openEditModal('<%=product.getId_product()%>','<%=product.getName()%>','<%=product.getPrice()%>','<%=product.getStock()%>','<%=product.getCategory().getId_category()%>','<%=product.getUnitOfMeasurement().getId_unit_of_measurement()%>',`<%=json%>`)">Editar</button>
+                        <button class="boton bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-800 ml-4" onclick="openDeleteModal('<%=product.getId_product()%>')">Eliminar</button>
                     </div>
                 </div>
                 <%
@@ -400,7 +402,45 @@
         </form>
     </div>
 </div>
+<!-- Modal for Delete Product -->
+<div id="deleteProductModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Eliminar Producto</h2>
+        <form action="DeleteProduct" method="POST">
+            <input type="hidden" id="id" name="id_product">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Código: </label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="code_entered">
+                <%
+                    if(request.getAttribute("Error") != null){
+                        String error = (String)request.getAttribute("Error");
+
+                %>
+                <p style="color: red"><%=error%></p>
+                <%
+                    }
+                %>
+
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeDeleteModal()">Cancelar</button>
+                <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Eliminar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<%
+    if(request.getAttribute("Error") != null){
+        String error = (String)request.getAttribute("Error");
+%>
+<script>
+    alert("<%=error%>");
+</script>
+<%
+    }
+%>
 <script src="js/function_products.js"></script>
+<script src="js/code_email_ajax.js"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>

@@ -19,10 +19,11 @@ public class SaleService {
 
     public static List<Sale> getSales(){
         List<Sale> saleList = new LinkedList<>();
-        try{
-            ResultSet rs = saleDAO.findAll();
+        try(ResultSet rs = saleDAO.findAll()){
+            int count = 1;
             if(rs !=null){
-                while (rs.next()) {
+                while (rs.absolute(count)) {
+                    count++;
                     int id = rs.getInt(1);
                     Employee employee = new Employee(rs.getInt(4),rs.getString(5),"",0,"",null,"");
                     Customer customer = new Customer(rs.getInt(2),rs.getString(3),"",null,0,0,0,0);
@@ -31,14 +32,20 @@ public class SaleService {
                     List<Product> productList = new LinkedList<>();
                     Product product = new Product(rs.getInt(6),rs.getString(7),rs.getDouble(8),rs.getInt(9),null,null);
                     productList.add(product);
+                    rs.beforeFirst();
                     while (rs.next()){
                         int id_compare = rs.getInt(1);
-                        if(id == id_compare){
+                        if(id == id_compare ){
                             Product products = new Product(rs.getInt(6),rs.getString(7),rs.getDouble(8),rs.getInt(9),null,null);
-                            productList.add(products);
+                            if(!productList.contains(products)){
+                                productList.add(products);
+                            }
                         }
                     }
-                    saleList.add(new Sale(id,employee,customer,date,amount,productList.size(),productList));
+                    Sale sale = new Sale(id,employee,customer,date,amount,productList.size(),productList);
+                    if(!saleList.contains(sale)){
+                        saleList.add(sale);
+                    }
                 }
             }else{
                 saleList.add(new Sale(0,null,null,null,0,0,null));
@@ -47,15 +54,13 @@ public class SaleService {
             return saleList;
         }catch (SQLException e){
             saleList.add(new Sale(0,null,null,null,0,0,null));
-            log.severe("Hubo un error al procesar la el resulset obtenido por el metodo getSales de SaleDAOImpl state: "+e.getSQLState());
+            log.severe("Hubo un error al procesar la el resulset obtenido por el metodo getSales de SaleDAOImpl state: "+e.getSQLState() +" "+e.getMessage());
             return saleList;
         }
-
     }
     public static double sumSales(){
         double total = 0;
-        try {
-            ResultSet rs = saleDAO.sumAmountSales();
+        try(ResultSet rs = saleDAO.sumAmountSales()) {
             if(rs.next()){
                 total = rs.getDouble(1);
             }
@@ -64,4 +69,6 @@ public class SaleService {
         }
         return total;
     }
+
+
 }
