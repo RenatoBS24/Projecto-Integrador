@@ -124,20 +124,23 @@ function closeReportModal(){
     modal.style.display = 'none';
     document.body.classList.remove('no-scroll','dimmed');
 }
-function categoryFilter(){
-    document.getElementById('filter').addEventListener('change', function() {
-        let filter = this.value;
-        let tabla = document.getElementsByTagName('table')[0];
-        let rows = tabla.getElementsByTagName('tr');
-        console.log(filter)
-        for (let i = 1; i < rows.length; i++) {
-            let categorySelected = rows[i].getElementsByTagName('td')[4].textContent.trim();
+document.addEventListener('DOMContentLoaded', function() {
+    function categoryFilter(){
+        document.getElementById('filter').addEventListener('change', function() {
+            let filter = this.value;
+            let tabla = document.getElementsByTagName('table')[0];
+            let rows = tabla.getElementsByTagName('tr');
+            console.log(filter)
+            for (let i = 1; i < rows.length; i++) {
+                let categorySelected = rows[i].getElementsByTagName('td')[4].textContent.trim();
 
-            if (filter === '0' || categorySelected === filter)  {
-                rows[i].style.display = '';
-            } else {
-                rows[i].style.display = 'none';
+                if (filter === '0' || categorySelected === filter)  {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
             }
-        }
-    });
-}
+        });
+    }
+    categoryFilter();
+});

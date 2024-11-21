@@ -1,5 +1,4 @@
 package com.chichos_snack_project.service;
-
 import com.chichos_snack_project.dao.ProductDAOImpl;
 import com.chichos_snack_project.model.Category;
 import com.chichos_snack_project.model.Product;
@@ -8,9 +7,6 @@ import com.chichos_snack_project.util.AppConfig;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -20,10 +16,8 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.apache.poi.ss.util.CellUtil.createCell;
 
 public class ProductService  {
     private static final java.util.logging.Logger log = Logger.getLogger(ProductService.class.getName());
@@ -144,7 +138,7 @@ public class ProductService  {
         }
     }
 
-    public static void createReport(String id_user,String id_category){
+    public static void createReport(String id_user,String id_category,OutputStream outputStream){
         try{
             checkNotNull(id_user,"El parametro id_user no puede ser nulo");
             checkNotNull(id_category,"El parametro id_category no puede ser nulo");
@@ -172,9 +166,8 @@ public class ProductService  {
                         createCell(workbook, rowItem, 2, rs.getDouble(3));
                         createCell(workbook, rowItem, 3,rs.getInt(4));
                     }
-                    String filename = "Prueba.xlsx";
-                    OutputStream fileOut = Files.newOutputStream(Paths.get(filename));
-                    workbook.write(fileOut);
+                    workbook.write(outputStream);
+                    log.info("El usuario:"+id_user_cast+" ha creado un reporte de productos");
                 }
 
             }catch (IOException e){

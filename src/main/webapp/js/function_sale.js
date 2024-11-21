@@ -16,9 +16,17 @@ function abrirModal(employee,customer,date,total,products) {
             ul.appendChild(li);
         });
     }
-    document.getElementById('reporteModal').style.display = 'flex';
+    document.getElementById('ModalDetails').style.display = 'flex';
 }
 
 function cerrarModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
+}
+
+function openReportModal(){
+    document.getElementById('reportModal').style.display = 'flex';
+}
+
+function closeReportModal(){
+    document.getElementById('reportModal').style.display = 'none';
 }

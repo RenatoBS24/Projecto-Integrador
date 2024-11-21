@@ -8,16 +8,23 @@
 
 
 ## Tecnologias usadas
-- **Java**
-- **JavaScript**
-- **TailwindCSS**
-- **MariaDB**
-- **Wildfly**
+- **Java**(Backend)
+- **JavaScript**(Frontend)
+- **TailwindCSS**(Frontend)
+- **MariaDB**(Base de datos)
+- **Wildfly**(Servidor)
 
 ## Descripcion
 **Se ha desarrollado un sistema web para administrar una bodega de productos de consumo diario, su objetivo es facilitar
 el control de inventario, ventas y clientes, así como la gestión de usuarios y roles.**
 
+## Imagenes del proyecto
+
+**Pantalla principal**
+[![imagen-2024-11-19-160924324.png](https://i.postimg.cc/Hn3qySgp/imagen-2024-11-19-160924324.png)](https://postimg.cc/ZvBskxng)
+
+**Vista de productos**
+[![imagen-2024-11-19-161209441.png](https://i.postimg.cc/JhJSq7LY/imagen-2024-11-19-161209441.png)](https://postimg.cc/R3SPCBqw)
 ## Cosas a tomar en cuenta
 
 >[!NOTE]

@@ -14,7 +14,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Ocultar el overlay inicialmente */
-        #reporteModal, #editarModal {
+        #reportModal, #editarModal,#ModalDetails {
             display: none;
         }
 
@@ -134,7 +134,8 @@
                     </span>
             </div>
             <div class="flex items-center space-x-4">
-                <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">+ Agregar productos</button>
+                <button class="bg-green-400 text-white p-2 rounded-lg hover:bg-grean-600" onclick="openReportModal()">Generar reporte</button>
+                <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">+Agregar productos</button>
                 <div class="relative">
                     <a href="Notifications">
                         <ion-icon name="notifications-outline" class="text-2xl text-gray-600"></ion-icon>
@@ -204,7 +205,7 @@
 </div>
 
 <!-- Modal de Detalles de Venta -->
-<div id="reporteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+<div id="ModalDetails" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
     <div class="bg-white w-3/4 lg:w-1/2 p-6 rounded-lg">
         <h3 class="text-xl font-semibold mb-4">Detalles de Venta</h3>
         <div class="space-y-2">
@@ -218,7 +219,7 @@
             </ul>
             <p class="font-semibold mt-4" id="totalId"></p>
         </div>
-        <button onclick="cerrarModal('reporteModal')" class="mt-6 w-full bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Cerrar</button>
+        <button onclick="cerrarModal('ModalDetails')" class="mt-6 w-full bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Cerrar</button>
     </div>
 </div>
 
@@ -234,6 +235,85 @@
             <label>Productos:</label>
             <textarea class="w-full p-2 border rounded-lg mb-4" rows="4"></textarea>
             <button onclick="cerrarModal('editarModal')" class="mt-6 w-full bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Guardar Cambios</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Reporte de Ventas-->
+<div id="reportModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white w-10/12 rounded-lg shadow-lg p-6 relative">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold">Reporte de ventas</h2>
+            <button class="text-black hover:text-red-500" onclick="closeReportModal()">
+                <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+            </button>
+        </div>
+
+        <!-- Dropdown para seleccionar el periodo -->
+        <div class="flex justify-start items-center mb-6">
+            <form action="" class="flex justify-start items-center">
+                <label for="filterstart" class="text-lg font-semibold">Desde:</label>
+                <input type="date" id="filterstart" class="p-1 bg-white border rounded-lg border-gray-300 m-3">
+                <label for="filterend" class="text-lg font-semibold">Hasta:</label>
+                <input type="date" id="filterend" class="p-1 bg-white border rounded-lg border-gray-300 m-3">
+                <label for="filterEmployee">Empleado</label>
+                <select id="filterEmployee" onchange="categoryFilter()" class="p-2 bg-white border border-gray-300 rounded-lg m-3">
+                    <option value="0">Todos</option>
+                    <%
+                        for(Employee employee : employeeList){
+                    %>
+                    <option value="<%=employee.getId_employee()%>"><%=employee.getName()%></option>
+                   <%
+                       }
+                   %>
+                </select>
+                <label for="filterCustomer" class="text-lg font-semibold">Cliente:</label>
+                <select id="filterCustomer" onchange="categoryFilter()" class="p-2 bg-white border border-gray-300 rounded-lg m-3">
+                    <option value="0">Todos</option>
+                    <%
+                        for(Customer customer : customerList){
+                    %>
+                    <option value="<%=customer.getId_customer()%>"><%=customer.getName()%></option>
+                    <%
+                        }
+                    %>
+                </select>
+                <div class="flex justify-center ms-3">
+                    <button class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600">Exportar</button>
+                </div>
+            </form>
+
+        </div>
+
+        <!-- Tabla del reporte -->
+        <div class="overflow-y-auto max-h-96">
+            <table class="table-auto w-full text-center border border-gray-200" id="reportTable">
+                <thead class="bg-blue-200 sticky top-0">
+                <tr>
+                    <th class="px-4 py-2">Id venta</th>
+                    <th class="px-4 py-2">Empleado</th>
+                    <th class="px-4 py-2">Cliente</th>
+                    <th class="px-4 py-2">Fecha</th>
+                    <th class="px-4 py-2">Monto</th>
+                </tr>
+                </thead>
+                <tbody>
+                <%
+                    for (Sale sale : saleList) {
+                %>
+                <tr>
+                    <td class="border px-4 py-2"><%= sale.getId_sale() %></td>
+                    <td class="border px-4 py-2"><%= sale.getEmployee().getName() %></td>
+                    <td class="border px-4 py-2"><%= sale.getCustomer().getName() %></td>
+                    <td class="border px-4 py-2"><%= sale.getSale_date() %></td>
+                    <td class="border px-4 py-2">S/<%= sale.getAmount() %></td>
+                </tr>
+                <%
+                    }
+                %>
+
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

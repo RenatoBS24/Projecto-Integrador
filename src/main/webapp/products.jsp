@@ -451,10 +451,9 @@
         </div>
 
         <!-- Dropdown para seleccionar el periodo -->
-        <div class="flex justify-start items-center mb-6">
-            <form action="" class="flex justify-start items-center">
+        <div class="flex justify-start items-center mb-6" >
                 <label for="filter" class="text-lg font-semibold">Categoria:</label>
-                <select id="filter" onchange="categoryFilter()" class="p-2 bg-white border border-gray-300 rounded-lg ms-3">
+                <select id="filter" name="id_category" onchange="categoryFilter()" class="p-2 bg-white border border-gray-300 rounded-lg ms-3">
                     <option value="0">Todos</option>
                     <%
                         for(Category category: categoryList){
@@ -465,10 +464,8 @@
                     %>
                 </select>
                 <div class="flex justify-center ms-3">
-                    <button class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600">Exportar</button>
+                    <button class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600" type="button" onclick="ajax_report()">Exportar</button>
                 </div>
-            </form>
-
         </div>
 
         <!-- Tabla del reporte -->
@@ -513,6 +510,7 @@
     }
 %>
 <script src="js/function_products.js"></script>
+<script src="js/ajax_report.js"></script>
 <script src="js/code_email_ajax.js"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

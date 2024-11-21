@@ -1,16 +1,12 @@
 package com.chichos_snack_project.controller;
-
 import com.chichos_snack_project.model.Category;
 import com.chichos_snack_project.model.Inventory;
 import com.chichos_snack_project.model.Product;
-
 import com.chichos_snack_project.model.UnitOfMeasurement;
 import com.chichos_snack_project.service.CategoryService;
 import com.chichos_snack_project.service.InventoryService;
 import com.chichos_snack_project.service.ProductService;
 import com.chichos_snack_project.service.UnitOfMeasurementService;
-
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

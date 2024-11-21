@@ -4,14 +4,11 @@ import com.chichos_snack_project.interfaces.SaleDAO;
 import com.chichos_snack_project.model.Sale;
 import com.chichos_snack_project.util.MysqlConnector;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class SaleDAOImpl implements SaleDAO {
 
-    private Connection con;
+    private final Connection con;
 
     public SaleDAOImpl(String name_datasource){
         con = MysqlConnector.getConnection(name_datasource);
@@ -35,6 +32,16 @@ public class SaleDAOImpl implements SaleDAO {
     @Override
     public void delete(Integer integer) throws SQLException {
 
+    }
+
+    public ResultSet getReport(Integer id_employee, Integer id_customer, java.sql.Date date_start, java.sql.Date date_end) throws SQLException{
+        String sql = "{CALL sp_create_reporte_ventas(?,?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,id_customer);
+        cs.setInt(2,id_employee);
+        cs.setDate(3,date_start);
+        cs.setDate(4,date_end);
+        return cs.executeQuery();
     }
     public ResultSet findAll() throws SQLException{
         String sql = "select * from uv_ventas";
