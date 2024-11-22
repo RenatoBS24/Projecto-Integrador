@@ -30,3 +30,142 @@ function openReportModal(){
 function closeReportModal(){
     document.getElementById('reportModal').style.display = 'none';
 }
+/*
+document.addEventListener('DOMContentLoaded', function() {
+    function employeeFilter(){
+        document.getElementById('filterEmployee').addEventListener('change', function() {
+            let filter = this.value;
+            let tabla = document.getElementsByTagName('table')[0];
+            let rows = tabla.getElementsByTagName('tr');
+            console.log(filter)
+            for (let i = 1; i < rows.length; i++) {
+                let categorySelected = rows[i].getElementsByTagName('td')[5].textContent.trim();
+
+                if (filter === '0' || categorySelected === filter)  {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        });
+    }
+    employeeFilter();
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    function customerFilter(){
+        document.getElementById('filterCustomer').addEventListener('change', function() {
+            let filter = this.value;
+            let tabla = document.getElementsByTagName('table')[0];
+            let rows = tabla.getElementsByTagName('tr');
+            console.log(filter)
+            for (let i = 1; i < rows.length; i++) {
+                let categorySelected = rows[i].getElementsByTagName('td')[6].textContent.trim();
+
+                if (filter === '0' || categorySelected === filter)  {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        });
+    }
+    customerFilter();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    function dateFilter(){
+        document.getElementById('filterStart').addEventListener('change', function() {
+            let filter = new Date(this.value);
+            let tabla = document.getElementsByTagName('table')[0];
+            let rows = tabla.getElementsByTagName('tr');
+            console.log(filter)
+            for (let i = 1; i < rows.length; i++) {
+                let dateSelected = new Date(rows[i].getElementsByTagName('td')[3].textContent.trim());
+
+                if (isNaN(filter.getTime()) || dateSelected >= filter) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        });
+    }
+    dateFilter();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    function dateEndFilter(){
+        document.getElementById('filterEnd').addEventListener('change', function() {
+            let filter = new Date(this.value);
+            let tabla = document.getElementsByTagName('table')[0];
+            let rows = tabla.getElementsByTagName('tr');
+            console.log(filter)
+            for (let i = 1; i < rows.length; i++) {
+                let dateSelected = new Date(rows[i].getElementsByTagName('td')[3].textContent.trim());
+
+                if (isNaN(filter.getTime()) || dateSelected <= filter) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        });
+    }
+    dateEndFilter();
+});
+*/document.addEventListener('DOMContentLoaded', function() {
+    function employeeFilter(){
+        document.getElementById('filterEmployee').addEventListener('change', function() {
+            applyFilters();
+        });
+    }
+    employeeFilter();
+});document.addEventListener('DOMContentLoaded', function() {
+    function customerFilter(){
+        document.getElementById('filterCustomer').addEventListener('change', function() {
+            applyFilters();
+        });
+    }
+    customerFilter();
+});document.addEventListener('DOMContentLoaded', function() {
+    function dateFilter(){
+        document.getElementById('filterStart').addEventListener('change', function() {
+            applyFilters();
+        });
+    }
+    dateFilter();
+});document.addEventListener('DOMContentLoaded', function() {
+    function dateEndFilter(){
+        document.getElementById('filterEnd').addEventListener('change', function() {
+            applyFilters();
+        });
+    }
+    dateEndFilter();
+});
+function applyFilters() {
+    let employeeFilter = document.getElementById('filterEmployee').value;
+    let customerFilter = document.getElementById('filterCustomer').value;
+    let startDateFilter = new Date(document.getElementById('filterStart').value);
+    let endDateFilter = new Date(document.getElementById('filterEnd').value);
+    let tabla = document.getElementsByTagName('table')[0];
+    let rows = tabla.getElementsByTagName('tr');
+
+    for (let i = 1; i < rows.length; i++) {
+        let employeeSelected = rows[i].getElementsByTagName('td')[5].textContent.trim();
+        let customerSelected = rows[i].getElementsByTagName('td')[6].textContent.trim();
+        let dateSelected = new Date(rows[i].getElementsByTagName('td')[3].textContent.trim());
+
+        let employeeMatch = (employeeFilter === '0' || employeeSelected === employeeFilter);
+        let customerMatch = (customerFilter === '0' || customerSelected === customerFilter);
+        let startDateMatch = (isNaN(startDateFilter.getTime()) || dateSelected >= startDateFilter);
+        let endDateMatch = (isNaN(endDateFilter.getTime()) || dateSelected <= endDateFilter);
+
+        if (employeeMatch && customerMatch && startDateMatch && endDateMatch) {
+            rows[i].style.display = '';
+        } else {
+            rows[i].style.display = 'none';
+        }
+    }
+}
