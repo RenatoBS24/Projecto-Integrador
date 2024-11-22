@@ -3,8 +3,14 @@
 **Proyecto Integrador** es un proyecto del curso de **Integrador-I** de la **Universidad Tecnologica del peru**.
 
 ## Programadores
-- [Renato Ballena Samame](https://github.com/RenatoBS24)
-- [Jose Yllaconza](https://github.com/JoseMa2001)
+- [Renato Ballena Samame](https://github.com/RenatoBS24)(Backend)
+- [Jose Yllaconza](https://github.com/JoseMa2001)(Fronted)
+
+## Gestor de base de datos
+- Juan Alberto Vilchez
+  
+## Analista
+- Angel Cespedes Palomino
 
 
 ## Tecnologias usadas
