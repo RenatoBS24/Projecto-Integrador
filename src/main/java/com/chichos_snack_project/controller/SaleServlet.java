@@ -5,7 +5,6 @@ import com.chichos_snack_project.model.Sale;
 import com.chichos_snack_project.service.CustomerService;
 import com.chichos_snack_project.service.EmployeeService;
 import com.chichos_snack_project.service.SaleService;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

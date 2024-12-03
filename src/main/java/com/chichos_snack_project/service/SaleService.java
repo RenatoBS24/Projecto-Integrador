@@ -8,7 +8,6 @@ import com.chichos_snack_project.util.AppConfig;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.ResultSet;
@@ -19,7 +18,6 @@ import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-
 public class SaleService {
 
     private static final java.util.logging.Logger log = Logger.getLogger(SaleService.class.getName());
@@ -172,6 +170,55 @@ public class SaleService {
             log.severe("Hubo un error al procesar la el resulset obtenido por el metodo sumAmountSales de SaleDAOImpl state: "+e.getSQLState());
         }
         return total;
+    }
+
+    public static boolean createSale(List<Product> productList,String amount,String id_employee,String id_Customer){
+        try{
+            checkNotNull(productList,"La lista de productos no puede ser nula");
+            checkNotNull(id_employee,"El id del empleado no puede ser nulo");
+            checkNotNull(id_Customer,"El id del cliente no puede ser nulo");
+            checkNotNull(amount,"El monto total de la venta no puede ser nulo");
+            checkArgument(!id_employee.isEmpty(),"El id del empleado no puede estar vacio");
+            checkArgument(!id_Customer.isEmpty(),"El id del cliente no puede estar vacio");
+            checkArgument(!amount.isEmpty(),"El monto total de la venta no puede estar vacio");
+            checkArgument(!productList.isEmpty(),"La lista de productos no puede estar vacia");
+            checkArgument(amount.matches("[0-9]+.?[0-9]*"),"El monto total de la venta debe ser un numero");
+            double amount_cast = Double.parseDouble(amount);
+            checkArgument(amount_cast > 0,"El monto total de la venta debe ser mayor a 0");
+            checkArgument(id_employee.matches("[0-9]+"),"El id del empleado debe ser un numero entero");
+            checkArgument(id_Customer.matches("[0-9]+"),"El id del cliente debe ser un numero entero");
+            int id_employee_cast = Integer.parseInt(id_employee);
+            int id_customer_cast = Integer.parseInt(id_Customer);
+            checkArgument(id_employee_cast > 0,"El id del empleado debe ser mayor a 0");
+            checkArgument(id_customer_cast > 0,"El id del cliente debe ser mayor a 0");
+            try{
+                Employee employee = EmployeeService.getEmployee(id_employee_cast);
+                Customer customer = CustomerService.getCustomer(id_customer_cast);
+                if (employee.getId_employee() !=0 && customer.getId_customer() !=0) {
+                    Sale sale = new Sale(0,employee,customer,null,amount_cast,productList.size(),productList);
+                    saleDAO.create(sale);
+                    log.info("Se ha creado una venta con un monto de: "+amount);
+                    return true;
+                }else{
+                    log.warning("No se encontro el empleado o el cliente");
+                    return false;
+                }
+            }catch (SQLException e){
+                log.severe("Hubo un error al procesar la el resulset obtenido por el metodo createSale de SaleDAOImpl state: "+e.getSQLState());
+                return false;
+            }
+        }catch (NullPointerException e){
+            log.severe("Hubo un error al crear la venta porque un argumento es nulo state: "+e.getMessage());
+            return false;
+        }catch (IllegalArgumentException e){
+            log.severe("Hubo un error al crear la venta porque un argumento es invalido state: "+e.getMessage());
+            return false;
+        }
+
+    }
+
+    private void createSaleProduct(List<Product> productList){
+
     }
 
 

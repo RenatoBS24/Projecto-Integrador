@@ -9,12 +9,12 @@ import java.sql.*;
 import java.util.logging.Logger;
 
 
-public class EmployeeDAPImpl implements EmployeeDAO {
+public class EmployeeDAOImpl implements EmployeeDAO {
 
     private Connection conn;
-    private static final java.util.logging.Logger log = Logger.getLogger(EmployeeDAPImpl.class.getName());
+    private static final java.util.logging.Logger log = Logger.getLogger(EmployeeDAOImpl.class.getName());
 
-    public EmployeeDAPImpl(String name_datasource) {
+    public EmployeeDAOImpl(String name_datasource) {
         this.conn = MysqlConnector.getConnection(name_datasource);
     }
 

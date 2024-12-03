@@ -1,6 +1,6 @@
 package com.chichos_snack_project.service;
 
-import com.chichos_snack_project.dao.EmployeeDAPImpl;
+import com.chichos_snack_project.dao.EmployeeDAOImpl;
 import com.chichos_snack_project.model.Employee;
 import com.chichos_snack_project.util.AppConfig;
 import org.apache.poi.ss.usermodel.*;
@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class EmployeeService {
-    private static final EmployeeDAPImpl employeeDAO = new EmployeeDAPImpl(AppConfig.getDatasource());
+    private static final EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(AppConfig.getDatasource());
     private static final java.util.logging.Logger log = Logger.getLogger(EmployeeService.class.getName());
     public static List<Employee> getEmployees(){
         List<Employee> employeeList = new LinkedList<>();
@@ -68,6 +68,14 @@ public class EmployeeService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    public static Employee getEmployee(int id){
+       try{
+           return employeeDAO.read(new Employee(id,null,null,0,null,null,null));
+       }catch (SQLException e){
+           log.severe("Hubo un error al intentar obtener un empleado mediante su id usando el metodo read de EmployeeDAOImpl state: "+e.getSQLState());
+           return new Employee(0,"Error","Error",0,"Error",null,"Error");
+       }
     }
     public static boolean update(String name,String lastname,String salary,String dni,String phone,String id){
         try{

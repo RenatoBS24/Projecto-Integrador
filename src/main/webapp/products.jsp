@@ -334,7 +334,7 @@
 <div id="editProductModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white w-full max-w-3xl p-6 rounded-lg shadow-lg">
         <h2 class="text-2xl font-bold mb-4">Editar Información del Producto</h2>
-        <form action="UpdateProduct" method="post">
+        <form action="updateProduct" method="post">
             <input type="hidden" name="id_product" id="id_product">
             <input type="hidden" name="id_inventory" id="id_inventory">
             <!-- Basic Product Information -->

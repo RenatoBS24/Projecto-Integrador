@@ -135,7 +135,9 @@
             </div>
             <div class="flex items-center space-x-4">
                 <button class="bg-green-400 text-white p-2 rounded-lg hover:bg-grean-600" onclick="openReportModal()">Generar reporte</button>
-                <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">+Agregar productos</button>
+                <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">
+                    <a href="sale_register.jsp">Nueva Venta</a>
+                </button>
                 <div class="relative">
                     <a href="Notifications">
                         <ion-icon name="notifications-outline" class="text-2xl text-gray-600"></ion-icon>

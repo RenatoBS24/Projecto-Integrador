@@ -48,6 +48,9 @@ public class UserService  {
         }catch (SQLException | NullPointerException e){
             log.warning(e.getMessage());
             return false;
+        }catch (IllegalArgumentException e){
+            log.warning("Se ha intentado iniciar sesion con un nombre de usuario invalido : "+username);
+            return false;
         }
     }
 

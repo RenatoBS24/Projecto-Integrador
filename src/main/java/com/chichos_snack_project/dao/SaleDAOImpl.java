@@ -16,7 +16,12 @@ public class SaleDAOImpl implements SaleDAO {
 
     @Override
     public void create(Sale sale) throws SQLException {
-
+        String sql = "{CALL sp_create_sale(?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setDouble(1,sale.getAmount());
+        cs.setInt(2,sale.getEmployee().getId_employee());
+        cs.setInt(3,sale.getCustomer().getId_customer());
+        cs.execute();
     }
 
     @Override
@@ -43,6 +48,7 @@ public class SaleDAOImpl implements SaleDAO {
         cs.setDate(4,date_end);
         return cs.executeQuery();
     }
+
     @SuppressWarnings("SqlResolve")
     public ResultSet findAll() throws SQLException{
         String sql = "select * from uv_ventas";

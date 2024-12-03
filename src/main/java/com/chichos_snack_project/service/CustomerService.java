@@ -31,6 +31,16 @@ public class CustomerService {
             return customerList;
         }
     }
+    public static Customer getCustomer(int id){
+        Customer customer = new Customer();
+        try{
+            customer.setId_customer(id);
+            return customerDAO.read(customer);
+        }catch (SQLException e){
+            log.severe("Hubo un error al obtener el empleado recibido por el metodo read de CustomerDAOImpl");
+            return new Customer(0,"Error","Error",null,0,0,0,0);
+        }
+    }
     public static boolean create(String name,String phone,String credit){
         try{
             checkNotNull(name,"El parametro name no puede ser nulo");
