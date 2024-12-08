@@ -35,6 +35,11 @@ public class NotificationDAOImpl implements NotificationDAO {
 
     }
 
+    @Override
+    public void close() throws SQLException {
+        con.close();
+    }
+
     public ResultSet findAll() throws SQLException{
         String sql = "select * from uv_notifiacion";
         PreparedStatement ps = con.prepareStatement(sql);

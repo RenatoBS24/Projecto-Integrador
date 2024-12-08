@@ -1,6 +1,7 @@
 <%@ page import="com.chichos_snack_project.model.Inventory" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.chichos_snack_project.model.Category" %>
+<%@ page import="com.chichos_snack_project.model.Product" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 
@@ -22,18 +23,19 @@
 <%
     HttpSession session1  = request.getSession();
     if(session1.getAttribute("is_valid_user") != null){
-        if(request.getAttribute("inventoryList") !=null && request.getAttribute("categoryList") != null){
+        if(request.getAttribute("inventoryList") !=null && request.getAttribute("categoryList") != null && request.getAttribute("productList") != null){
             @SuppressWarnings("unchecked")
             List<Inventory> inventoryList = (List<Inventory>) request.getAttribute("inventoryList");
             @SuppressWarnings("unchecked")
             List<Category> categoryList = (List<Category>) request.getAttribute("categoryList");
+            @SuppressWarnings("unchecked")
+            List<Product> productList = (List<Product>)request.getAttribute("productList");
 
 %>
 <body class="bg-gray-100">
-
 <div class="flex">
     <!-- Sidebar Navigation -->
-    <div class="bg-teal-600 w-64 h-screen text-white p-6 fixed top-0 left-0">
+    <div class="bg-teal-600 w-64 fixed h-screen text-white p-6 fixed top-0 left-0">
         <h1 class="text-2xl font-bold mb-10">CHICHOS SNACK</h1>
         <ul>
             <li class="mb-6">
@@ -45,10 +47,18 @@
                 </a>
             </li>
             <li class="mb-6">
+                <a href="index.jsp" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                    <span>
+                        <ion-icon name="cash-outline" class="text-xl"></ion-icon>
+                    </span>
+                    <span>Inicio</span>
+                </a>
+            </li>
+            <li class="mb-6">
                 <a href="Sales" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
-                        <span>
-                            <ion-icon name="cash-outline" class="text-xl"></ion-icon>
-                        </span>
+                    <span>
+                        <ion-icon name="cash-outline" class="text-xl"></ion-icon>
+                    </span>
                     <span>Ventas</span>
                 </a>
             </li>
@@ -60,6 +70,15 @@
                     <span>Productos</span>
                 </a>
             </li>
+            <li class="mb-6">
+                <a href="Customer" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
+                    <span>
+                        <ion-icon name="people-outline" class="text-xl"></ion-icon>
+                    </span>
+                    <span>Clientes</span>
+                </a>
+            </li>
+
             <li class="mb-6">
                 <a href="Employee" class="flex items-center space-x-4 p-2 rounded-lg hover:bg-teal-500">
                         <span>
@@ -142,7 +161,7 @@
                             <p class="text-red-600 font-bold">Expiracion: <%=inventory.getExpiration_date()%></p>
                         </div>
                         <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4" onclick="openEditModal('<%=inventory.getLot()%>','<%=inventory.getProduct().getName()%>','<%=inventory.getExpiration_date()%>','<%=inventory.getPurchase_date()%>','<%=inventory.getPurchase_price()%>','<%=inventory.getStock()%>','<%=inventory.getId_inventory()%>')">Editar</button>
-                        <button class="boton bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-800 ml-4" onclick="openDeleteModal('')">Eliminar</button>
+                        <button class="boton bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-800 ml-4" onclick="openDeleteModal('<%=inventory.getId_inventory()%>')">Eliminar</button>
                     </div>
                 </div>
                 <%
@@ -169,7 +188,7 @@
                             <p class="text-red-600 font-bold">Expiracion: <%=inventory.getExpiration_date()%></p>
                         </div>
                         <button class="bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-800 ml-4" onclick="openEditModal('<%=inventory.getLot()%>','<%=inventory.getProduct().getName()%>','<%=inventory.getExpiration_date()%>','<%=inventory.getPurchase_date()%>','<%=inventory.getPurchase_price()%>','<%=inventory.getStock()%>','<%=inventory.getId_inventory()%>')">Editar</button>
-                        <button class="boton bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-800 ml-4" onclick="openDeleteModal('')">Eliminar</button>
+                        <button class="boton bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-800 ml-4" onclick="openDeleteModal('<%=inventory.getId_inventory()%>')">Eliminar</button>
                     </div>
                 </div>
                 <%
@@ -187,26 +206,42 @@
     </div>
 </div>
 
-<!-- Modal for Adding Product -->
+<!-- Modal for Adding Inventory -->
 <div id="productModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold mb-4">Agregar Información del Producto</h2>
-        <form>
+        <h2 class="text-2xl font-bold mb-4">Agregar Información del Inventario</h2>
+        <form action="createInventory" method="POST">
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Nombre del Producto</label>
-                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                <label class="block text-sm font-medium text-gray-700" for="product">Nombre del Producto</label>
+                <select name="product" id="product" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <%
+                        for(Product product:productList){
+                    %>
+                    <option value="<%=product.getId_product()%>"><%=product.getName()%></option>
+                    <%
+                        }
+                    %>
+                </select>
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Lote</label>
-                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                <label class="block text-sm font-medium text-gray-700" for="lot">Lote:</label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="lot" maxlength="20" id="lot" required>
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Precio</label>
-                <input type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                <label class="block text-sm font-medium text-gray-700" for="stock">Stock:</label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="stock" id="stock" oninput="validateNumber(this)" required>
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Subir Archivo (Excel)</label>
-                <input type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                <label class="block text-sm font-medium text-gray-700" for="date_buy">Fecha de compra:</label>
+                <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="date_buy" id="date_buy" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700" for="date_end">Fecha de Vencimiento:</label>
+                <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="date_end" id="date_end" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700" for="price_buy">Precio</label>
+                <input type="number" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="price_buy" id="price_buy" required>
             </div>
             <!-- Modal Actions -->
             <div class="flex justify-end space-x-4">
@@ -221,34 +256,33 @@
 <div id="editProductModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
     <div class="bg-white w-full max-w-3xl p-6 rounded-lg shadow-lg">
         <h2 class="text-2xl font-bold mb-4">Editar Información del Inventario</h2>
-        <form action="updateProduct" method="post">
-            <input type="hidden" name="id_product" id="id_product">
+        <form action="UpdateInventory" method="post">
             <input type="hidden" name="id_inventory" id="id_inventory">
             <!-- Basic Product Information -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700" for="name_lot">Lote</label>
-                    <input type="text" name="name_lot" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" id="name_lot">
-                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="name_product">Producto</label>
                     <p class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" id="name_product"></p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700" for="editExpiryDate">Fecha de Caducidad</label>
-                    <input id="editExpiryDate" name="expired" type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Fecha de Compra</label>
-                    <input id="editBuyDate" type="date" name="purchase" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Precio de compra</label>
-                    <input id="editPurchasePrice" type="text" name="buy_purchase" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <label class="block text-sm font-medium text-gray-700" for="name_lot">Lote</label>
+                    <p  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" id="name_lot" ></p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Stock del Inventario</label>
-                    <input type="text" id="editProductStock"  name="stock" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input type="text" id="editProductStock"  name="stock" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" oninput="validateNumber(this)" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Fecha de Compra</label>
+                    <input id="editBuyDate" type="date" name="purchase" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700" for="editExpiryDate">Fecha de Caducidad</label>
+                    <input id="editExpiryDate" name="expired" type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Precio de compra</label>
+                    <input id="editPurchasePrice" type="number" name="buy_purchase" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" required>
                 </div>
             </div>
             <!-- Modal Actions -->
@@ -259,26 +293,54 @@
         </form>
     </div>
 </div>
+<!-- Modal for delete inventory -->
+<div id="deleteInventoryModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Eliminar Inventario</h2>
+        <form action="DeleteInventory" method="POST">
+            <input type="hidden" id="id" name="id_inventory">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Código: </label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="code_entered" required oninput="validateNumber(this)">
+                <%
+                    if(request.getAttribute("Error") != null){
+                        String error = (String)request.getAttribute("Error");
 
+                %>
+                <p style="color: red"><%=error%></p>
+                <%
+                    }
+                %>
 
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeDeleteModal()">Cancelar</button>
+                <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Eliminar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<%
+    if(request.getSession().getAttribute("error") !=null){
+        String error = (String) request.getSession().getAttribute("error");
+        request.getSession().removeAttribute("error");
+
+%>
 <script>
-    // Function to open the modal
-    function openModal() {
-        document.getElementById('productModal').classList.remove('hidden');
-    }
-
-    // Function to close the modal
-    function closeModal() {
-        document.getElementById('productModal').classList.add('hidden');
-    }
+    alert("<%=error%>");
 </script>
+<%
+    }
+%>
+
 <script src="js/function_inventory.js"></script>
+<script src="js/code_email_ajax.js"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 <%
         }else{
-            response.sendRedirect("inventory");
+            response.sendRedirect("Inventory");
         }
 
     }else{

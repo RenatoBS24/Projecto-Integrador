@@ -132,7 +132,7 @@
                 <div class="flex space-x-2">
                     <button onclick="openModalDelete('<%=customer.getId_customer()%>')"  class=" boton bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Eliminar</button>
                     <button onclick="openModal1('<%=customer.getName()%>','<%=customer.getPhone()%>','<%=customer.getAmount_total()%>','<%=customer.getAmount_available()%>','<%=customer.getAmount_used()%>','<%=customer.getId_credit()%>')" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Editar información</button>
-                    <button onclick="openModal1()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Editar credito</button>
+                    <button onclick="openModalCredit('<%=customer.getId_credit()%>','<%=customer.getName()%>','<%=customer.getAmount_total()%>','<%=customer.getAmount_available()%>','<%=customer.getAmount_used()%>')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Editar credito</button>
                 </div>
             </div>
             <%
@@ -159,31 +159,77 @@
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-gray-700 text-sm">Nombre:</label>
-                    <input type="text" class="w-full p-1 border rounded focus:outline-none" id="name" name="name">
+                    <input type="text" class="w-full p-1 border rounded focus:outline-none" id="name" name="name" required>
                 </div>
                 <div>
                     <label class="block text-gray-700 text-sm">Telefono:</label>
-                    <input type="text" class="w-full p-1 border rounded focus:outline-none" id="phone" name="phone">
+                    <input type="text" class="w-full p-1 border rounded focus:outline-none" id="phone" name="phone" required>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-gray-700 text-sm">Credito total:</label>
-                    <input type="number" class="w-full p-1 border rounded focus:outline-none" id="amount_total" name="amount_total">
+                    <p class="w-full p-1 border rounded focus:outline-none bg-white" id="amount_total"></p>
                 </div>
                 <div>
                     <label class="block text-gray-700 text-sm">Credito disponible:</label>
-                    <input type="text" class="w-full p-1 border rounded focus:outline-none" id="amount_available" name="amount_available">
+                    <p class="w-full p-1 border rounded focus:outline-none bg-white" id="amount_available"></p>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-gray-700 text-sm">Credito usado:</label>
-                    <input type="text" class="w-full p-1 border rounded focus:outline-none" id="amount_used" name="amount_used">
+                    <p class="w-full p-1 border rounded focus:outline-none bg-white" id="amount_used"></p>
                 </div>
             </div>
             <div class="flex justify-between mt-4">
                 <button type="button" onclick="closeModal()" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Cancelar</button>
+                <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para editar el credito -->
+
+<div id="modalCredit" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-blue-100 w-full max-w-sm mx-auto rounded-lg shadow-lg p-4 relative">
+        <h2 class="text-xl font-bold mb-2 text-center">Editar credito del Cliente</h2>
+        <div class="flex justify-center mb-4">
+            <div class="relative">
+                <img src="https://via.placeholder.com/100" alt="Empleado" class="rounded-full w-24 h-24 object-cover">
+                <span class="absolute bottom-0 right-0 bg-gray-300 p-2 rounded-full cursor-pointer">
+                        <ion-icon name="camera-outline"></ion-icon>
+                    </span>
+            </div>
+        </div>
+        <form action="UpdateCredit" method="POST" class="space-y-3">
+            <input type="hidden" id="id_credit" name="id_credit">
+            <div class="grid grid-cols-1 gap-3">
+                <div>
+                    <label class="block text-gray-700 text-sm">Nombre:</label>
+                    <p  class="w-full p-1 border rounded focus:outline-none bg-white" id="name_customer">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-3">
+                <div>
+                    <label class="block text-gray-700 text-sm">Credito total:</label>
+                    <input type="text" class="w-full p-1 border rounded focus:outline-none bg-white" id="total" name="amount_total" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm">Credito usado:</label>
+                    <input type="text" class="w-full p-1 border rounded focus:outline-none bg-white" id="used" name="amount_used" required>
+                </div>
+
+            </div>
+            <div class="grid grid-cols-1 gap-3">
+                <div>
+                    <label class="block text-gray-700 text-sm">Credito disponible:</label>
+                    <p class="w-full p-1 border rounded focus:outline-none bg-white bg-white" id="available">
+                </div>
+            </div>
+            <div class="flex justify-between mt-4">
+                <button type="button" onclick="closeModalCredit()" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Cancelar</button>
                 <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Guardar</button>
             </div>
         </form>

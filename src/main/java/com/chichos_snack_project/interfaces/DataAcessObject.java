@@ -7,4 +7,5 @@ public interface DataAcessObject<T,K> {
     public T read(T t) throws SQLException;
     public void update(K k,T t) throws SQLException;
     public void delete(K k) throws SQLException;
+    public void close() throws SQLException;
 }

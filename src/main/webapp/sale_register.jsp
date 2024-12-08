@@ -1,6 +1,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.chichos_snack_project.model.Product" %>
 <%@ page import="com.chichos_snack_project.model.Category" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="com.chichos_snack_project.model.Employee" %>
+<%@ page import="com.chichos_snack_project.model.Customer" %>
+<%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,11 +61,15 @@
 <%
     HttpSession session1 = request.getSession();
     if(session1.getAttribute("is_valid_user") !=null){
-        if(request.getAttribute("productList") !=null && request.getAttribute("categoryList") !=null){
+        if(request.getAttribute("productList") !=null && request.getAttribute("categoryList") !=null && request.getAttribute("employeeList") !=null && request.getAttribute("customerList") !=null){
             @SuppressWarnings("unchecked")
             List<Product> productList = (List<Product>) request.getAttribute("productList");
             @SuppressWarnings("unchecked")
             List<Category> categoryList = (List<Category>) request.getAttribute("categoryList");
+            @SuppressWarnings("unchecked")
+            List<Employee> employeeList = (List<Employee>) request.getAttribute("employeeList");
+            @SuppressWarnings("unchecked")
+            List<Customer> customerList = (List<Customer>) request.getAttribute("customerList");
 
 %>
 <body class="bg-gray-100">
@@ -148,11 +156,14 @@
                     <input type="text" placeholder="Search Here" class="p-2 border border-gray-300 rounded-lg focus:outline-none w-full lg:w-96">
                     <span class="absolute right-2 top-2 text-gray-400">
                             <ion-icon name="search-outline"></ion-icon>
-                        </span>
+                    </span>
                 </div>
                 <div class="flex items-center space-x-4">
                     <!-- Button to Open Modal -->
-                    <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" onclick="openModal()">+ Agregar productos</button>
+                    <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" onclick="toggleCart()">
+                        <ion-icon name="cart-outline" class="text-2xl"></ion-icon>
+                        Carrito de Compras
+                    </button>
                     <div class="relative">
                         <a href="Notifications">
                             <ion-icon name="notifications-outline" class="text-2xl text-gray-600"></ion-icon>
@@ -178,94 +189,214 @@
             </div>
         </div>
         <!-- Product Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="overflow-y-auto h-[calc(100vh-14rem)]  no-scrollbar ">
+            <div id="todos" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Product Item -->
+                <%
+                    for(Product product:productList){
+                %>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold"><%=product.getName()%></h3>
+                            <p class="text-gray-600">Stock: <%=product.getStock()%> <%=product.getUnitOfMeasurement().getName_unit_of_measurement()%></p>
+                            <p class="text-teal-600 font-bold">Precio: <%=product.getPrice()%></p>
+                            <input type="hidden" value="<%=product.getId_product()%>" id="id" >
+                        </div>
+                    </div>
+                    <%
+                        if(product.getStock() > 0){
+                    %>
+                    <button onclick="addToCart('<%=product.getName()%>','<%=product.getPrice()%>',<%=product.getId_product()%>)" class="bg-teal-500 text-white mt-4 w-full py-2 rounded hover:bg-teal-600">
+                        Agregar al carrito
+                    </button>
+                    <%
+                    }else{
+                    %>
+                    <p class="text-red-600 text-lg">El producto esta Agotado</p>
+                    <%
+                        }
+                    %>
+                </div>
+                <%
+                    }
+                %>
+            </div>
             <%
-                for(Product product: productList){
-
-
+                for(Category category:categoryList){
             %>
-            <div class="bg-white rounded-lg shadow p-4">
-                <img src="https://via.placeholder.com/150" alt="Producto" class="w-full h-40 object-cover rounded">
-                <h3 class="mt-4 font-bold text-gray-700"><%=product.getName()%></h3>
-                <p class="text-sm text-gray-500">Stock: <%=product.getStock()%>  </p>
-                <p class="text-lg font-bold text-teal-600">S/<%=product.getPrice()%></p>
-                <button onclick="addToCart('<%=product.getName()%>','<%=product.getPrice()%>')" class="bg-teal-500 text-white mt-4 w-full py-2 rounded hover:bg-teal-600">
-                    Agregar al carrito
-                </button>
+            <div id="<%=category.getName_category()%>" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                <%
+                    for(Product product:productList){
+                        if(product.getCategory().getName_category().equalsIgnoreCase(category.getName_category())){
+                %>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <img src="https://via.placeholder.com/200" class="w-full h-40 object-cover rounded-lg mb-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold"><%=product.getName()%></h3>
+                            <p class="text-gray-600">Stock: <%=product.getStock()%></p>
+                            <p class="text-teal-600 font-bold">Precio: <%=product.getPrice()%></p>
+                        </div>
+                    </div>
+                    <%
+                        if(product.getStock() > 0){
+                    %>
+                    <button onclick="addToCart('<%=product.getName()%>','<%=product.getPrice()%>',<%=product.getId_product()%>)" class="bg-teal-500 text-white mt-4 w-full py-2 rounded hover:bg-teal-600">
+                        Agregar al carrito
+                    </button>
+                    <%
+                        }else{
+                    %>
+                    <p class="text-red-600 text-lg">El producto esta Agotado</p>
+                    <%
+                        }
+                    %>
+                </div>
+                <%
+                        }
+                    }
+                %>
+
             </div>
             <%
                 }
-            %>
-            <!-- Repeat this structure for other products -->
-        </div>
 
-        <!-- Cart Section -->
-        <div class="mt-10">
-            <h2 class="text-2xl font-bold mb-4">Carrito de Compras</h2>
-            <div class="bg-white rounded-lg shadow p-4">
-                <table class="w-full text-left">
-                    <thead>
-                    <tr>
-                        <th class="border-b py-2">Producto</th>
-                        <th class="border-b py-2">Cantidad</th>
-                        <th class="border-b py-2">Precio</th>
-                        <th class="border-b py-2">Total</th>
-                        <th class="border-b py-2"></th>
-                    </tr>
-                    </thead>
-                    <tbody id="cart-items">
-                    <tr>
-                        <td colspan="5" class="text-center py-4 text-gray-500">El carrito está vacío</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="flex justify-between items-center mt-6">
-                    <span class="text-xl font-bold">Total: <span id="cart-total" class="text-teal-600">$0.00</span></span>
-                    <button class="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600">Finalizar Compra</button>
-                </div>
-            </div>
+            %>
         </div>
     </div>
 </div>
 
-<script>
-    const cartItems = [];
-    const cartTotalElement = document.getElementById('cart-total');
-    const cartItemsElement = document.getElementById('cart-items');
-
-    function addToCart(name, price) {
-        const item = cartItems.find(item => item.name === name);
-        if (item) {
-            item.quantity++;
-        } else {
-            cartItems.push({ name, price, quantity: 1 });
-        }
-        renderCart();
-    }
-
-    function renderCart() {
-        cartItemsElement.innerHTML = cartItems.map(item => `
+<div id="cart-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-end items-start z-50 hidden">
+    <div class="bg-white w-full max-w-2xl h-full p-6 rounded-l-lg">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold">Carrito de Compras</h2>
+            <button class="text-red-500" onclick="toggleCart()">
+                <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+            </button>
+        </div>
+        <div>
+            <table class="w-full text-left">
+                <thead>
                 <tr>
-                    <td class="py-2">${item.name}</td>
-                    <td class="py-2">${item.quantity}</td>
-                    <td class="py-2">$${item.price.toFixed(2)}</td>
-                    <td class="py-2">$${(item.price * item.quantity)}</td>
+                    <th class="border-b py-2">Producto</th>
+                    <th class="border-b py-2">Cantidad</th>
+                    <th class="border-b py-2">Precio</th>
+                    <th class="border-b py-2">Total</th>
+                    <th class="border-b py-2"></th>
+                </tr>
+                </thead>
+                <tbody id="cart-items">
+                <%
+                    if(session1.getAttribute("cart") == null){
+                %>
+                <p>El carrito esta vacio</p>
+                <%
+                    }else{
+                        @SuppressWarnings("unchecked")
+                        HashMap<Integer,Product> productHashMap = (HashMap<Integer, Product>) session1.getAttribute("cart");
+                        for(Product product:productHashMap.values()){
+
+
+                %>
+                <tr class="js-cart-item">
+                    <td class="py-2"><%=product.getName()%></td>
+                    <td class="py-2 flex items-center">
+                        <button class="text-gray-500 hover:text-gray-700" onclick="updateQuantity('<%=product.getName()%>', -1,<%=product.getId_product()%>)">-</button>
+                        <span class="mx-2"><%=product.getStock()%></span>
+                        <button class="text-gray-500 hover:text-gray-700" onclick="updateQuantity('<%=product.getName()%>', 1,<%=product.getId_product()%>)">+</button>
+                    </td>
+                    <td class="py-2">S/<%=product.getPrice()%></td>
+                    <td class="py-2">S/<%=product.getPrice()*product.getStock()%></td>
                     <td class="py-2">
-                        <button class="text-red-500 hover:underline" onclick="removeFromCart('${item.name}')">Eliminar</button>
+                        <button class="text-red-500 hover:underline" onclick="removeFromCart('<%=product.getName()%>',<%=product.getId_product()%>)">Eliminar</button>
                     </td>
                 </tr>
-            `).join('');
-        const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        cartTotalElement.textContent = `$${total.toFixed(2)}`;
-    }
+                <%
+                        }
+                    }
+                %>
+                </tbody>
+            </table>
+            <div class="flex justify-between items-center mt-6">
+                <span class="text-xl font-bold">Total:
+                    <%
+                        if(session1.getAttribute("cart") == null){
+                    %>
+                    <span id="cart-total" class="text-teal-600">$0.00</span>
+                    <%
+                        }else{
+                            @SuppressWarnings("unchecked")
+                            HashMap<Integer,Product> productHashMap = (HashMap<Integer, Product>) session1.getAttribute("cart");
+                            double total = 0;
+                            for(Product product:productHashMap.values()){
+                                total += product.getPrice()*product.getStock();
+                            }
+                    %>
+                    <span id="cart-total" class="text-teal-600">$<%=total%></span>
+                    <%
+                        }
+                    %>
+                </span>
+            </div>
+            <div class="mt-4 flex space-x-4">
+                <div class="w-1/2">
+                    <label for="employee">Empleado</label>
+                    <select name="Employee" id="employee" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                        <%
+                            for(Employee employee:employeeList){
+                        %>
+                        <option value="<%=employee.getId_employee()%>"><%=employee.getName()%></option>
+                        <%
+                            }
+                        %>
+                    </select>
+                </div>
+                <div class="w-1/2">
+                    <label for="customer">Cliente</label>
+                    <select name="Customer" id="customer" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                        <%
+                            for(Customer customer:customerList){
+                        %>
+                        <option value="<%=customer.getId_customer()%>"><%=customer.getName()%></option>
+                        <%
+                            }
+                        %>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-4">
+                <label for="check">Usar Credito</label>
+                <input type="checkbox" onchange="showCredit()" id="check">
+            </div>
+            <%
+                for(Customer customer:customerList){
+            %>
+            <div class="mt-4 hidden" id="credit-info-<%=customer.getId_customer()%>">
+                <p class="text-gray-700">Credito Disponible: <span id="initial-credit">S/<%=customer.getAmount_available()%></span></p>
+                <p class="text-gray-700">Monto Gastado: <span id="amount-spent">S/<%=customer.getAmount_used()%></span></p>
+                <p class="text-gray-700">Credito Total: <span id="remaining-credit">S/<%=customer.getAmount_total()%></span></p>
+            </div>
+           <%
+               }
+           %>
+            <button class="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600 mt-4 w-full" onclick="checkout()">Finalizar Compra</button>
+        </div>
+    </div>
+</div>
+<script src = "js/function_shopping_cart.js"></script>
+<script>
+    <%
+        if(session1.getAttribute("cart") != null){
+    %>
+    const productMap = <%=new ObjectMapper().writeValueAsString(session1.getAttribute("cart"))%>
+    initializeCartItems(productMap);
+<%
+}
+%>
 
-    function removeFromCart(name) {
-        const index = cartItems.findIndex(item => item.name === name);
-        if (index > -1) cartItems.splice(index, 1);
-        renderCart();
-    }
 </script>
-
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>

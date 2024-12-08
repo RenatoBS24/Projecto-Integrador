@@ -1,10 +1,23 @@
+document.getElementById('total').addEventListener('input', function (e) {
+    this.value = this.value.replace(/[^0-9.]/g, '');
+});
+
+document.getElementById('available').addEventListener('input', function (e) {
+    this.value = this.value.replace(/[^0-9.]/g, '');
+});
+
+document.getElementById('used').addEventListener('input', function (e) {
+    this.value = this.value.replace(/[^0-9.]/g, '');
+});
+
+
 // Función para abrir el modal de edición del cliente
 function openModal1(name,phone,amount_total,amount_available,amount_used,id_customer) {
     document.getElementById('name').value = name;
     document.getElementById('phone').value = phone;
-    document.getElementById('amount_total').value = amount_total;
-    document.getElementById('amount_available').value = amount_available;
-    document.getElementById('amount_used').value = amount_used;
+    document.getElementById('amount_total').innerText = amount_total;
+    document.getElementById('amount_available').innerText= amount_available;
+    document.getElementById('amount_used').innerText = amount_used;
     document.getElementById('id_customer').value = id_customer;
     document.getElementById('modal').classList.remove('hidden');
 }
@@ -12,6 +25,20 @@ function openModal1(name,phone,amount_total,amount_available,amount_used,id_cust
 // Función para cerrar el modal de edición del cliente
 function closeModal() {
     document.getElementById('modal').classList.add('hidden');
+}
+
+// Función para abrir el modal del edicion de credito del cliente
+function openModalCredit(id_credit,name,total,available,used) {
+    document.getElementById('id_credit').value = id_credit
+    document.getElementById('name_customer').innerText = name;
+    document.getElementById('total').value = total;
+    document.getElementById('available').innerText = available;
+    document.getElementById('used').value = used;
+    document.getElementById('modalCredit').classList.remove('hidden');
+}
+// Funcion para cerrar el modal de edicion de credito del cliente
+function closeModalCredit() {
+    document.getElementById('modalCredit').classList.add('hidden');
 }
 
 // Función para abrir el modal del reporte del cliente

@@ -6,13 +6,9 @@ import com.chichos_snack_project.util.MysqlConnector;
 
 
 import java.sql.*;
-import java.util.logging.Logger;
-
 
 public class UserDAOImpl implements UserDAO {
     Connection con;
-    private static final java.util.logging.Logger log = Logger.getLogger(UserDAOImpl.class.getName());
-
     public UserDAOImpl(String name_datasource)  {
         this.con = MysqlConnector.getConnection(name_datasource);
     }
@@ -64,7 +60,6 @@ public class UserDAOImpl implements UserDAO {
                 cs.setString(1,user.getPassword());
                 cs.setInt(2,integer);
                 cs.executeUpdate();
-                log.info("Se actualizaron las credenciales del usuario : "+user.getUsername());
             }
         } catch (SQLException e) {
             throw new RuntimeException();
@@ -75,6 +70,16 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public void delete(Integer integer) throws SQLException {
 
+    }
+
+    @Override
+    public void close() throws SQLException {
+        con.close();
+    }
+    public void open(String name_datasource) throws SQLException {
+       if(con.isClosed()){
+           this.con = MysqlConnector.getConnection(name_datasource);
+       }
     }
 
     public int read(String username){

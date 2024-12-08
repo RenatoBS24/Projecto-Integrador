@@ -37,6 +37,11 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     }
 
+    @Override
+    public void close() throws SQLException {
+        con.close();
+    }
+
     public ResultSet findAll(){
         String sql = "select * from uv_categoria";
         try {

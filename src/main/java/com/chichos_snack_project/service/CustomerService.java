@@ -46,6 +46,10 @@ public class CustomerService {
             checkNotNull(name,"El parametro name no puede ser nulo");
             checkNotNull(phone,"El parametro phone no puede ser nulo");
             checkNotNull(credit,"El parametro credit no puede ser nulo");
+            checkArgument(!name.isEmpty(),"El nombre no puede estar vacio");
+            checkArgument(!phone.isEmpty(),"El telefono no puede estar vacio");
+            checkArgument(!credit.isEmpty(),"El credito no puede estar vacio");
+            checkArgument(credit.matches("\\d+(\\.\\d+)?"),"El total debe ser un numero positivo");
             double credit_cast = Double.parseDouble(credit);
             checkArgument(phone.matches("\\d+"),"El telefono solo debe contener numeros");
             checkArgument(credit_cast>0,"El credito ingresado no puede ser negativo");
@@ -66,7 +70,17 @@ public class CustomerService {
             checkNotNull(name,"El parametro name no puede ser nulo");
             checkNotNull(phone,"El parametro phone no puede ser nulo");
             checkNotNull(id,"El parametro id no puede ser nulo");
+            // valida que name,phone y id no esten vacios
+            checkArgument(!name.isEmpty(),"El nombre no puede estar vacio");
+            checkArgument(!phone.isEmpty(),"El telefono no puede estar vacio");
+            checkArgument(!id.isEmpty(),"El id no puede estar vacio");
+            // valida que name solo contenga letras
+            checkArgument(name.matches("[a-zA-Z]+"),"El nombre solo debe contener letras");
+            // valida que phone solo tenga 9 numeros
+            checkArgument(phone.length() == 9,"El telefono debe tener 9 digitos");
             checkArgument(phone.matches("\\d+"),"El telefono solo debe contener numeros");
+            // valida que id sea mayor que 0
+            checkArgument(Integer.parseInt(id)>0,"El id debe ser mayor que 0");
             Customer customer = new Customer();
             customer.setId_customer(Integer.parseInt(id));
             Customer customer_data = customerDAO.read(customer);
@@ -88,6 +102,11 @@ public class CustomerService {
         try {
             checkNotNull(code,"El parametro code no puede ser nulo");
             checkNotNull(code_entered,"El parametro code_entered no puede ser nulo");
+            checkArgument(!code.isEmpty(),"El codigo no puede estar vacio");
+            checkArgument(!code_entered.isEmpty(),"El codigo ingresado no puede estar vacio");
+            checkArgument(id>0,"El id debe ser mayor que 0");
+            checkArgument(code.matches("\\d{8}"),"El codigo debe tener 8 digitos");
+            checkArgument(code_entered.matches("\\d{8}"),"El codigo ingresado debe tener 8 digitos");
             if(code.equals(code_entered)){
                 try{
                     log.info("Deleting customer with id: " + id);
@@ -120,5 +139,33 @@ public class CustomerService {
 
         }
         return count;
+    }
+
+    public static boolean updateCredit(String id_credit,String total,String used){
+        try{
+            checkNotNull(id_credit,"El parametro id_credit no puede ser nulo");
+            checkNotNull(total,"El parametro total no puede ser nulo");
+            checkNotNull(used,"El parametro used no puede ser nulo");
+            checkArgument(!id_credit.isEmpty(),"El id_credit no puede estar vacio");
+            checkArgument(!total.isEmpty(),"El total no puede estar vacio");
+            checkArgument(!used.isEmpty(),"El used no puede estar vacio");
+            checkArgument(total.matches("\\d+(\\.\\d+)?"),"El total debe ser un numero positivo");
+            checkArgument(used.matches("\\d+(\\.\\d+)?"),"El used debe ser un numero positivo");
+            checkArgument(id_credit.matches("\\d+"),"El id_credit debe ser un numero positivo");
+            int id_credit_cast = Integer.parseInt(id_credit);
+            double total_cast = Double.parseDouble(total);
+            double used_cast = Double.parseDouble(used);
+            try{
+                customerDAO.updateCredit(id_credit_cast,total_cast,used_cast);
+                log.info("Se actualizo el credito del cliente con id: "+id_credit_cast);
+                return true;
+            }catch(SQLException e){
+                log.severe("No se pudo actualizar el credito del cliente por una SQLException en el metodo updateCredit de CustomerDAOImpl "+e.getSQLState());
+                return false;
+            }
+        }catch (NullPointerException | IllegalArgumentException e){
+            log.severe(e.getMessage());
+            return false;
+        }
     }
 }

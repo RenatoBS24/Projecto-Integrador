@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -198,4 +199,60 @@ public class ProductService  {
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cell.setCellStyle(cellStyle);
     }
+
+    public static Product productForSale(String id,String quantity,String price,String name){
+        try{
+            checkNotNull(id,"El parametro id no puede ser nulo");
+            checkNotNull(quantity,"El parametro quantity no puede ser nulo");
+            checkNotNull(price,"El parametro price no puede ser nulo");
+            checkNotNull(name,"El parametro name no puede ser nulo");
+            checkArgument(!id.isEmpty(),"El id del producto no puede estar vacio");
+            checkArgument(!quantity.isEmpty(),"La cantidad no puede estar vacia");
+            checkArgument(!price.isEmpty(),"El precio no puede estar vacio");
+            checkArgument(!name.isEmpty(),"El nombre del producto no puede estar vacio");
+            checkArgument(name.matches("^([A-Za-záéíóúÁÉÍÓÚñÑ]+)(\\s[A-Za-záéíóúÁÉÍÓÚñÑ]+)*$"), "El nombre del producto debe contener al menos una letra y solo puede contener letras y espacios");
+            checkArgument(id.matches("\\d+"),"El id del producto debe ser un numero");
+            checkArgument(quantity.matches("\\d+"),"La cantidad debe ser un numero");
+            checkArgument(price.matches("\\d+(\\.\\d+)?"),"El precio debe ser un numero");
+            int id_cast = Integer.parseInt(id);
+            int quantity_cast = Integer.parseInt(quantity);
+            double price_cast = Double.parseDouble(price);
+            // valida que id_cast sea mayor a 0
+            checkArgument(id_cast>0,"El id del producto debe ser mayor a 0");
+            // valida que quantity_cast sea mayor a 0
+            checkArgument(quantity_cast>0,"La cantidad debe ser mayor a 0");
+            // valida que price_cast sea mayor a 0
+            checkArgument(price_cast>0,"El precio debe ser mayor a 0");
+            return new Product(id_cast,name,price_cast,quantity_cast,new Category(0,"",""),new UnitOfMeasurement(0,"",""));
+        }catch (NullPointerException | IllegalArgumentException e) {
+            log.severe("Hubo un error al crear el producto para la venta porque un argumento es nulo state: " + e.getMessage());
+            return new Product(0, "", 0, 0, new Category(0, "", ""), new UnitOfMeasurement(0, "", ""));
+        }
+    }
+    public static HashMap<Integer,Product> updateQuantity(String quantity,String id,HashMap<Integer,Product> cart) {
+        try{
+            checkNotNull(quantity,"El parametro quantity no puede ser nulo");
+            checkArgument(!quantity.isEmpty(),"La cantidad no puede estar vacia");
+            checkArgument(quantity.matches("\\d+"),"La cantidad debe ser un numero");
+            checkNotNull(id,"El parametro id no puede ser nulo");
+            checkArgument(!id.isEmpty(),"El id del producto no puede estar vacio");
+            checkArgument(id.matches("\\d+"),"El id del producto debe ser un numero");
+            int id_cast = Integer.parseInt(id);
+            checkArgument(id_cast>0,"El id del producto debe ser mayor a 0");
+            int quantity_cast = Integer.parseInt(quantity);
+
+            if (quantity_cast>0) {
+                Product product = cart.get(id_cast);
+                product.setStock(quantity_cast);
+                cart.put(id_cast,product);
+            }else{
+                cart.remove(id_cast);
+            }
+            return cart;
+        }catch (NullPointerException | IllegalArgumentException e){
+            log.severe("Hubo un error al actualizar la cantidad del producto en el carrito porque un argumento es nulo state: "+e.getMessage());
+            return cart;
+        }
+    }
+
 }

@@ -16,11 +16,13 @@ public class SaleDAOImpl implements SaleDAO {
 
     @Override
     public void create(Sale sale) throws SQLException {
-        String sql = "{CALL sp_create_sale(?,?,?)}";
+        String sql = "{CALL sp_create_sale(?,?,?,?)}";
         CallableStatement cs = con.prepareCall(sql);
         cs.setDouble(1,sale.getAmount());
         cs.setInt(2,sale.getEmployee().getId_employee());
         cs.setInt(3,sale.getCustomer().getId_customer());
+        boolean confirm = sale.getCount() == 1;
+        cs.setBoolean(4,confirm);
         cs.execute();
     }
 
@@ -60,5 +62,17 @@ public class SaleDAOImpl implements SaleDAO {
         String sql = "select uf_sumVentas()";
         PreparedStatement ps = con.prepareStatement(sql);
         return ps.executeQuery();
+    }
+    public void registerSaleProduct(Integer id,Double price,Integer quantity) throws SQLException{
+        String sql = "{CALL sp_insert_venta_producto(?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,id);
+        cs.setDouble(2,price);
+        cs.setInt(3,quantity);
+        cs.execute();
+    }
+    @Override
+    public void close() throws SQLException {
+        con.close();
     }
 }

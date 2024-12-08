@@ -59,6 +59,12 @@ public class CustomerDAOImpl implements CustomerDAO {
         cs.setInt(1,integer);
         cs.executeUpdate();
     }
+
+    @Override
+    public void close() throws SQLException {
+        con.close();
+    }
+
     public ResultSet findAll() throws SQLException {
         String sql = "select * from uv_clientes";
         try{
@@ -70,10 +76,18 @@ public class CustomerDAOImpl implements CustomerDAO {
 
         }
     }
-
     public ResultSet countCustomer() throws SQLException{
         String sql = "select uf_totalClientes()";
         PreparedStatement ps = con.prepareStatement(sql);
         return ps.executeQuery();
+    }
+
+    public void updateCredit(Integer id, Double total, Double used) throws SQLException {
+        String sql = "{CALL sp_update_credito(?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1, id);
+        cs.setDouble(2, total);
+        cs.setDouble(3, used);
+        cs.executeUpdate();
     }
 }

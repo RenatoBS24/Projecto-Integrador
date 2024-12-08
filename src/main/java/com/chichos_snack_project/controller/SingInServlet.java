@@ -24,7 +24,7 @@ public class SingInServlet extends HttpServlet{
             HttpSession se = request.getSession();
             se.setAttribute("is_valid_user",true);
             se.setAttribute("username",name);
-            request.getRequestDispatcher("index.jsp").forward(request,response);
+            request.getRequestDispatcher("/index.jsp").forward(request,response);
         }else{
             request.setAttribute("errorMessage","Credenciales invalidas");
             request.getRequestDispatcher("login.jsp").forward(request,response);

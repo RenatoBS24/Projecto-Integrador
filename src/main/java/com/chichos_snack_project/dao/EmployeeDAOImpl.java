@@ -68,6 +68,11 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         cs.executeUpdate();
     }
 
+    @Override
+    public void close() throws SQLException {
+        conn.close();
+    }
+
     public ResultSet findAll() throws SQLException {
         String sql = "select * from uv_trabajadores";
         try{

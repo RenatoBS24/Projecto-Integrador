@@ -49,6 +49,11 @@ public class ProductDAOImpl implements ProductDAO {
         cs.execute();
     }
 
+    @Override
+    public void close() throws SQLException {
+        con.close();
+    }
+
     public ResultSet getProductsByCategory(Integer id_category) throws SQLException {
         String sql = "{CALL sp_getProductosByCategoria(?)}";
         CallableStatement cs = con.prepareCall(sql);

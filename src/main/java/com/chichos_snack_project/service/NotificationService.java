@@ -33,6 +33,5 @@ public class NotificationService {
             log.severe("Ocurrio un error en la lectura del metodo findAll de NotificationDAOImpl, state: "+e.getSQLState());
             return notificationList;
         }
-
     }
 }

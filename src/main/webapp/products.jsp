@@ -201,11 +201,8 @@
                     }
                 %>
             </div>
-
             <%
                 for(Category category:categoryList){
-
-
             %>
             <div id="<%=category.getName_category()%>" class="category grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
                 <%
@@ -243,6 +240,7 @@
             </div>
             <%
                 }
+
             %>
         </div>
     </div>

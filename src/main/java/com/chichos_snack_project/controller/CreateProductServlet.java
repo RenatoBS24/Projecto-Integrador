@@ -26,7 +26,7 @@ public class CreateProductServlet extends HttpServlet {
         String id_category = request.getParameter("category");
         String stock = request.getParameter("stock");
         String buy_price = request.getParameter("purchase_price");
-        if(ProductService.createProduct(name,price,id_unit,id_category) && InventoryService.createInventory(lot,expiration,purchase,stock,buy_price)){
+        if(ProductService.createProduct(name,price,id_unit,id_category) && InventoryService.createInventoryOfProduct(lot,expiration,purchase,stock,buy_price)){
             response.sendRedirect("Products");
         }else{
             request.setAttribute("Error" ,"No se pudo registrar el producto");

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -172,31 +173,40 @@ public class SaleService {
         return total;
     }
 
-    public static boolean createSale(List<Product> productList,String amount,String id_employee,String id_Customer){
+    public static boolean createSale(HashMap<Integer,Product> productList, String amount, String id_employee, String id_Customer,String confirm){
         try{
             checkNotNull(productList,"La lista de productos no puede ser nula");
             checkNotNull(id_employee,"El id del empleado no puede ser nulo");
             checkNotNull(id_Customer,"El id del cliente no puede ser nulo");
             checkNotNull(amount,"El monto total de la venta no puede ser nulo");
+            checkNotNull(confirm,"El confirm no puede ser nulo");
             checkArgument(!id_employee.isEmpty(),"El id del empleado no puede estar vacio");
             checkArgument(!id_Customer.isEmpty(),"El id del cliente no puede estar vacio");
             checkArgument(!amount.isEmpty(),"El monto total de la venta no puede estar vacio");
             checkArgument(!productList.isEmpty(),"La lista de productos no puede estar vacia");
-            checkArgument(amount.matches("[0-9]+.?[0-9]*"),"El monto total de la venta debe ser un numero");
-            double amount_cast = Double.parseDouble(amount);
-            checkArgument(amount_cast > 0,"El monto total de la venta debe ser mayor a 0");
+            checkArgument(!confirm.isEmpty(),"El confirm no puede estar vacio");
             checkArgument(id_employee.matches("[0-9]+"),"El id del empleado debe ser un numero entero");
             checkArgument(id_Customer.matches("[0-9]+"),"El id del cliente debe ser un numero entero");
             int id_employee_cast = Integer.parseInt(id_employee);
             int id_customer_cast = Integer.parseInt(id_Customer);
             checkArgument(id_employee_cast > 0,"El id del empleado debe ser mayor a 0");
             checkArgument(id_customer_cast > 0,"El id del cliente debe ser mayor a 0");
+            // valida que el confirm pueda ser convertido a boolean
+            checkArgument(confirm.equalsIgnoreCase("true") || confirm.equalsIgnoreCase("false"),"El confirm debe ser un booleano");
+            boolean confirm_cast = Boolean.parseBoolean(confirm);
+            int conf = confirm_cast ? 1 : 0;
+            LinkedList<Product> products = new LinkedList<>(productList.values());
+            double total = 0;
+            for(Product product: products){
+                total+= product.getPrice()*product.getStock();
+            }
             try{
                 Employee employee = EmployeeService.getEmployee(id_employee_cast);
                 Customer customer = CustomerService.getCustomer(id_customer_cast);
                 if (employee.getId_employee() !=0 && customer.getId_customer() !=0) {
-                    Sale sale = new Sale(0,employee,customer,null,amount_cast,productList.size(),productList);
+                    Sale sale = new Sale(0,employee,customer,null,total,conf,null);
                     saleDAO.create(sale);
+                    createSaleProduct(products);
                     log.info("Se ha creado una venta con un monto de: "+amount);
                     return true;
                 }else{
@@ -216,8 +226,14 @@ public class SaleService {
         }
 
     }
-
-    private void createSaleProduct(List<Product> productList){
+    private static void createSaleProduct(List<Product> productList){
+        try{
+            for(Product product: productList){
+                saleDAO.registerSaleProduct(product.getId_product(),product.getPrice(),product.getStock());
+            }
+        }catch (SQLException e){
+            log.severe("Hubo un error al procesar la el resulset obtenido por el metodo createSaleProduct de SaleDAOImpl state: "+e.getSQLState());
+        }
 
     }
 
