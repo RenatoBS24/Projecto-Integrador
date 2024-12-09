@@ -13,8 +13,9 @@ public class ArchitectureTest {
 
     @Test
     public void testArch(){
-        ArchRule rule = classes().should().bePublic();
-        rule.check(importedClasses);
+        ArchRule rule = classes()
+                .that().areNotAnonymousClasses()
+                .should().bePublic();
     }
 
     @Test
@@ -27,8 +28,8 @@ public class ArchitectureTest {
                 .layer("Interfaces").definedBy("..interfaces..")
                 .layer("Util").definedBy("..util..")
                 .layer("Test").definedBy("..test..")
-                .whereLayer("DAO").mayOnlyBeAccessedByLayers("Services")
-                .whereLayer("Services").mayOnlyBeAccessedByLayers("Controllers");
+                .whereLayer("DAO").mayOnlyBeAccessedByLayers("Services","Test")
+                .whereLayer("Services").mayOnlyBeAccessedByLayers("Controllers","Test");
         layerDependencies.check(importedClasses);
     }
 

@@ -58,3 +58,53 @@ function openDeleteModal(id) {
 function  closeDeleteModal(){
     document.getElementById('deleteProductModal').classList.add('hidden');
 }
+function openReportModal(){
+    document.getElementById('reportModal').style.display = 'flex';
+}
+
+function closeReportModal(){
+    document.getElementById('reportModal').style.display = 'none';
+}
+document.addEventListener('DOMContentLoaded', function() {
+    function productFilter(){
+        document.getElementById('filterProduct').addEventListener('change', function() {
+            applyFilters();
+        });
+    }
+    productFilter();
+});document.addEventListener('DOMContentLoaded', function() {
+    function dateFilter(){
+        document.getElementById('filterStart').addEventListener('change', function() {
+            applyFilters();
+        });
+    }
+    dateFilter();
+});document.addEventListener('DOMContentLoaded', function() {
+    function dateEndFilter(){
+        document.getElementById('filterEnd').addEventListener('change', function() {
+            applyFilters();
+        });
+    }
+    dateEndFilter();
+});
+function applyFilters() {
+    let productFilter = document.getElementById('filterProduct').value;
+    let startDateFilter = new Date(document.getElementById('filterStart').value);
+    let endDateFilter = new Date(document.getElementById('filterEnd').value);
+    let tabla = document.getElementsByTagName('table')[0];
+    let rows = tabla.getElementsByTagName('tr');
+
+    for (let i = 1; i < rows.length; i++) {
+        let productSelected = rows[i].getElementsByTagName('td')[6].textContent.trim();
+        let dateSelected = new Date(rows[i].getElementsByTagName('td')[3].textContent.trim());
+        let productMatch = (productFilter === '0' || productSelected === productFilter);
+        let startDateMatch = (isNaN(startDateFilter.getTime()) || dateSelected >= startDateFilter);
+        let endDateMatch = (isNaN(endDateFilter.getTime()) || dateSelected <= endDateFilter);
+
+        if (productMatch && startDateMatch && endDateMatch) {
+            rows[i].style.display = '';
+        } else {
+            rows[i].style.display = 'none';
+        }
+    }
+}

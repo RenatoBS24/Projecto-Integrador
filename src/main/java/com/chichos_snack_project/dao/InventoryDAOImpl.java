@@ -77,4 +77,14 @@ public class InventoryDAOImpl implements InventoryDAO {
         PreparedStatement ps = con.prepareStatement(sql);
         return ps.executeQuery();
     }
+
+    public ResultSet createReport(Integer id_product,java.sql.Date date_start, java.sql.Date date_end,Integer id_user) throws SQLException{
+        String sql = "{CALL sp_create_report_inventario(?,?,?,?)}";
+        CallableStatement cs = con.prepareCall(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+        cs.setInt(1,id_product);
+        cs.setDate(2,date_start);
+        cs.setDate(3,date_end);
+        cs.setInt(4,id_user);
+        return cs.executeQuery();
+    }
 }

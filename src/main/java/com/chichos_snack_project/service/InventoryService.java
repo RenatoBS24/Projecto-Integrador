@@ -6,7 +6,12 @@ import com.chichos_snack_project.model.Inventory;
 import com.chichos_snack_project.model.Product;
 import com.chichos_snack_project.model.UnitOfMeasurement;
 import com.chichos_snack_project.util.AppConfig;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.WorkbookUtil;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -229,5 +234,94 @@ public class InventoryService {
             log.severe("Hubo un error al eliminar el inventario porque un argumento no cumple las condiciones de checkArgument state: "+e.getMessage());
             return false;
         }
+    }
+
+    public static void createReport(String id_product, String date_start, String date_end, String id_user, OutputStream outputStream){
+        try {
+            checkNotNull(id_product, "El parametro id_product no puede ser nulo");
+            checkNotNull(date_start, "El parametro date_start no puede ser nulo");
+            checkNotNull(date_end, "El parametro date_end no puede ser nulo");
+            checkNotNull(id_user, "El parametro id_user no puede ser nulo");
+            checkArgument(!id_product.isEmpty(), "El id del producto no puede estar vacio");
+            checkArgument(!id_user.isEmpty(), "La fecha de inicio no puede estar vacia");
+            checkArgument(id_product.matches("\\d+"), "El id del producto debe ser un numero");
+            checkArgument(id_user.matches("\\d+"), "El id del usuario debe ser un numero");
+            java.sql.Date date_start_cast = null;
+            java.sql.Date date_end_cast = null;
+            if (!date_start.equalsIgnoreCase("")) {
+                date_start = date_start.trim();
+                checkArgument(date_start.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}"), "La fecha de inicio debe tener el formato yyyy-mm-dd");
+                date_start_cast = java.sql.Date.valueOf(date_start);
+            }
+            if (!date_end.equalsIgnoreCase("")) {
+                date_end = date_end.trim();
+                checkArgument(date_end.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}"), "La fecha de fin debe tener el formato yyyy-mm-dd");
+                date_end_cast = java.sql.Date.valueOf(date_end);
+            }
+            int id_product_cast = Integer.parseInt(id_product);
+            int id_user_cast = Integer.parseInt(id_user);
+            inventoryDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = inventoryDAO.createReport(id_product_cast, date_start_cast, date_end_cast,id_user_cast); Workbook workbook = new XSSFWorkbook();){
+                if(rs !=null){
+                    String safeName = WorkbookUtil.createSafeSheetName("Reporte de Inventario");
+                    Sheet sheet = workbook.createSheet(safeName);
+                    //Header
+                    Row row = sheet.createRow(0);
+                    createCell(workbook, row, 0,"Lote");
+                    createCell(workbook, row, 1,"Producto");
+                    createCell(workbook, row, 2, "Stock");
+                    createCell(workbook, row, 3,"Fecha de compra");
+                    createCell(workbook, row, 4,"Fecha de vencimiento");
+                    createCell(workbook, row, 5,"Precio de compra");
+                    int rowId = 1;
+                    while(rs.next()){
+                        Row rowItem = sheet.createRow(rowId++);
+                        createCell(workbook, rowItem, 0,rs.getString(3));
+                        createCell(workbook, rowItem, 1,rs.getString(8));
+                        createCell(workbook, rowItem, 2, rs.getInt(2));
+                        createCell(workbook, rowItem, 3,rs.getDate(5));
+                        createCell(workbook, rowItem, 4,rs.getDate(4));
+                        createCell(workbook, rowItem, 5,rs.getDouble(6));
+                    }
+                    workbook.write(outputStream);
+                    log.info("El usuario:"+id_user_cast+" ha creado un reporte de inventario");
+                }
+            }catch (IOException e){
+                log.severe("Hubo un error al crear el reporte state: "+e.getMessage());
+            }catch (SQLException e){
+                log.severe("Hubo un error al crear el reporte state: "+e.getSQLState());
+            }finally {
+                try{
+                    inventoryDAO.close();
+                }catch (SQLException e){
+                    log.info("No se pudo cerrar la conexion en el metodo createInventory de InventoryService state: "+e.getSQLState());
+                }
+            }
+
+        }catch (NullPointerException e){
+            log.severe("Hubo un error al crear el reporte porque un argumento es nulo state: "+e.getMessage());
+        }catch (IllegalArgumentException e){
+            log.severe("Hubo un error al crear el reporte porque un argumento no cumple las condiciones de checkArgument state: "+e.getMessage());
+        }catch (SQLException e){
+            log.severe("Hubo un error al crear el reporte state: "+e.getSQLState());
+        }
+    }
+    private static void createCell(Workbook wb, Row row, int column, Object val){
+        CreationHelper creationHelper = wb.getCreationHelper();
+        Cell cell = row.createCell(column);
+        CellStyle cellStyle = wb.createCellStyle();
+        if(val instanceof String){
+            cell.setCellValue((String) val);
+        }else if(val instanceof Integer){
+            cell.setCellValue((Integer) val);
+        } else if (val instanceof Double){
+            cell.setCellValue((Double) val);
+        } else if (val instanceof java.sql.Date) {
+            cell.setCellValue((java.sql.Date) val);
+            cellStyle.setDataFormat(creationHelper.createDataFormat().getFormat("dd/MM/yyyy"));
+        }
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        cell.setCellStyle(cellStyle);
     }
 }

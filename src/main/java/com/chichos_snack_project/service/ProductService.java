@@ -38,6 +38,22 @@ public class ProductService  {
             return productsList;
         }
     }
+    public static List<Product> ProductsMostSale(){
+        List<Product> productsList = new LinkedList<>();
+        try(ResultSet rs = productDAO.mostSale()){
+            if(rs !=null){
+                while(rs.next()){
+                    productsList.add(new Product(0,rs.getString(1),0,0,new Category(0,"",""),new UnitOfMeasurement(0,"","")));
+                }
+            }else{
+                productsList.add(new Product(0,"Error",0,0,new Category(0,"error","error"),new UnitOfMeasurement(0,"error","error")));
+            }
+        }catch (SQLException e){
+            log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo mostSale de ProductDAOImpl state: "+e.getSQLState());
+            productsList.add(new Product(0,"Error",0,0,new Category(0,"error","error"),new UnitOfMeasurement(0,"error","error")));
+        }
+        return productsList;
+    }
 
     public static boolean createProduct (String name,String price,String id_unit,String id_category){
         try{
@@ -145,9 +161,8 @@ public class ProductService  {
             checkArgument(id_category.matches("\\d+"),"El id de la categoria debe ser un numero");
             int id_user_cast = Integer.parseInt(id_user);
             int id_category_cast = Integer.parseInt(id_category);
-            // validaciones para id_user_cast
             checkArgument(id_user_cast>0,"El id del usuario debe ser mayor a 0");
-            try(ResultSet rs = productDAO.getProductsByCategory(id_category_cast);Workbook workbook = new XSSFWorkbook();){
+            try(ResultSet rs = productDAO.getProductsByCategory(id_category_cast);Workbook workbook = new XSSFWorkbook()){
                 if(rs !=null){
                     String safeName = WorkbookUtil.createSafeSheetName("Reporte de productos");
                     Sheet sheet = workbook.createSheet(safeName);

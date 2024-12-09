@@ -41,6 +41,9 @@ public class SaleService {
             checkNotNull(id_user,"El id del usuario no puede ser nulo");
             checkNotNull(id_customer,"El id del cliente no puede ser nulo");
             checkNotNull(id_employee,"El id del empleado no puede ser nulo");
+            checkArgument(!id_user.isEmpty(),"El id del usuario no puede estar vacio");
+            checkArgument(!id_customer.isEmpty(),"El id del cliente no puede estar vacio");
+            checkArgument(!id_employee.isEmpty(),"El id del empleado no puede estar vacio");
             id_user = id_user.trim();
             id_customer = id_customer.trim();
             id_employee = id_employee.trim();
@@ -235,6 +238,41 @@ public class SaleService {
             log.severe("Hubo un error al procesar la el resulset obtenido por el metodo createSaleProduct de SaleDAOImpl state: "+e.getSQLState());
         }
 
+    }
+
+    public static boolean deleteSale(String id_sale,String code,String code_entered){
+        try{
+            checkNotNull(id_sale,"El id de la venta no puede ser nulo");
+            checkNotNull(code,"El codigo de la venta no puede ser nulo");
+            checkNotNull(code_entered,"El codigo ingresado no puede ser nulo");
+            checkArgument(!id_sale.isEmpty(),"El id de la venta no puede estar vacio");
+            checkArgument(!code.isEmpty(),"El codigo de la venta no puede estar vacio");
+            checkArgument(!code_entered.isEmpty(),"El codigo ingresado no puede estar vacio");
+            checkArgument(id_sale.matches("[0-9]+"),"El id de la venta debe ser un numero entero");
+            checkArgument(code.matches("[0-9]+"),"El codigo de la venta debe ser un numero entero");
+            checkArgument(code_entered.matches("[0-9]+"),"El codigo ingresado debe ser un numero entero");
+            int id_sale_cast = Integer.parseInt(id_sale);
+            checkArgument(id_sale_cast > 0,"El id de la venta debe ser mayor a 0");
+            if(code.equals(code_entered)){
+                try {
+                    saleDAO.delete(id_sale_cast);
+                    log.info("Se ha eliminado la venta con el id: "+id_sale_cast);
+                    return true;
+                } catch (SQLException e) {
+                    log.severe("Hubo un error al eliminar la venta mediante  deleteSale de SaleDAOImpl state: "+e.getSQLState());
+                    return false;
+                }
+            }else{
+                log.warning("El codigo ingresado no coincide con el codigo de la venta");
+                return false;
+            }
+        }catch (NullPointerException e) {
+            log.severe("Hubo un error al eliminar la venta porque un argumento es nulo state: " + e.getMessage());
+            return false;
+        }catch (IllegalArgumentException e){
+            log.severe("Hubo un error al eliminar la venta porque un argumento es invalido state: "+e.getMessage());
+            return false;
+        }
     }
 
 

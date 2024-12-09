@@ -3,6 +3,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.chichos_snack_project.model.Sale" %>
 <%@ page import="com.google.gson.Gson" %>
+<%@ page import="java.sql.Date" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="javax.ejb.Local" %>
+<%@ page import="java.time.temporal.ChronoUnit" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 
@@ -193,8 +197,16 @@
                         <span>Venta #<%=sale.getId_sale()%> - Cliente: <%=sale.getCustomer().getName()%></span>
                         <div>
                             <button class="text-blue-500" onclick="abrirModal('<%=sale.getEmployee().getName()%>','<%=sale.getCustomer().getName()%>','<%=sale.getSale_date()%>','<%=sale.getAmount()%>',`<%=json%>`)">Ver Detalles</button>
-                            <button class="text-green-500 ml-4" onclick="abrirModal('editarModal')">Editar</button>
-                            <button class="text-red-500 ml-4">Eliminar</button>
+                            <%
+                                LocalDate saleDate = sale.getSale_date().toLocalDate();
+                                LocalDate currentDate = LocalDate.now();
+                                long dayBetween = ChronoUnit.DAYS.between(saleDate,currentDate);
+                                if(dayBetween <=1){
+                            %>
+                            <button class="boton text-red-500 ml-4" onclick="openModalDelete(<%=sale.getId_sale()%>)">Eliminar</button>
+                            <%
+                                }
+                            %>
                         </div>
                     </div>
                     <%
@@ -242,7 +254,7 @@
 </div>
 
 <!-- Modal de Reporte de Ventas-->
-<div id="reportModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+<div id="reportModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
     <div class="bg-white w-10/12 rounded-lg shadow-lg p-6 relative">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-semibold">Reporte de ventas</h2>
@@ -322,12 +334,51 @@
         </div>
     </div>
 </div>
+<!--Modal for delete sale -->
+<div id="deleteSaleModal" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-white w-1/3 p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Eliminar Venta</h2>
+        <form action="DeleteSale" method="POST">
+            <input type="hidden" id="id_sale" name="id">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Código: </label>
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="code_entered" required oninput="validateNumber(this)">
+                <%
+                    if(request.getAttribute("Error") != null){
+                        String error = (String)request.getAttribute("Error");
 
+                %>
+                <p style="color: red"><%=error%></p>
+                <%
+                    }
+                %>
+
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" class="bg-gray-300 p-2 rounded-lg hover:bg-gray-400" onclick="closeDeleteModal()">Cancelar</button>
+                <button type="submit" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">Eliminar</button>
+            </div>
+        </form>
+    </div>
+</div>
 <!-- Scripts -->
+<%
+    if(request.getSession().getAttribute("error") !=null){
+        String error = (String) request.getSession().getAttribute("error");
+        request.getSession().removeAttribute("error");
+
+%>
+<script>
+    alert("<%=error%>");
+</script>
+<%
+    }
+%>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <script src="js/function_sale.js"></script>
 <script src="js/ajax_report_sales.js"></script>
+<script src="js/code_email_ajax.js"></script>
 
 </body>
 <%

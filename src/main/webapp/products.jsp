@@ -143,6 +143,7 @@
                     <!-- Button to Open Modal -->
                     <button class="bg-green-400 text-white p-2 rounded-lg hover:bg-grean-600" onclick="openReportModal()">Generar reporte</button>
                     <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" onclick="openModal()">+ Agregar productos</button>
+                    <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" ><a href="Inventory">Ver Inventario</a></button>
                     <div class="relative">
                         <a href="Notifications">
                             <ion-icon name="notifications-outline" class="text-2xl text-gray-600"></ion-icon>

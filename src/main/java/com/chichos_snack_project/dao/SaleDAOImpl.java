@@ -4,6 +4,7 @@ import com.chichos_snack_project.interfaces.SaleDAO;
 import com.chichos_snack_project.model.Sale;
 import com.chichos_snack_project.util.MysqlConnector;
 
+
 import java.sql.*;
 
 public class SaleDAOImpl implements SaleDAO {
@@ -38,7 +39,10 @@ public class SaleDAOImpl implements SaleDAO {
 
     @Override
     public void delete(Integer integer) throws SQLException {
-
+        String sql = "{CALL sp_delete_venta(?)}";
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setInt(1,integer);
+        cs.execute();
     }
 
     public ResultSet createReport(Integer id_employee, Integer id_customer, java.sql.Date date_start, java.sql.Date date_end) throws SQLException{
@@ -53,7 +57,7 @@ public class SaleDAOImpl implements SaleDAO {
 
     @SuppressWarnings("SqlResolve")
     public ResultSet findAll() throws SQLException{
-        String sql = "select * from uv_ventas";
+        String sql = "{CALL sp_ventas()}";
         PreparedStatement ps = con.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
         return ps.executeQuery();
     }

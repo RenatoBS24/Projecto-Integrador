@@ -1,5 +1,7 @@
 <%@ page import="com.chichos_snack_project.model.Employee" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.chichos_snack_project.model.Sale" %>
+<%@ page import="com.chichos_snack_project.model.Product" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 
@@ -19,11 +21,15 @@
         HttpSession session1  = request.getSession();
         boolean is_valid_user = false;
         if(session1.getAttribute("is_valid_user") != null){
-            if(request.getAttribute("total") !=null && request.getAttribute("count") !=null && request.getAttribute("employeeList") !=null){
+            if(request.getAttribute("total") !=null && request.getAttribute("count") !=null && request.getAttribute("employeeList") !=null && request.getAttribute("saleList") !=null && request.getAttribute("mostSoldProducts") !=null){
                 double total = (double)request.getAttribute("total");
                 int count = (int)request.getAttribute("count");
                 @SuppressWarnings("unchecked")
                 List<Employee> employeeList = (List<Employee>) request.getAttribute("employeeList");
+                @SuppressWarnings("unchecked")
+                List<Sale> saleList = (List<Sale>) request.getAttribute("saleList");
+                @SuppressWarnings("unchecked")
+                List<Product> mostSoldProducts = (List<Product>) request.getAttribute("mostSoldProducts");
 
     %>
 </head>
@@ -145,30 +151,35 @@
                 <!-- Popular Products -->
                 <h3 class="text-lg font-semibold mb-2">Productos mas vendidos del mes</h3>
                 <div class="flex space-x-4">
-                    <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-full">
-                    <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-full">
-                    <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-full">
-                    <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-full">
-                    <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-full">
+                    <%
+                        for(Product product: mostSoldProducts){
+                    %>
+                    <div>
+                        <img src="https://via.placeholder.com/50" class="w-12 h-12 rounded-full">
+                        <p><%=product.getName()%></p>
+                    </div>
+                    <%
+                        }
+                    %>
+
                 </div>
             </div>
 
             <!-- Reports Section -->
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4">Reportes</h2>
+                <h2 class="text-xl font-semibold mb-4">Ultimas Ventas</h2>
                 <div class="flex flex-col space-y-2">
+                    <%
+                      for(int i = 0;i<4;i++){
+                        Sale sale = saleList.get(i);
+                    %>
                     <div class="flex justify-between">
-                        <span>Gaseosa Inka Kola 600 ml</span>
-                        <span class="text-green-600">S/.6.00</span>
+                        <span>Venta #00<%=sale.getId_sale()%></span>
+                        <span class="text-green-600">S/<%=sale.getAmount()%></span>
                     </div>
-                    <div class="flex justify-between">
-                        <span>Colores Faber Castell X 12</span>
-                        <span class="text-green-600">S/.6.70</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>Pan Bimbo</span>
-                        <span class="text-green-600">S/.11.60</span>
-                    </div>
+                    <%
+                        }
+                    %>
                 </div>
                 <button class="bg-teal-500 text-white mt-4 p-2 rounded-lg hover:bg-teal-600" onclick="mostrarReporte()">Ver reporte detallado</button>
             </div>

@@ -28,7 +28,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User read(User user) throws SQLException {
-        String sql = "{CALL sp_validate(?,?,?,?,?)}";
+        String sql = "{CALL sp_validate(?,?,?,?,?,?)}";
         if(user !=null){
             CallableStatement cs = con.prepareCall(sql);
             cs.setString(1,user.getUsername());
@@ -36,14 +36,16 @@ public class UserDAOImpl implements UserDAO {
             cs.registerOutParameter(3, Types.VARCHAR);
             cs.registerOutParameter(4,Types.VARCHAR);
             cs.registerOutParameter(5,Types.INTEGER);
+            cs.registerOutParameter(6,Types.INTEGER);
             cs.executeQuery();
             //---------------------------------
 
             String username = cs.getString(3);
             String password = cs.getString(4);
             int id_rol = cs.getInt(5);
+            int id_user = cs.getInt(6);
 
-            if(id_rol != 0 && username!= null && password != null){
+            if(id_rol != 0 && username!= null && password != null && id_user != 0){
                 return new User(username,password,id_rol);
             }
 

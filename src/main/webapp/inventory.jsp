@@ -18,6 +18,9 @@
         .no-scrollbar {
             scrollbar-width: none;
         }
+        #reportModal{
+            display: none;
+        }
     </style>
 </head>
 <%
@@ -120,6 +123,7 @@
             </div>
             <div class="flex items-center space-x-4">
                 <!-- Button to Open Modal -->
+                <button class="bg-green-400 text-white p-2 rounded-lg hover:bg-grean-600" onclick="openReportModal()">Generar reporte</button>
                 <button class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600" onclick="openModal()">+ Agregar Inventario</button>
                 <div class="relative">
                     <a href="Notifications">
@@ -320,6 +324,77 @@
         </form>
     </div>
 </div>
+<!-- Modal for report -->
+<div id="reportModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white w-10/12 rounded-lg shadow-lg p-6 relative">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold">Reporte de ventas</h2>
+            <button class="text-black hover:text-red-500" onclick="closeReportModal()">
+                <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+            </button>
+
+        </div>
+        <!-- Dropdown para seleccionar el periodo -->
+        <div class="flex justify-start items-center mb-6">
+            <form action="" class="flex justify-start items-center">
+                <label for="filterStart" class="text-lg font-semibold">Desde:</label>
+                <input type="date" id="filterStart" name="date_start" onchange="dateFilter()" class="p-1 bg-white border rounded-lg border-gray-300 m-3">
+                <label for="filterEnd" class="text-lg font-semibold">Hasta:</label>
+                <input type="date" id="filterEnd" name="date_end" onchange="dateEndFilter()" class="p-1 bg-white border rounded-lg border-gray-300 m-3">
+                <label for="filterProduct">Producto</label>
+                <select id="filterProduct" name="filter_product" onchange="" class="p-2 bg-white border border-gray-300 rounded-lg m-3">
+                    <option value="0">Todos</option>
+                    <%
+                        for(Product product:productList){
+                    %>
+                    <option value="<%=product.getId_product()%>"><%=product.getName()%></option>
+                    <%
+                        }
+                    %>
+                </select>
+                <div class="flex justify-center ms-3">
+                    <button class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600" type="button" onclick="ajax_report_inventory()" >Exportar</button>
+                </div>
+            </form>
+
+        </div>
+
+        <!-- Tabla del reporte -->
+        <div class="overflow-y-auto max-h-96">
+            <table class="table-auto w-full text-center border border-gray-200" id="reportTable">
+                <thead class="bg-blue-200 sticky top-0">
+                <tr>
+                    <th class="px-4 py-2">Lote</th>
+                    <th class="px-4 py-2">Producto</th>
+                    <th class="px-4 py-2">Stock</th>
+                    <th class="px-4 py-2">Fecha de compra</th>
+                    <th class="px-4 py-2">Fecha de vencimiento</th>
+                    <th class="px-4 py-2">Precio de Compra</th>
+                </tr>
+                </thead>
+                <tbody>
+                <%
+                    for (Inventory inventory : inventoryList) {
+                %>
+                <tr>
+                    <td class="border px-4 py-2"><%= inventory.getLot() %></td>
+                    <td class="border px-4 py-2"><%= inventory.getProduct().getName()%></td>
+                    <td class="border px-4 py-2"><%= inventory.getStock() %></td>
+                    <td class="border px-4 py-2"><%= inventory.getPurchase_date() %></td>
+                    <td class="border px-4 py-2"><%= inventory.getExpiration_date()%></td>
+                    <td class="border px-4 py-2">S/<%=inventory.getPurchase_price()%></td>
+                    <td class="hidden"><%=inventory.getProduct().getId_product()%></td>
+                </tr>
+                <%
+                    }
+                %>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <%
     if(request.getSession().getAttribute("error") !=null){
         String error = (String) request.getSession().getAttribute("error");
@@ -335,6 +410,7 @@
 
 <script src="js/function_inventory.js"></script>
 <script src="js/code_email_ajax.js"></script>
+<script src="js/ajax_report_inventory.js"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>

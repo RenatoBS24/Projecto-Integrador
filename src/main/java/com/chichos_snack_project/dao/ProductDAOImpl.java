@@ -72,4 +72,10 @@ public class ProductDAOImpl implements ProductDAO {
         }
     }
 
+    public ResultSet mostSale() throws SQLException{
+        String sql = "{CALL sp_most_sold_products()}";
+        CallableStatement cs = con.prepareCall(sql);
+        return cs.executeQuery();
+    }
+
 }

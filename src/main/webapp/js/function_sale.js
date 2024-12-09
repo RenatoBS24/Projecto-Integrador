@@ -169,3 +169,13 @@ function applyFilters() {
         }
     }
 }
+
+
+
+function openModalDelete(id){
+    document.getElementById('deleteSaleModal').classList.remove('hidden');
+    document.getElementById('id_sale').value = id;
+}
+function closeDeleteModal(){
+    document.getElementById('deleteSaleModal').classList.add('hidden');
+}

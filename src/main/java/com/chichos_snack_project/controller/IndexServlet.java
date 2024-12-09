@@ -1,8 +1,11 @@
 package com.chichos_snack_project.controller;
 
 import com.chichos_snack_project.model.Employee;
+import com.chichos_snack_project.model.Product;
+import com.chichos_snack_project.model.Sale;
 import com.chichos_snack_project.service.CustomerService;
 import com.chichos_snack_project.service.EmployeeService;
+import com.chichos_snack_project.service.ProductService;
 import com.chichos_snack_project.service.SaleService;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,9 +23,13 @@ public class IndexServlet  extends HttpServlet {
        double total = SaleService.sumSales();
        int count = CustomerService.getCountCustomer();
        List<Employee> employeeList = EmployeeService.getEmployees();
+       List<Sale> saleList = SaleService.getSales();
+       List<Product> mostSoldProducts = ProductService.ProductsMostSale();
        request.setAttribute("total",total);
        request.setAttribute("count",count);
        request.setAttribute("employeeList",employeeList);
+       request.setAttribute("saleList",saleList);
+       request.setAttribute("mostSoldProducts",mostSoldProducts);
        request.getRequestDispatcher("index.jsp").forward(request,response);
     }
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

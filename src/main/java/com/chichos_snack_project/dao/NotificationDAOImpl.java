@@ -4,10 +4,7 @@ import com.chichos_snack_project.interfaces.NotificationDAO;
 import com.chichos_snack_project.model.Notification;
 import com.chichos_snack_project.util.MysqlConnector;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class NotificationDAOImpl implements NotificationDAO {
 
@@ -41,8 +38,8 @@ public class NotificationDAOImpl implements NotificationDAO {
     }
 
     public ResultSet findAll() throws SQLException{
-        String sql = "select * from uv_notifiacion";
-        PreparedStatement ps = con.prepareStatement(sql);
-        return ps.executeQuery();
+        String sql = "{CALL sp_getNotifications()}";
+        CallableStatement cs = con.prepareCall(sql);
+        return cs.executeQuery();
     }
 }
