@@ -21,23 +21,31 @@ public class EmployeeService {
     private static final java.util.logging.Logger log = Logger.getLogger(EmployeeService.class.getName());
     public static List<Employee> getEmployees(){
         List<Employee> employeeList = new LinkedList<>();
-        try(ResultSet rs = employeeDAO.findAll()){
-            if(rs !=null){
-                while (rs.next()){
-                    employeeList.add(new Employee(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getDate(6),rs.getString(7)));
+        try {
+            employeeDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = employeeDAO.findAll()){
+                if(rs !=null){
+                    while (rs.next()){
+                        employeeList.add(new Employee(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getDate(6),rs.getString(7)));
+                    }
+                }else{
+                    employeeList.add(new Employee(0,"Error","Error",0,"Error",null,"Error"));
                 }
-            }else{
+                return employeeList;
+            }catch (SQLException e){
+                log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de EmployeeDAOImpl");
                 employeeList.add(new Employee(0,"Error","Error",0,"Error",null,"Error"));
+                return employeeList;
             }
-            return employeeList;
-        }catch (SQLException e){
-            log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de EmployeeDAOImpl");
+        } catch (SQLException e) {
+            log.severe("Hubo un error al intentar abrir la conexion con la base de datos en el metodo getEmployees de EmployeeService");
             employeeList.add(new Employee(0,"Error","Error",0,"Error",null,"Error"));
             return employeeList;
         }
     }
     public static boolean create(String name,String lastname,String dni,String phone,String salary){
         try{
+            employeeDAO.open(AppConfig.getDatasource());
             checkNotNull(name,"El parametro name no puede ser nulo");
             checkNotNull(lastname,"El parametro lastname no puede ser nulo");
             checkNotNull(dni,"El parametro dni no puede ser nulo");
@@ -56,25 +64,45 @@ public class EmployeeService {
         }catch (NullPointerException | IllegalArgumentException e){
             log.severe(e.getMessage());
             return false;
+        }finally {
+            try {
+                employeeDAO.close();
+            } catch (SQLException e) {
+                log.severe("Hubo un error al intentar cerrar la conexion con la base de datos en el metodo create de EmployeeService");
+            }
         }
     }
 
     public static boolean create(List<Employee> employeeList){
         try {
+            employeeDAO.open(AppConfig.getDatasource());
             for (Employee employee : employeeList){
                 employeeDAO.create(employee);
             }
             return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }finally {
+            try {
+                employeeDAO.close();
+            } catch (SQLException e) {
+                log.severe("Hubo un error al intentar cerrar la conexion con la base de datos en el metodo create de EmployeeService");
+            }
         }
     }
     public static Employee getEmployee(int id){
        try{
+           employeeDAO.open(AppConfig.getDatasource());
            return employeeDAO.read(new Employee(id,null,null,0,null,null,null));
        }catch (SQLException e){
            log.severe("Hubo un error al intentar obtener un empleado mediante su id usando el metodo read de EmployeeDAOImpl state: "+e.getSQLState());
            return new Employee(0,"Error","Error",0,"Error",null,"Error");
+       }finally {
+              try {
+                employeeDAO.close();
+              } catch (SQLException e) {
+                log.severe("Hubo un error al intentar cerrar la conexion con la base de datos en el metodo getEmployee de EmployeeService");
+              }
        }
     }
     public static boolean update(String name,String lastname,String salary,String dni,String phone,String id){
@@ -92,6 +120,7 @@ public class EmployeeService {
             employee.setId_employee(Integer.parseInt(id));
             Employee employee_data = employeeDAO.read(employee);
             if(employee_data !=null){
+                employeeDAO.open(AppConfig.getDatasource());
                 employee_data.setName(name);
                 employee_data.setLastname(lastname);
                 employee_data.setDni(dni);
@@ -110,6 +139,12 @@ public class EmployeeService {
         }catch (NullPointerException | IllegalArgumentException e){
             log.severe(e.getMessage());
             return false;
+        }finally {
+            try {
+                employeeDAO.close();
+            } catch (SQLException e) {
+                log.severe("Hubo un error al intentar cerrar la conexion con la base de datos en el metodo update de EmployeeService");
+            }
         }
     }
     public static boolean delete(int id,String code,String code_entered){
@@ -118,12 +153,19 @@ public class EmployeeService {
             checkNotNull(code_entered,"El parametro code_entered no puede ser nulo");
             if(code.equals(code_entered)){
                 try{
+                    employeeDAO.open(AppConfig.getDatasource());
                     log.info("Deleting employee with id: " + id);
                     employeeDAO.delete(id);
                     return true;
                 }catch (SQLException e){
                     log.severe("No se pudo eliminar al empleado por una SQLException en el metodo delete de EmployeeDAOImpl "+e.getSQLState());
                     return false;
+                }finally {
+                    try {
+                        employeeDAO.close();
+                    } catch (SQLException e) {
+                        log.severe("Hubo un error al intentar cerrar la conexion con la base de datos en el metodo delete de EmployeeService");
+                    }
                 }
             }else{
                 log.info("El codigo ingresado por el usuario no coincide");

@@ -9,7 +9,7 @@ import java.sql.*;
 
 public class SaleDAOImpl implements SaleDAO {
 
-    private final Connection con;
+    private  Connection con;
 
     public SaleDAOImpl(String name_datasource){
         con = MysqlConnector.getConnection(name_datasource);
@@ -78,5 +78,11 @@ public class SaleDAOImpl implements SaleDAO {
     @Override
     public void close() throws SQLException {
         con.close();
+    }
+
+    public void open(String name_datasource) throws SQLException{
+        if(con.isClosed()){
+            con = MysqlConnector.getConnection(name_datasource);
+        }
     }
 }

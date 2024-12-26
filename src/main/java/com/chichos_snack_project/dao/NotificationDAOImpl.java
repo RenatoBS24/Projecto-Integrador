@@ -8,7 +8,7 @@ import java.sql.*;
 
 public class NotificationDAOImpl implements NotificationDAO {
 
-    private final Connection con;
+    private  Connection con;
     public NotificationDAOImpl(String name_datasource){
         this.con = MysqlConnector.getConnection(name_datasource);
     }
@@ -35,6 +35,11 @@ public class NotificationDAOImpl implements NotificationDAO {
     @Override
     public void close() throws SQLException {
         con.close();
+    }
+    public void open(String name_datasource) throws SQLException {
+        if(con.isClosed()){
+            con = MysqlConnector.getConnection(name_datasource);
+        }
     }
 
     public ResultSet findAll() throws SQLException{

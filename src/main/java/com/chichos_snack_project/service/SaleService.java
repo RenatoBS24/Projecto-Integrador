@@ -26,17 +26,25 @@ public class SaleService {
 
     public static List<Sale> getSales(){
         List<Sale> saleList = new LinkedList<>();
-        try(ResultSet rs = saleDAO.findAll()){
-            return getListSaleFilter(rs);
-        }catch (SQLException e){
+        try {
+            saleDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = saleDAO.findAll()){
+                return getListSaleFilter(rs);
+            }catch (SQLException e){
+                saleList.add(new Sale(0,null,null,null,0,0,null));
+                log.severe("Hubo un error al procesar la el resulset obtenido por el metodo getSales de SaleDAOImpl state: "+e.getSQLState() +" "+e.getMessage());
+                return saleList;
+            }
+        } catch (SQLException e) {
             saleList.add(new Sale(0,null,null,null,0,0,null));
-            log.severe("Hubo un error al procesar la el resulset obtenido por el metodo getSales de SaleDAOImpl state: "+e.getSQLState() +" "+e.getMessage());
+            log.severe("Hubo un error al abrir la conexion con la base de datos state: "+e.getSQLState());
             return saleList;
         }
     }
 
     public static void createReport(String id_user, String id_customer, String id_employee, String date_start, String date_end, OutputStream outputStream){
         try{
+            saleDAO.open(AppConfig.getDatasource());
             log.info(id_user+" "+id_customer+" "+id_employee+" "+date_start+" "+date_end);
             checkNotNull(id_user,"El id del usuario no puede ser nulo");
             checkNotNull(id_customer,"El id del cliente no puede ser nulo");
@@ -106,6 +114,8 @@ public class SaleService {
             log.severe("Hubo un error al crear el reporte porque un argumento es nulo state: "+e.getMessage());
         }catch (IllegalArgumentException e){
             log.severe("Hubo un error al crear el reporte porque un argumento es invalido state: "+e.getMessage());
+        }catch (SQLException e){
+            log.severe("Hubo un error al abrir la conexion con la base de datos state: "+e.getSQLState());
         }
     }
 
@@ -166,12 +176,17 @@ public class SaleService {
 
     public static double sumSales(){
         double total = 0;
-        try(ResultSet rs = saleDAO.sumAmountSales()) {
-            if(rs.next()){
-                total = rs.getDouble(1);
+        try {
+            saleDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = saleDAO.sumAmountSales()) {
+                if(rs.next()){
+                    total = rs.getDouble(1);
+                }
+            } catch (SQLException e) {
+                log.severe("Hubo un error al procesar la el resulset obtenido por el metodo sumAmountSales de SaleDAOImpl state: "+e.getSQLState());
             }
         } catch (SQLException e) {
-            log.severe("Hubo un error al procesar la el resulset obtenido por el metodo sumAmountSales de SaleDAOImpl state: "+e.getSQLState());
+            log.severe("Hubo un error al abrir la conexion con la base de datos state: "+e.getSQLState());
         }
         return total;
     }
@@ -207,6 +222,7 @@ public class SaleService {
                 Employee employee = EmployeeService.getEmployee(id_employee_cast);
                 Customer customer = CustomerService.getCustomer(id_customer_cast);
                 if (employee.getId_employee() !=0 && customer.getId_customer() !=0) {
+                    saleDAO.open(AppConfig.getDatasource());
                     Sale sale = new Sale(0,employee,customer,null,total,conf,null);
                     saleDAO.create(sale);
                     createSaleProduct(products);
@@ -219,6 +235,12 @@ public class SaleService {
             }catch (SQLException e){
                 log.severe("Hubo un error al procesar la el resulset obtenido por el metodo createSale de SaleDAOImpl state: "+e.getSQLState());
                 return false;
+            }finally {
+                try{
+                    saleDAO.close();
+                }catch (SQLException e){
+                    log.severe("Hubo un error al cerrar la conexion con la base de datos state: "+e.getSQLState());
+                }
             }
         }catch (NullPointerException e){
             log.severe("Hubo un error al crear la venta porque un argumento es nulo state: "+e.getMessage());
@@ -255,12 +277,19 @@ public class SaleService {
             checkArgument(id_sale_cast > 0,"El id de la venta debe ser mayor a 0");
             if(code.equals(code_entered)){
                 try {
+                    saleDAO.open(AppConfig.getDatasource());
                     saleDAO.delete(id_sale_cast);
                     log.info("Se ha eliminado la venta con el id: "+id_sale_cast);
                     return true;
                 } catch (SQLException e) {
                     log.severe("Hubo un error al eliminar la venta mediante  deleteSale de SaleDAOImpl state: "+e.getSQLState());
                     return false;
+                }finally {
+                    try{
+                        saleDAO.close();
+                    }catch (SQLException e) {
+                        log.severe("Hubo un error al cerrar la conexion con la base de datos state: " + e.getSQLState());
+                    }
                 }
             }else{
                 log.warning("El codigo ingresado no coincide con el codigo de la venta");

@@ -23,33 +23,47 @@ public class ProductService  {
     private static final ProductDAOImpl productDAO = new ProductDAOImpl(AppConfig.getDatasource());
     public static List<Product> getProducts(){
         List<Product> productsList = new LinkedList<>();
-        try(ResultSet rs = productDAO.findAll()){
-            if(rs !=null){
-                while (rs.next()){
-                    productsList.add(new Product(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getInt(4),new Category(rs.getInt(5),rs.getString(6),""),new UnitOfMeasurement(rs.getInt(7),rs.getString(8),"")));
+        try {
+            productDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = productDAO.findAll()){
+                if(rs !=null){
+                    while (rs.next()){
+                        productsList.add(new Product(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getInt(4),new Category(rs.getInt(5),rs.getString(6),""),new UnitOfMeasurement(rs.getInt(7),rs.getString(8),"")));
+                    }
+                }else{
+                    productsList.add(new Product(0,"Error",0,0,new Category(0,"error","error"),new UnitOfMeasurement(0,"error","error")));
                 }
-            }else{
+                return productsList;
+            }catch (SQLException e){
+                log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de ProductDAOImpl state: "+e.getSQLState());
                 productsList.add(new Product(0,"Error",0,0,new Category(0,"error","error"),new UnitOfMeasurement(0,"error","error")));
+                return productsList;
             }
-            return productsList;
-        }catch (SQLException e){
-            log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de ProductDAOImpl state: "+e.getSQLState());
+        } catch (SQLException e) {
+            log.severe("Hubo un error al abrir la conexion en el metodo getProducts de ProductService state: "+e.getSQLState());
             productsList.add(new Product(0,"Error",0,0,new Category(0,"error","error"),new UnitOfMeasurement(0,"error","error")));
             return productsList;
+
         }
     }
     public static List<Product> ProductsMostSale(){
         List<Product> productsList = new LinkedList<>();
-        try(ResultSet rs = productDAO.mostSale()){
-            if(rs !=null){
-                while(rs.next()){
-                    productsList.add(new Product(0,rs.getString(1),0,0,new Category(0,"",""),new UnitOfMeasurement(0,"","")));
+        try {
+            productDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = productDAO.mostSale()){
+                if(rs !=null){
+                    while(rs.next()){
+                        productsList.add(new Product(0,rs.getString(1),0,0,new Category(0,"",""),new UnitOfMeasurement(0,"","")));
+                    }
+                }else{
+                    productsList.add(new Product(0,"Error",0,0,new Category(0,"error","error"),new UnitOfMeasurement(0,"error","error")));
                 }
-            }else{
+            }catch (SQLException e){
+                log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo mostSale de ProductDAOImpl state: "+e.getSQLState());
                 productsList.add(new Product(0,"Error",0,0,new Category(0,"error","error"),new UnitOfMeasurement(0,"error","error")));
             }
-        }catch (SQLException e){
-            log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo mostSale de ProductDAOImpl state: "+e.getSQLState());
+        } catch (SQLException e) {
+           log.severe("Hubo un error al abrir la conexion en el metodo ProductsMostSale de ProductService state: "+e.getSQLState());
             productsList.add(new Product(0,"Error",0,0,new Category(0,"error","error"),new UnitOfMeasurement(0,"error","error")));
         }
         return productsList;
@@ -57,12 +71,20 @@ public class ProductService  {
 
     public static boolean createProduct (String name,String price,String id_unit,String id_category){
         try{
+            productDAO.open(AppConfig.getDatasource());
             checkNotNull(name,"El parametro name no puede ser nulo");
             checkNotNull(price,"El parametro price no puede ser nulo");
             checkNotNull(id_unit,"El parametro id_unit no puede ser nulo");
             checkNotNull(id_category,"El parametro id_category no puede ser nulo");
+            // Valida que los argumentos no esten vacios
+            checkArgument(!name.isEmpty(),"El nombre del producto no puede estar vacio");
+            checkArgument(!price.isEmpty(),"El precio no puede estar vacio");
+            checkArgument(!id_unit.isEmpty(),"El id de la unidad de medida no puede estar vacio");
+            checkArgument(!id_category.isEmpty(),"El id de la categoria no puede estar vacio");
             id_unit = id_unit.trim();
             id_category = id_category.trim();
+            // Valida que el nombre del prodcuto solo tenga letras o espacios
+            checkArgument(name.matches("^([A-Za-záéíóúÁÉÍÓÚñÑ]+)(\\s[A-Za-záéíóúÁÉÍÓÚñÑ]+)*$"), "El nombre del producto debe contener al menos una letra y solo puede contener letras y espacios");
             checkArgument(price.matches("\\d+(\\.\\d+)?"),"El precio debe ser un numero");
             checkArgument(id_unit.matches("\\d+"),"El id de la unidad de medida debe ser un numero");
             checkArgument(id_category.matches("\\d+"),"El id de la categoria debe ser un numero");
@@ -81,17 +103,32 @@ public class ProductService  {
         catch (SQLException e){
             log.severe("Hubo un error al crear el producto state: "+e.getSQLState());
             return false;
+        }finally {
+            try {
+                productDAO.close();
+            } catch (SQLException e) {
+                log.severe("Hubo un error al cerrar la conexion en el metodo createProduct de ProductService state: "+e.getSQLState());
+            }
         }
 
     }
 
     public static boolean UpdateProduct(String id_product, String name, String price, String unit, String category){
         try{
+            productDAO.open(AppConfig.getDatasource());
             checkNotNull(id_product,"El parametro id_product no puede ser nulo");
             checkNotNull(name,"El parametro name no puede ser nulo");
             checkNotNull(price,"El parametro price no puede ser nulo");
             checkNotNull(unit,"El parametro unit no puede ser nulo");
             checkNotNull(category,"El parametro category no puede ser nulo");
+            // valida que los parametros no esten vacios
+            checkArgument(!id_product.isEmpty(),"El id del producto no puede estar vacio");
+            checkArgument(!name.isEmpty(),"El nombre del producto no puede estar vacio");
+            checkArgument(!price.isEmpty(),"El precio no puede estar vacio");
+            checkArgument(!unit.isEmpty(),"El id de la unidad de medida no puede estar vacio");
+            checkArgument(!category.isEmpty(),"El id de la categoria no puede estar vacio");
+            // valida que el name product solo tenga letras o espacios
+            checkArgument(name.matches("^([A-Za-záéíóúÁÉÍÓÚñÑ]+)(\\s[A-Za-záéíóúÁÉÍÓÚñÑ]+)*$"), "El nombre del producto debe contener al menos una letra y solo puede contener letras y espacios");
             id_product = id_product.trim();
             name = name.trim();
             price = price.trim();
@@ -118,6 +155,12 @@ public class ProductService  {
         catch (SQLException e){
             log.severe("Hubo un error al actualizar el producto state: "+e.getSQLState());
             return false;
+        }finally {
+            try {
+                productDAO.close();
+            } catch (SQLException e) {
+                log.severe("Hubo un error al cerrar la conexion en el metodo UpdateProduct de ProductService state: "+e.getSQLState());
+            }
         }
     }
 
@@ -125,6 +168,9 @@ public class ProductService  {
         try{
             checkNotNull(code,"El parametro code no puede ser nulo");
             checkNotNull(code_entered,"El parametro code_entered no puede ser nulo");
+            // valida que los argumentos no esten vacios
+            checkArgument(!code.isEmpty(),"El codigo no puede estar vacio");
+            checkArgument(!code_entered.isEmpty(),"El codigo ingresado no puede estar vacio");
             checkArgument(code.matches("\\d+"),"El codigo solo debe contener numeros");
             checkArgument(code_entered.matches("\\d+"),"El codigo ingresado solo debe contener numeros");
             checkNotNull(id_product,"El parametro id_product no puede ser nulo");
@@ -133,12 +179,19 @@ public class ProductService  {
             checkArgument(!id_product.equals("0"),"El id del producto no puede ser 0");
             if (code.equals(code_entered)) {
                 try {
+                    productDAO.open(AppConfig.getDatasource());
                     int id_product_cast = Integer.parseInt(id_product);
                     productDAO.delete(id_product_cast);
                     return true;
                 } catch (SQLException e) {
                     log.severe("No se pudo eliminar el producto por una SQLException en el metodo delete de ProductDAOImpl " + e.getSQLState());
                     return false;
+                }finally {
+                    try {
+                        productDAO.close();
+                    } catch (SQLException e) {
+                        log.severe("Hubo un error al cerrar la conexion en el metodo deleteProduct de ProductService state: "+e.getSQLState());
+                    }
                 }
             }else{
                 log.info("Los codigos ingresados no son iguales");
@@ -155,6 +208,7 @@ public class ProductService  {
 
     public static void createReport(String id_user,String id_category,OutputStream outputStream){
         try{
+            productDAO.open(AppConfig.getDatasource());
             checkNotNull(id_user,"El parametro id_user no puede ser nulo");
             checkNotNull(id_category,"El parametro id_category no puede ser nulo");
             checkArgument(id_user.matches("\\d+"),"El id del usuario debe ser un numero");
@@ -194,9 +248,10 @@ public class ProductService  {
             log.severe("Hubo un error al crear el reporte porque un argumento es nulo state: " + e.getMessage());
         }catch (IllegalArgumentException e){
             log.severe("Hubo un error al crear el reporte porque un argumento no cumple las condiciones de checkArgument state: "+e.getMessage());
+        }catch (SQLException e) {
+            log.severe("Hubo un error al abrir la conexion en el metodo createReport de ProductService state: " + e.getSQLState());
+
         }
-
-
     }
 
     private static void createCell(Workbook wb,Row row,int column,Object val){

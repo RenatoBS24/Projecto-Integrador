@@ -18,20 +18,33 @@ public class NotificationService {
 
     public static List<Notification> getNotifications() {
         List<Notification> notificationList = new LinkedList<>();
-        try(ResultSet rs = notificationDAO.findAll()){
-            if(rs !=null){
-                while (rs.next()){
-                    notificationList.add(new Notification(rs.getInt(1),new Product(rs.getInt(2),"",0,0,null,null),rs.getString(3),rs.getString(4),rs.getDate(5)));
+        try {
+            notificationDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = notificationDAO.findAll()){
+                if(rs !=null){
+                    while (rs.next()){
+                        notificationList.add(new Notification(rs.getInt(1),new Product(rs.getInt(2),"",0,0,null,null),rs.getString(3),rs.getString(4),rs.getDate(5)));
+                    }
+                }else{
+                    log.severe("El resultset obtenido del metodo findAll de NotificationDAOImpl es nulo");
+                    notificationList.add(new Notification(0,null,"","",null));
                 }
-            }else{
-                log.severe("El resultset obtenido del metodo findAll de NotificationDAOImpl es nulo");
+                return notificationList;
+            }catch (SQLException e){
                 notificationList.add(new Notification(0,null,"","",null));
+                log.severe("Ocurrio un error en la lectura del metodo findAll de NotificationDAOImpl, state: "+e.getSQLState());
+                return notificationList;
             }
-            return notificationList;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             notificationList.add(new Notification(0,null,"","",null));
-            log.severe("Ocurrio un error en la lectura del metodo findAll de NotificationDAOImpl, state: "+e.getSQLState());
+            log.severe("Ocurrio un error en la apertura de la conexion en el metodo findAll de NotificationDAOImpl, state: "+e.getSQLState());
             return notificationList;
+        } finally {
+            try {
+                notificationDAO.close();
+            } catch (SQLException e) {
+                log.severe("Ocurrio un error al cerrar la conexion en el metodo findAll de NotificationDAOImpl, state: "+e.getSQLState());
+            }
         }
     }
 }

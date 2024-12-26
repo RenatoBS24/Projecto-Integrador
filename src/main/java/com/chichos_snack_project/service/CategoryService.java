@@ -16,20 +16,33 @@ public class CategoryService {
 
     public static List<Category> getCategory(){
         List<Category> categoryList = new LinkedList<>();
-        try(ResultSet rs = categoryDAO.findAll()){
-            if(rs != null){
-                while (rs.next()) {
-                    categoryList.add(new Category(rs.getInt(1),rs.getString(2), rs.getString(3)));
+        try {
+            categoryDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = categoryDAO.findAll()){
+                if(rs != null){
+                    while (rs.next()) {
+                        categoryList.add(new Category(rs.getInt(1),rs.getString(2), rs.getString(3)));
+                    }
+                }else{
+                    categoryList.add(new Category(0,"Error","Error"));
                 }
-            }else{
-                categoryList.add(new Category(0,"Error","Error"));
-            }
-            return categoryList;
+                return categoryList;
 
-        }catch (SQLException e){
-            log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de CategoryDAOImpl");
+            }catch (SQLException e){
+                log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de CategoryDAOImpl");
+                categoryList.add(new Category(0,"Error","Error"));
+                return categoryList;
+            }
+        } catch (SQLException e) {
+            log.severe("Hubo un error al abrir la conexion en el metodo findAll de CategoryDAOImpl");
             categoryList.add(new Category(0,"Error","Error"));
             return categoryList;
+        }finally {
+            try {
+                categoryDAO.close();
+            } catch (SQLException e) {
+                log.severe("Hubo un error al cerrar la conexion en el metodo findAll de CategoryDAOImpl");
+            }
         }
     }
 }

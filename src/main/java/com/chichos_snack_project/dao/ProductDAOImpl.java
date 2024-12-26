@@ -53,6 +53,11 @@ public class ProductDAOImpl implements ProductDAO {
     public void close() throws SQLException {
         con.close();
     }
+    public void open(String name_datasource) throws SQLException{
+        if(con.isClosed()){
+            con = MysqlConnector.getConnection(name_datasource);
+        }
+    }
 
     public ResultSet getProductsByCategory(Integer id_category) throws SQLException {
         String sql = "{CALL sp_getProductosByCategoria(?)}";

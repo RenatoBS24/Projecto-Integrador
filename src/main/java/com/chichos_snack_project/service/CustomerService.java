@@ -16,17 +16,24 @@ public class CustomerService {
     private static final java.util.logging.Logger log = Logger.getLogger(CustomerService.class.getName());
     public static List<Customer> getCustomer(){
         List<Customer> customerList = new LinkedList<>();
-        try(ResultSet rs = customerDAO.findAll()){
-            if(rs !=null){
-                while (rs.next()){
-                    customerList.add(new Customer(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDate(4),rs.getDouble(5),rs.getDouble(6),rs.getDouble(7),rs.getInt(8)));
+        try {
+            customerDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = customerDAO.findAll()){
+                if(rs !=null){
+                    while (rs.next()){
+                        customerList.add(new Customer(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDate(4),rs.getDouble(5),rs.getDouble(6),rs.getDouble(7),rs.getInt(8)));
+                    }
+                }else{
+                    customerList.add(new Customer(0,"Error","Error",null,0,0,0,0));
                 }
-            }else{
+                return customerList;
+            }catch (SQLException e){
+                log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de CustomerDAOImpl");
                 customerList.add(new Customer(0,"Error","Error",null,0,0,0,0));
+                return customerList;
             }
-            return customerList;
-        }catch (SQLException e){
-            log.severe("Hubo un error al cargar la data del ResulSet recibido por el metodo findAll de CustomerDAOImpl");
+        } catch (SQLException e) {
+            log.severe("Hubo un error al abrir la conexion en el metodo getCustomer de CustomerService");
             customerList.add(new Customer(0,"Error","Error",null,0,0,0,0));
             return customerList;
         }
@@ -34,15 +41,23 @@ public class CustomerService {
     public static Customer getCustomer(int id){
         Customer customer = new Customer();
         try{
+            customerDAO.open(AppConfig.getDatasource());
             customer.setId_customer(id);
             return customerDAO.read(customer);
         }catch (SQLException e){
             log.severe("Hubo un error al obtener el empleado recibido por el metodo read de CustomerDAOImpl");
             return new Customer(0,"Error","Error",null,0,0,0,0);
+        }finally {
+            try {
+                customerDAO.close();
+            } catch (SQLException e) {
+                log.severe("Hubo un error al cerrar la conexion en el metodo getCustomer de CustomerService");
+            }
         }
     }
     public static boolean create(String name,String phone,String credit){
         try{
+            customerDAO.open(AppConfig.getDatasource());
             checkNotNull(name,"El parametro name no puede ser nulo");
             checkNotNull(phone,"El parametro phone no puede ser nulo");
             checkNotNull(credit,"El parametro credit no puede ser nulo");
@@ -63,10 +78,17 @@ public class CustomerService {
         }catch (NullPointerException | IllegalArgumentException e){
             log.severe(e.getMessage());
             return false;
+        }finally {
+            try {
+                customerDAO.close();
+            } catch (SQLException e) {
+                log.severe("Hubo un error al cerrar la conexion en el metodo create de CustomerService");
+            }
         }
     }
     public static boolean update(String name,String phone,String id) {
         try{
+            customerDAO.open(AppConfig.getDatasource());
             checkNotNull(name,"El parametro name no puede ser nulo");
             checkNotNull(phone,"El parametro phone no puede ser nulo");
             checkNotNull(id,"El parametro id no puede ser nulo");
@@ -95,6 +117,12 @@ public class CustomerService {
         }catch (NullPointerException | IllegalArgumentException e){
             log.severe(e.getMessage());
             return false;
+        }finally {
+            try {
+                customerDAO.close();
+            } catch (SQLException e) {
+                log.severe("Hubo un error al cerrar la conexion en el metodo update de CustomerService");
+            }
         }
 
     }
@@ -109,12 +137,19 @@ public class CustomerService {
             checkArgument(code_entered.matches("\\d{8}"),"El codigo ingresado debe tener 8 digitos");
             if(code.equals(code_entered)){
                 try{
+                    customerDAO.open(AppConfig.getDatasource());
                     log.info("Deleting customer with id: " + id);
                     customerDAO.delete(id);
                     return true;
                 }catch (SQLException e){
                     log.severe("No se pudo eliminar al cliente por una SQLException en el metodo delete de EmployeeDAOImpl "+e.getSQLState());
                     return false;
+                }finally {
+                    try {
+                        customerDAO.close();
+                    } catch (SQLException e) {
+                        log.severe("Hubo un error al cerrar la conexion en el metodo delete de CustomerService");
+                    }
                 }
             }else{
                 log.info("El codigo ingresado por el usuario no coincide");
@@ -127,16 +162,21 @@ public class CustomerService {
     }
     public static int getCountCustomer(){
         int count = 0;
-        try(ResultSet rs = customerDAO.countCustomer()){
-            if(rs != null && rs.next()){
-                count = rs.getInt(1);
-            }else{
-                log.severe("El ResultSet recibido por el metodo countCustoemr de CustomerDAOImpl es nulo ");
+        try {
+            customerDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = customerDAO.countCustomer()){
+                if(rs != null && rs.next()){
+                    count = rs.getInt(1);
+                }else{
+                    log.severe("El ResultSet recibido por el metodo countCustoemr de CustomerDAOImpl es nulo ");
+                }
+
+            }catch (SQLException e){
+                log.severe("Hubo un error al procesar la el resulset obtenido por el metodo sumAmountSales de SaleDAOImpl state: " +e.getSQLState());
+
             }
-
-        }catch (SQLException e){
-            log.severe("Hubo un error al procesar la el resulset obtenido por el metodo sumAmountSales de SaleDAOImpl state: " +e.getSQLState());
-
+        } catch (SQLException e) {
+            log.severe("Hubo un error al abrir la conexion en el metodo getCountCustomer de CustomerService");
         }
         return count;
     }
@@ -156,12 +196,19 @@ public class CustomerService {
             double total_cast = Double.parseDouble(total);
             double used_cast = Double.parseDouble(used);
             try{
+                customerDAO.open(AppConfig.getDatasource());
                 customerDAO.updateCredit(id_credit_cast,total_cast,used_cast);
                 log.info("Se actualizo el credito del cliente con id: "+id_credit_cast);
                 return true;
             }catch(SQLException e){
                 log.severe("No se pudo actualizar el credito del cliente por una SQLException en el metodo updateCredit de CustomerDAOImpl "+e.getSQLState());
                 return false;
+            }finally {
+                try {
+                    customerDAO.close();
+                } catch (SQLException e) {
+                    log.severe("Hubo un error al cerrar la conexion en el metodo updateCredit de CustomerService");
+                }
             }
         }catch (NullPointerException | IllegalArgumentException e){
             log.severe(e.getMessage());

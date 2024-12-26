@@ -43,6 +43,12 @@ public class UnitOfMeasurementDAOImpl implements UnitOfMeasurementDAO {
         con.close();
     }
 
+    public void open(String name_datasource) throws SQLException {
+        if(con.isClosed()){
+            con = MysqlConnector.getConnection(name_datasource);
+        }
+    }
+
     public ResultSet findAll() throws SQLException {
         String sql = "select * from uv_unidadades";
         PreparedStatement ps = con.prepareStatement(sql);

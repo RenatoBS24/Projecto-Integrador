@@ -7,10 +7,10 @@
 - [Jose Yllaconza](https://github.com/JoseMa2001)(Fronted)
 
 ## Gestor de base de datos
-- Juan Alberto Vilchez
+- [Renato Ballena Samame](https://github.com/RenatoBS24)
   
 ## Analista
-- Angel Cespedes Palomino
+- [Jose Yllaconza](https://github.com/JoseMa2001)
 
 
 ## Tecnologias usadas

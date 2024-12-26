@@ -267,15 +267,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="lot">Número de Lote</label>
-                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="lot" id="lot">
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="lot" id="lot" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Fecha de Vencimiento</label>
-                    <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name = "expired_date">
+                    <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name = "expired_date" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Fecha de Compra</label>
-                    <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="purchase_date">
+                    <input type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="purchase_date" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="unit">Unidad de medida</label>
@@ -304,21 +304,17 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Stock</label>
-                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="stock">
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="stock" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Precio de compra</label>
-                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="purchase_price">
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="purchase_price" required>
                 </div>
 
 
             </div>
 
             <!-- File Upload -->
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Subir Archivo (Excel)</label>
-                <input type="file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
-            </div>
 
             <!-- Modal Actions -->
             <div class="flex justify-end space-x-4">
@@ -341,11 +337,11 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Nombre del Producto</label>
-                    <input id="editProductName" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="name">
+                    <input id="editProductName" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="name" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Precio</label>
-                    <input id="editProductPrice" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="price">
+                    <input id="editProductPrice" type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="price" required>
                 </div>
             </div>
 
@@ -370,7 +366,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="categories">Categoria</label>
-                    <select id="categories" name="category" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category">
+                    <select id="categories" name="category" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="category" required>
                         <%for(Category category: categoryList){%>
 
                         <option value="<%=category.getId_category()%>"><%=category.getName_category()%></option>
@@ -388,19 +384,19 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700" for="editExpiryDate">Fecha de Caducidad</label>
-                    <input id="editExpiryDate" name="expired" type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input id="editExpiryDate" name="expired" type="date" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Fecha de Compra</label>
-                    <input id="editBuyDate" type="date" name="purchase" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input id="editBuyDate" type="date" name="purchase" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Precio de compra</label>
-                    <input id="editPurchasePrice" type="text" name="buy_purchase" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input id="editPurchasePrice" type="text" name="buy_purchase" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Stock del Inventario</label>
-                    <input type="text" id="editProductStock"  name="stock" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none">
+                    <input type="text" id="editProductStock"  name="stock" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" required>
                 </div>
             </div>
             <!-- Modal Actions -->
@@ -419,7 +415,7 @@
             <input type="hidden" id="id" name="id_product">
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Código: </label>
-                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="code_entered">
+                <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none" name="code_entered" required>
                 <%
                     if(request.getAttribute("Error") != null){
                         String error = (String)request.getAttribute("Error");

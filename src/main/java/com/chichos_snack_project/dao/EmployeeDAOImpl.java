@@ -11,17 +11,17 @@ import java.util.logging.Logger;
 
 public class EmployeeDAOImpl implements EmployeeDAO {
 
-    private Connection conn;
+    private Connection con;
     private static final java.util.logging.Logger log = Logger.getLogger(EmployeeDAOImpl.class.getName());
 
     public EmployeeDAOImpl(String name_datasource) {
-        this.conn = MysqlConnector.getConnection(name_datasource);
+        this.con = MysqlConnector.getConnection(name_datasource);
     }
 
     @Override
     public void create(Employee employee) throws SQLException {
         String sql = "{CALL sp_insert_trabajador(?,?,?,?,?)}";
-        CallableStatement cs = conn.prepareCall(sql);
+        CallableStatement cs = con.prepareCall(sql);
         cs.setString(1,employee.getName());
         cs.setString(2,employee.getLastname());
         cs.setString(3,employee.getDni());
@@ -34,7 +34,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public Employee read(Employee employee) throws SQLException {
         String sql = "{CALL sp_getTrabajador(?)}";
-        CallableStatement cs = conn.prepareCall(sql);
+        CallableStatement cs = con.prepareCall(sql);
         cs.setInt(1,employee.getId_employee());
         ResultSet rs = cs.executeQuery();
         if(rs.next()){
@@ -49,7 +49,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public void update(Integer integer, Employee employee) throws SQLException {
         String sql = "{CALL sp_update_trabajador(?,?,?,?,?,?)}";
-        CallableStatement cs = conn.prepareCall(sql);
+        CallableStatement cs = con.prepareCall(sql);
         cs.setInt(1, integer);
         cs.setString(2,employee.getName());
         cs.setString(3,employee.getLastname());
@@ -63,20 +63,25 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     public void delete(Integer integer) throws SQLException {
         String sql = "{CALL sp_delete_trabajador(?)}";
         log.info("El id recibido es:"+integer);
-        CallableStatement cs = conn.prepareCall(sql);
+        CallableStatement cs = con.prepareCall(sql);
         cs.setInt(1,integer);
         cs.executeUpdate();
     }
 
     @Override
     public void close() throws SQLException {
-        conn.close();
+        con.close();
+    }
+    public void open(String name_datasource) throws SQLException{
+        if (con.isClosed()) {
+            this.con = MysqlConnector.getConnection(name_datasource);
+        }
     }
 
     public ResultSet findAll() throws SQLException {
         String sql = "select * from uv_trabajadores";
         try{
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
             return ps.executeQuery();
         }catch (SQLException e){
             log.severe("Ocurrio un error al obtener los datos de la vista uv_trabajadores");

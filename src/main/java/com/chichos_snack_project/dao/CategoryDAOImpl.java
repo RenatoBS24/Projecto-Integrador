@@ -41,15 +41,16 @@ public class CategoryDAOImpl implements CategoryDAO {
     public void close() throws SQLException {
         con.close();
     }
-
-    public ResultSet findAll(){
-        String sql = "select * from uv_categoria";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            return ps.executeQuery();
-        } catch (SQLException e) {
-            log.severe("No se pudo obtener los datos de la vista uv_categoria");
-            return null;
+    public void open(String name_datasource) throws SQLException {
+        if(con.isClosed()){
+            con = MysqlConnector.getConnection(name_datasource);
         }
+    }
+
+    public ResultSet findAll() throws SQLException{
+        String sql = "select * from uv_categoria";
+        PreparedStatement ps = con.prepareStatement(sql);
+        return ps.executeQuery();
+
     }
 }

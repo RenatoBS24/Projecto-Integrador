@@ -6,8 +6,8 @@ public class Sending_Email {
 
 
     public static String email(){
-        String email = "pro51.ballena@gmail.com";
-        String password = "msgh lesd hwxu xivt";
+        String email = "correo@gmail.com";
+        String password = "Poner aqui la clave de aplicacion";
         String code = generate_code();
         try{
             MultiPartEmail multiPartEmail = new MultiPartEmail();
@@ -18,7 +18,7 @@ public class Sending_Email {
             multiPartEmail.setFrom(email);
             multiPartEmail.setSubject("Codigo de verifacion");
             multiPartEmail.setMsg("Su codigo de verificacion es: "+code);
-            multiPartEmail.addTo("renatoballena2405@gmail.com");
+            multiPartEmail.addTo("correoxd@gmail.com");
             multiPartEmail.send();
             return code;
         }catch (EmailException e){

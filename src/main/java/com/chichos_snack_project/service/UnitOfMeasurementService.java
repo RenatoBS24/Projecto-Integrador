@@ -21,20 +21,33 @@ public class UnitOfMeasurementService {
      */
     public static List<UnitOfMeasurement> getAllUnitOfMeasurements() {
         List<UnitOfMeasurement> unitOfMeasurementList = new LinkedList<>();
-        try(ResultSet rs = unitDAO.findAll()){
-            if(rs != null){
-                while (rs.next()){
-                    unitOfMeasurementList.add(new UnitOfMeasurement(rs.getInt(1),rs.getString(2), rs.getString(3)));
+        try {
+            unitDAO.open(AppConfig.getDatasource());
+            try(ResultSet rs = unitDAO.findAll()){
+                if(rs != null){
+                    while (rs.next()){
+                        unitOfMeasurementList.add(new UnitOfMeasurement(rs.getInt(1),rs.getString(2), rs.getString(3)));
+                    }
+                }else{
+                    unitOfMeasurementList.add(new UnitOfMeasurement(0,"Error","Error"));
+                    log.severe("El resultset obtenido del metodo findAll de UnitOfMeasurementDAOImpl es nulo");
                 }
-            }else{
+                return unitOfMeasurementList;
+            }catch(SQLException e){
                 unitOfMeasurementList.add(new UnitOfMeasurement(0,"Error","Error"));
-                log.severe("El resultset obtenido del metodo findAll de UnitOfMeasurementDAOImpl es nulo");
+                log.severe("Ocurrio un error en la lectura del metodo findAll de UnitOfMeasurementDAOImpl, state: "+e.getSQLState());
+                return unitOfMeasurementList;
             }
-            return unitOfMeasurementList;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             unitOfMeasurementList.add(new UnitOfMeasurement(0,"Error","Error"));
-            log.severe("Ocurrio un error en la lectura del metodo findAll de UnitOfMeasurementDAOImpl, state: "+e.getSQLState());
+            log.severe("Ocurrio un error en la apertura de la conexion en el metodo findAll de UnitOfMeasurementDAOImpl, state: "+e.getSQLState());
             return unitOfMeasurementList;
+        }finally {
+            try {
+                unitDAO.close();
+            } catch (SQLException e) {
+                log.severe("Ocurrio un error al cerrar la conexion en el metodo findAll de UnitOfMeasurementDAOImpl, state: "+e.getSQLState());
+            }
         }
     }
 }

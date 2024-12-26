@@ -64,6 +64,11 @@ public class CustomerDAOImpl implements CustomerDAO {
     public void close() throws SQLException {
         con.close();
     }
+    public void open(String name_datasource) throws SQLException{
+        if(con.isClosed()){
+            con = MysqlConnector.getConnection(name_datasource);
+        }
+    }
 
     public ResultSet findAll() throws SQLException {
         String sql = "select * from uv_clientes";
